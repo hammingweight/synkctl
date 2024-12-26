@@ -1,0 +1,84 @@
+name: test and build
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.*'
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: install go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.23.0
+      - uses: actions/checkout@v2
+
+      - name: unit test
+        run: go test -v ./...
+
+      - name: vet
+        run: go vet ./...
+
+      - name: lint
+        run: |
+          go install golang.org/x/lint/golint@latest
+          golint -set_exit_status ./...
+
+  release:
+    permissions:
+      contents: write
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set RELEASE_VERSION ENV var
+        run: echo "RELEASE_VERSION=${GITHUB_REF:10}" >> $GITHUB_ENV
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.23.0
+
+      - name: install gox
+        run: go install github.com/mitchellh/gox@v1.0.1
+
+      - name: build cross-platform binaries
+        env:
+          PLATFORMS: linux/amd64 linux/arm64 darwin/arm64 darwin/amd64 windows/amd64
+          VERSION_INJECT: github.com/hammingweight/synkctl/cmd.Version
+          OUT_BASE: ./bin/${{ env.RELEASE_VERSION }}
+          OUTPUT_PATH_FORMAT: ./bin/${{ env.RELEASE_VERSION }}/{{.OS}}/{{.Arch}}/synkctl
+        run: |
+          gox -osarch="${PLATFORMS}" -ldflags "-X ${VERSION_INJECT}=${RELEASE_VERSION}" -output "${OUTPUT_PATH_FORMAT}"
+          tar -czvf "${OUT_BASE}/darwin/arm64/synkctl_darwin_arm64.tar.gz" -C "${OUT_BASE}/darwin/arm64" synkctl
+          tar -czvf "${OUT_BASE}/darwin/amd64/synkctl_darwin_amd64.tar.gz" -C "${OUT_BASE}/darwin/amd64" synkctl
+          zip -j "${OUT_BASE}/windows/amd64/synkctl_windows_amd64.zip" "${OUT_BASE}/windows/amd64/synkctl.exe"
+          tar -czvf "${OUT_BASE}/linux/amd64/synkctl_linux_amd64.tar.gz" -C "${OUT_BASE}/linux/amd64" synkctl
+          tar -czvf "${OUT_BASE}/linux/arm64/synkctl_linux_arm64.tar.gz" -C "${OUT_BASE}/linux/arm64" synkctl
+          tree ./bin
+
+      - name: create release
+        env:
+          OUT_BASE: ./bin/${{ env.RELEASE_VERSION }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api -X POST 'repos/{owner}/{repo}/releases/generate-notes' \
+            -F commitish=${{ env.RELEASE_VERSION }} \
+            -F tag_name=${{ env.RELEASE_VERSION }} \
+            > tmp-release-notes.json
+          cat tmp-release-notes.json
+          jq -r .body tmp-release-notes.json > tmp-release-notes.md
+          cat tmp-release-notes.md
+          gh release create ${{ env.RELEASE_VERSION }} \
+            -t "synkctl ${RELEASE_VERSION}" \
+            -F tmp-release-notes.md \
+            "${OUT_BASE}/linux/amd64/synkctl_linux_amd64.tar.gz#linux_amd64" \
+            "${OUT_BASE}/linux/arm64/synkctl_linux_arm64.tar.gz#linux_arm64" \
+            "${OUT_BASE}/windows/amd64/synkctl_windows_amd64.zip#windows_amd64" \
+            "${OUT_BASE}/darwin/arm64/synkctl_darwin_arm64.tar.gz#osx_arm64" \
+            "${OUT_BASE}/darwin/amd64/synkctl_darwin_amd64.tar.gz#osx_amd64"

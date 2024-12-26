@@ -1,0 +1,5 @@
+# A config file used in unit testing.
+endpoint: https://example.com/
+user: foo@example.com
+password: mypassword
+bad_key: unexpected_value
