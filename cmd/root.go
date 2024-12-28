@@ -44,9 +44,14 @@ func init() {
 	configFile := filepath.Join(home, ".synk", "config")
 	rootCmd.PersistentFlags().StringP("config", "c", configFile, "synk config file location")
 
+	// Set up viper
 	viper.SetEnvPrefix("SYNK")
 
 	viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
+
+	viper.BindPFlag("endpoint", createCmd.Flags().Lookup("endpoint"))
+	viper.BindPFlag("username", createCmd.Flags().Lookup("username"))
+	viper.BindPFlag("password", createCmd.Flags().Lookup("password"))
 }
 
 // initConfig reads in ENV variables if set.

@@ -22,19 +22,14 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("create called using config file %s\n", viper.GetString("config"))
+		fmt.Println(viper.GetString("endpoint"))
 	},
 }
 
 func init() {
 	configurationCmd.AddCommand(createCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// createCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// createCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	createCmd.Flags().StringP("endpoint", "e", "https://api.sunsynk.net", "SunSynk API endpoint")
+	createCmd.Flags().StringP("user", "u", "", "SunSynk username")
+	createCmd.Flags().StringP("password", "p", "", "SunSynk user's password")
 }
