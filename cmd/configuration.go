@@ -10,13 +10,9 @@ import (
 // configCmd represents the config command
 var configurationCmd = &cobra.Command{
 	Use:   "configuration",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Configures credentials to access the SunSynk API",
+	Long: `Commands to create a configuration file for accessing the SunSynk API and
+to validate credentials.`,
 }
 
 func init() {

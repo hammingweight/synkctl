@@ -1,6 +1,5 @@
 /*
 Copyright © 2024 Carl Meijer
-
 */
 package main
 

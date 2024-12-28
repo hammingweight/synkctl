@@ -34,6 +34,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
+	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	// Flags that apply to all subcommands.
 	// Get a default path to the synk config file.
 	home, err := os.UserHomeDir()
@@ -46,12 +47,7 @@ func init() {
 
 	// Set up viper
 	viper.SetEnvPrefix("SYNK")
-
 	viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
-
-	viper.BindPFlag("endpoint", createCmd.Flags().Lookup("endpoint"))
-	viper.BindPFlag("username", createCmd.Flags().Lookup("username"))
-	viper.BindPFlag("password", createCmd.Flags().Lookup("password"))
 }
 
 // initConfig reads in ENV variables if set.
