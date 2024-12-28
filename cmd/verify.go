@@ -1,6 +1,5 @@
 /*
 Copyright © 2024 Carl Meijer
-
 */
 package cmd
 
@@ -26,7 +25,7 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	configCmd.AddCommand(verifyCmd)
+	configurationCmd.AddCommand(verifyCmd)
 
 	// Here you will define your flags and configuration settings.
 

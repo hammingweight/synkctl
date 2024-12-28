@@ -4,7 +4,9 @@ Copyright © 2024 Carl Meijer
 package cmd
 
 import (
+	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -17,6 +19,7 @@ var rootCmd = &cobra.Command{
 	Long: `SynkCtl is a CLI for querying and updating SunSynk hybrid inverters and getting
 the state of the battery, grid and input (e.g. solar panels) connected to the
 inverter.`,
+	Version: "0.1.0",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -32,9 +35,21 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	// Flags that apply to all subcommands.
+	// Get a default path to the synk config file.
+	home, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	configFile := filepath.Join(home, ".synk", "config")
+	rootCmd.PersistentFlags().StringP("config", "c", configFile, "synk config file location")
+
+	viper.SetEnvPrefix("SYNK")
+
+	viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
 }
 
-// initConfig reads in config file and ENV variables if set.
+// initConfig reads in ENV variables if set.
 func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 }
