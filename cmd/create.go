@@ -25,7 +25,7 @@ to quickly create a Cobra application.`,
 		if len(args) != 0 {
 			return fmt.Errorf("unexpected argument '%s'", args[0])
 		}
-		return createConfig(viper.GetString("endpoint"), viper.GetString("username"), viper.GetString("password"))
+		return createConfig(viper.GetString("endpoint"), viper.GetString("user"), viper.GetString("password"))
 	},
 }
 
@@ -33,18 +33,18 @@ func init() {
 	configurationCmd.AddCommand(createCmd)
 
 	createCmd.Flags().StringP("endpoint", "e", "https://api.sunsynk.net", "SunSynk API endpoint")
-	createCmd.Flags().StringP("username", "u", "", "SunSynk username")
+	createCmd.Flags().StringP("user", "u", "", "SunSynk user")
 	createCmd.Flags().StringP("password", "p", "", "SunSynk user's password")
 
 	// Viper bindings.
 	viper.BindPFlag("endpoint", createCmd.Flags().Lookup("endpoint"))
-	viper.BindPFlag("username", createCmd.Flags().Lookup("username"))
+	viper.BindPFlag("user", createCmd.Flags().Lookup("user"))
 	viper.BindPFlag("password", createCmd.Flags().Lookup("password"))
 }
 
-func createConfig(endpoint, username, password string) error {
-	if username == "" {
-		return errors.New("username must be specified")
+func createConfig(endpoint, user, password string) error {
+	if user == "" {
+		return errors.New("user must be specified")
 	}
 
 	return nil
