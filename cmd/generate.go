@@ -12,6 +12,32 @@ import (
 	"github.com/spf13/viper"
 )
 
+func generate(args []string) error {
+	if len(args) != 0 {
+		return fmt.Errorf("unexpected argument '%s'", args[0])
+	}
+	user := viper.GetString("user")
+	if user == "" {
+		return fmt.Errorf("%w: a user name (--user) must be supplied", ErrCantCreateConfigFile)
+	}
+	configFile := viper.GetString("config")
+	password := viper.GetString("password")
+	config := &synk.Configuration{
+		Endpoint: viper.GetString("endpoint"),
+		User:     user,
+		Password: password,
+	}
+	err := config.WriteToFile(viper.GetString("config"))
+	if err != nil {
+		return fmt.Errorf("%w: %w", ErrCantCreateConfigFile, err)
+	}
+	fmt.Printf("Wrote configuration to '%s'.\n", configFile)
+	if password == "" {
+		fmt.Fprintf(os.Stderr, "\nNo password (--password) was supplied; you'll need to edit '%s' to add one.\n", configFile)
+	}
+	return nil
+}
+
 // generateCmd represents the create command
 var generateCmd = &cobra.Command{
 	Use:   "generate",
@@ -23,29 +49,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) != 0 {
-			return fmt.Errorf("unexpected argument '%s'", args[0])
-		}
-		user := viper.GetString("user")
-		if user == "" {
-			return fmt.Errorf("%w: a user name (--user) must be supplied", ErrCantCreateConfigFile)
-		}
-		configFile := viper.GetString("config")
-		password := viper.GetString("password")
-		config := &synk.Configuration{
-			Endpoint: viper.GetString("endpoint"),
-			User:     user,
-			Password: password,
-		}
-		err := config.WriteToFile(viper.GetString("config"))
-		if err != nil {
-			return fmt.Errorf("%w: %w", ErrCantCreateConfigFile, err)
-		}
-		fmt.Printf("Wrote configuration to '%s'.\n", configFile)
-		if password == "" {
-			fmt.Fprintf(os.Stderr, "\nNo password (--password) was supplied; you'll need to edit '%s' to add one.\n", configFile)
-		}
-		return nil
+		return generate(args)
 	},
 }
 
