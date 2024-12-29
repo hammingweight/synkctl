@@ -12,9 +12,9 @@ import (
 	"github.com/spf13/viper"
 )
 
-// createCmd represents the create command
-var createCmd = &cobra.Command{
-	Use:   "create",
+// generateCmd represents the create command
+var generateCmd = &cobra.Command{
+	Use:   "generate",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -50,14 +50,14 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	configurationCmd.AddCommand(createCmd)
+	configurationCmd.AddCommand(generateCmd)
 
-	createCmd.Flags().StringP("endpoint", "e", "https://api.sunsynk.net", "SunSynk API endpoint")
-	createCmd.Flags().StringP("user", "u", "", "SunSynk user")
-	createCmd.Flags().StringP("password", "p", "", "SunSynk user's password")
+	generateCmd.Flags().StringP("endpoint", "e", "https://api.sunsynk.net", "SunSynk API endpoint")
+	generateCmd.Flags().StringP("user", "u", "", "SunSynk user")
+	generateCmd.Flags().StringP("password", "p", "", "SunSynk user's password")
 
 	// Viper bindings.
-	viper.BindPFlag("endpoint", createCmd.Flags().Lookup("endpoint"))
-	viper.BindPFlag("user", createCmd.Flags().Lookup("user"))
-	viper.BindPFlag("password", createCmd.Flags().Lookup("password"))
+	viper.BindPFlag("endpoint", generateCmd.Flags().Lookup("endpoint"))
+	viper.BindPFlag("user", generateCmd.Flags().Lookup("user"))
+	viper.BindPFlag("password", generateCmd.Flags().Lookup("password"))
 }
