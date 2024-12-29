@@ -42,7 +42,11 @@ func (configuration *Configuration) WriteToFile(fileName string) error {
 }
 
 func (configuration *Configuration) read(reader io.Reader) error {
-	return nil
+	data, err := io.ReadAll(reader)
+	if err != nil {
+		return err
+	}
+	return yaml.Unmarshal(data, configuration)
 }
 
 func (configuration *Configuration) ReadFromFile(fileName string) error {
