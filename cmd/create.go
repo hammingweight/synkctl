@@ -6,7 +6,9 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"os"
 
+	"github.com/hammingweight/synkctl/synk"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -25,7 +27,21 @@ to quickly create a Cobra application.`,
 		if len(args) != 0 {
 			return fmt.Errorf("unexpected argument '%s'", args[0])
 		}
-		return createConfig(viper.GetString("endpoint"), viper.GetString("user"), viper.GetString("password"))
+		user := viper.GetString("user")
+		if user == "" {
+			return errors.New("a user name (--user) must be supplied")
+		}
+		configFile := viper.GetString("config")
+		password := viper.GetString("password")
+		if password == "" {
+			fmt.Fprintf(os.Stderr, "no password (--password) was supplied; you'll need to edit '%s' to add one\n", configFile)
+		}
+		config := synk.Configuration{
+			Endpoint: viper.GetString("endpoint"),
+			User:     user,
+			Password: password,
+		}
+		return synk.CreateConfigurationFile(configFile, config)
 	},
 }
 
@@ -40,12 +56,4 @@ func init() {
 	viper.BindPFlag("endpoint", createCmd.Flags().Lookup("endpoint"))
 	viper.BindPFlag("user", createCmd.Flags().Lookup("user"))
 	viper.BindPFlag("password", createCmd.Flags().Lookup("password"))
-}
-
-func createConfig(endpoint, user, password string) error {
-	if user == "" {
-		return errors.New("user must be specified")
-	}
-
-	return nil
 }
