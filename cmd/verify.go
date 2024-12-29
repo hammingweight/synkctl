@@ -4,6 +4,7 @@ Copyright © 2024 Carl Meijer
 package cmd
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/hammingweight/synkctl/synk"
@@ -11,11 +12,11 @@ import (
 	"github.com/spf13/viper"
 )
 
-func verify(args []string) error {
+func verify(ctx context.Context, args []string) error {
 	if len(args) != 0 {
 		return fmt.Errorf("unexpected argument '%s'", args[0])
 	}
-	_, err := synk.Authenticate(viper.GetString("config"))
+	_, err := synk.Authenticate(ctx, viper.GetString("config"))
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantAuthenticateUser, err)
 	}
@@ -34,7 +35,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return verify(args)
+		return verify(cmd.Context(), args)
 	},
 }
 
