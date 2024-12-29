@@ -34,14 +34,19 @@ to quickly create a Cobra application.`,
 		configFile := viper.GetString("config")
 		password := viper.GetString("password")
 		if password == "" {
-			fmt.Fprintf(os.Stderr, "no password (--password) was supplied; you'll need to edit '%s' to add one\n", configFile)
+			fmt.Fprintf(os.Stderr, "No password (--password) was supplied; you'll need to edit '%s' to add one.\n", configFile)
 		}
 		config := synk.Configuration{
 			Endpoint: viper.GetString("endpoint"),
 			User:     user,
 			Password: password,
 		}
-		return synk.CreateConfigurationFile(configFile, config)
+		err := synk.CreateConfigurationFile(configFile, config)
+		if err != nil {
+			return err
+		}
+		fmt.Printf("Wrote configuration to '%s'.\n", configFile)
+		return nil
 	},
 }
 
