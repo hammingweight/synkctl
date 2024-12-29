@@ -32,9 +32,6 @@ to quickly create a Cobra application.`,
 		}
 		configFile := viper.GetString("config")
 		password := viper.GetString("password")
-		if password == "" {
-			fmt.Fprintf(os.Stderr, "No password (--password) was supplied; you'll need to edit '%s' to add one.\n\n", configFile)
-		}
 		config := &synk.Configuration{
 			Endpoint: viper.GetString("endpoint"),
 			User:     user,
@@ -45,6 +42,9 @@ to quickly create a Cobra application.`,
 			return fmt.Errorf("%w: %w", ErrCantCreateConfigFile, err)
 		}
 		fmt.Printf("Wrote configuration to '%s'.\n", configFile)
+		if password == "" {
+			fmt.Fprintf(os.Stderr, "\nNo password (--password) was supplied; you'll need to edit '%s' to add one.\n", configFile)
+		}
 		return nil
 	},
 }
