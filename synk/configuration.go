@@ -50,5 +50,9 @@ func (configuration *Configuration) read(reader io.Reader) error {
 }
 
 func (configuration *Configuration) ReadFromFile(fileName string) error {
-	return configuration.read(nil)
+	f, err := os.Open(fileName)
+	if err != nil {
+		return err
+	}
+	return configuration.read(f)
 }

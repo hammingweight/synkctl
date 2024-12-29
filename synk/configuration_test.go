@@ -25,3 +25,20 @@ password: secret`
 		t.Errorf("expected Password: secret, got %s", configuration.Password)
 	}
 }
+
+func TestReadFromFile(t *testing.T) {
+	configuration := &Configuration{}
+	err := configuration.ReadFromFile("./testdata/testconfig")
+	if err != nil {
+		t.Fatal("failed with error: ", err)
+	}
+	if configuration.Endpoint != "http://example.com" {
+		t.Errorf("expected Endpoint: http://example.com, got %s", configuration.Endpoint)
+	}
+	if configuration.User != "foo" {
+		t.Errorf("expected User: foo, got %s", configuration.User)
+	}
+	if configuration.Password != "bar" {
+		t.Errorf("expected Password: bar, got %s", configuration.Password)
+	}
+}
