@@ -36,12 +36,12 @@ to quickly create a Cobra application.`,
 		if password == "" {
 			fmt.Fprintf(os.Stderr, "No password (--password) was supplied; you'll need to edit '%s' to add one.\n", configFile)
 		}
-		config := synk.Configuration{
+		config := &synk.Configuration{
 			Endpoint: viper.GetString("endpoint"),
 			User:     user,
 			Password: password,
 		}
-		err := synk.CreateConfigurationFile(configFile, config)
+		err := config.WriteToFile(viper.GetString("config"))
 		if err != nil {
 			return err
 		}
