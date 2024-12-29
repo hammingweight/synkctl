@@ -1,8 +1,11 @@
 package synk
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 )
@@ -18,6 +21,19 @@ type AuthenticationRequest struct {
 	Password  string `json:"password"`
 }
 
+func getAuthRequestBody(config *Configuration) (io.Reader, error) {
+	authRequest := AuthenticationRequest{
+		GrantType: "password",
+		User:      config.User,
+		Password:  config.Password,
+	}
+	r, err := json.Marshal(&authRequest)
+	if err != nil {
+		return nil, err
+	}
+	return bytes.NewReader(r), nil
+}
+
 func Authenticate(ctx context.Context, configFile string) (*Tokens, error) {
 	config := &Configuration{}
 	err := config.ReadFromFile(configFile)
@@ -29,7 +45,11 @@ func Authenticate(ctx context.Context, configFile string) (*Tokens, error) {
 	if err != nil {
 		return nil, err
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, nil)
+	authRequest, err := getAuthRequestBody(config)
+	if err != nil {
+		return nil, err
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, authRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +59,13 @@ func Authenticate(ctx context.Context, configFile string) (*Tokens, error) {
 	if err != nil {
 		return nil, err
 	}
-	// TODO: Check status code
-	fmt.Println(resp.StatusCode)
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("authentication request returned status code %d", resp.StatusCode)
+	}
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(string(body))
 	return nil, err
 }
