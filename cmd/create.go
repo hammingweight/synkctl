@@ -4,7 +4,6 @@ Copyright © 2024 Carl Meijer
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"os"
 
@@ -29,12 +28,12 @@ to quickly create a Cobra application.`,
 		}
 		user := viper.GetString("user")
 		if user == "" {
-			return errors.New("a user name (--user) must be supplied")
+			return fmt.Errorf("%w: a user name (--user) must be supplied", synk.ErrCantCreateConfigFile)
 		}
 		configFile := viper.GetString("config")
 		password := viper.GetString("password")
 		if password == "" {
-			fmt.Fprintf(os.Stderr, "No password (--password) was supplied; you'll need to edit '%s' to add one.\n", configFile)
+			fmt.Fprintf(os.Stderr, "No password (--password) was supplied; you'll need to edit '%s' to add one.\n\n", configFile)
 		}
 		config := &synk.Configuration{
 			Endpoint: viper.GetString("endpoint"),
@@ -43,7 +42,7 @@ to quickly create a Cobra application.`,
 		}
 		err := config.WriteToFile(viper.GetString("config"))
 		if err != nil {
-			return err
+			return fmt.Errorf("%w: %w", synk.ErrCantCreateConfigFile, err)
 		}
 		fmt.Printf("Wrote configuration to '%s'.\n", configFile)
 		return nil
