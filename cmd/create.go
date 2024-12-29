@@ -28,7 +28,7 @@ to quickly create a Cobra application.`,
 		}
 		user := viper.GetString("user")
 		if user == "" {
-			return fmt.Errorf("%w: a user name (--user) must be supplied", synk.ErrCantCreateConfigFile)
+			return fmt.Errorf("%w: a user name (--user) must be supplied", ErrCantCreateConfigFile)
 		}
 		configFile := viper.GetString("config")
 		password := viper.GetString("password")
@@ -42,7 +42,7 @@ to quickly create a Cobra application.`,
 		}
 		err := config.WriteToFile(viper.GetString("config"))
 		if err != nil {
-			return fmt.Errorf("%w: %w", synk.ErrCantCreateConfigFile, err)
+			return fmt.Errorf("%w: %w", ErrCantCreateConfigFile, err)
 		}
 		fmt.Printf("Wrote configuration to '%s'.\n", configFile)
 		return nil

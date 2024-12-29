@@ -1,4 +1,4 @@
-package synk
+package cmd
 
 import (
 	"errors"
