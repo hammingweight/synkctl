@@ -11,14 +11,24 @@ import (
 )
 
 type Tokens struct {
-	Bearer  string
-	Refresh string
+	AccessToken  string `json:"access_token"`
+	TokenType    string `json:"token_type"`
+	RefreshToken string `json:"refresh_token"`
+	ExpiresIn    int    `json:"expires_in"`
+	Scope        string `json:"scope"`
 }
 
 type AuthenticationRequest struct {
 	GrantType string `json:"grant_type"`
 	User      string `json:"username"`
 	Password  string `json:"password"`
+}
+
+type AuthenticationResponse struct {
+	Code    int    `json:"code"`
+	Message string `json:"msg"`
+	Data    Tokens `json:"data"`
+	Success bool   `json:"success"`
 }
 
 func getAuthRequestBody(config *Configuration) (io.Reader, error) {
