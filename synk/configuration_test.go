@@ -20,14 +20,17 @@ password: secret`
 	if err != nil {
 		t.Fatal("error: ", err)
 	}
-	if configuration.Endpoint != "http://example.com" {
-		t.Errorf("expected Endpoint: http://example.com, got %s", configuration.Endpoint)
+	api := "http://example.com"
+	user := "carl"
+	password := "secret"
+	if configuration.Endpoint != api {
+		t.Errorf("expected Endpoint: %s, got %s", api, configuration.Endpoint)
 	}
-	if configuration.User != "carl" {
-		t.Errorf("expected User: carl, got %s", configuration.User)
+	if configuration.User != user {
+		t.Errorf("expected User: %s, got %s", user, configuration.User)
 	}
-	if configuration.Password != "secret" {
-		t.Errorf("expected Password: secret, got %s", configuration.Password)
+	if configuration.Password != password {
+		t.Errorf("expected Password: %s, got %s", password, configuration.Password)
 	}
 }
 
@@ -37,14 +40,17 @@ func TestReadFromFile(t *testing.T) {
 	if err != nil {
 		t.Fatal("failed with error: ", err)
 	}
-	if configuration.Endpoint != "http://example.com" {
-		t.Errorf("expected Endpoint: http://example.com, got %s", configuration.Endpoint)
+	api := "https://example.com/"
+	user := "foo@example.com"
+	password := "mypassword"
+	if configuration.Endpoint != api {
+		t.Errorf("expected Endpoint: %s, got %s", api, configuration.Endpoint)
 	}
-	if configuration.User != "foo" {
-		t.Errorf("expected User: foo, got %s", configuration.User)
+	if configuration.User != user {
+		t.Errorf("expected User: %s, got %s", user, configuration.User)
 	}
-	if configuration.Password != "bar" {
-		t.Errorf("expected Password: bar, got %s", configuration.Password)
+	if configuration.Password != password {
+		t.Errorf("expected Password: %s, got %s", password, configuration.Password)
 	}
 }
 

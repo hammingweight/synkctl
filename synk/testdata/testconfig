@@ -1,3 +1,4 @@
-endpoint: http://example.com
-user: foo
-password: bar
+# A config file used in unit testing.
+endpoint: https://example.com/
+user: foo@example.com
+password: mypassword
