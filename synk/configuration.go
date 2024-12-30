@@ -9,9 +9,10 @@ import (
 )
 
 type Configuration struct {
-	Endpoint string `yaml:"endpoint"`
-	User     string `yaml:"user"`
-	Password string `yaml:"password"`
+	Endpoint          string `yaml:"endpoint"`
+	User              string `yaml:"user"`
+	Password          string `yaml:"password"`
+	DefaultInverterSN string `yaml:"default_inverter_sn,omitempty"`
 }
 
 func createAndOpenFile(filename string) (*os.File, error) {

@@ -52,6 +52,21 @@ func TestReadFromFile(t *testing.T) {
 	if configuration.Password != password {
 		t.Errorf("expected Password: %s, got %s", password, configuration.Password)
 	}
+	if configuration.DefaultInverterSN != "" {
+		t.Errorf("expected DefaultInverterId: \"\", got %s", configuration.DefaultInverterSN)
+	}
+}
+
+func TestReadFromFileWithInverterSerialNumber(t *testing.T) {
+	configuration := &Configuration{}
+	err := configuration.ReadFromFile("./testdata/testconfig_with_inverter_id")
+	if err != nil {
+		t.Fatal("failed with error: ", err)
+	}
+	sn := "12345678"
+	if configuration.DefaultInverterSN != sn {
+		t.Errorf("expected DefaultInverterSN: %s got %s", sn, configuration.DefaultInverterSN)
+	}
 }
 
 func TestWrite(t *testing.T) {

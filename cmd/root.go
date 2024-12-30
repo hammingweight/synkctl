@@ -43,11 +43,13 @@ func init() {
 		os.Exit(1)
 	}
 	configFile := filepath.Join(home, ".synk", "config")
-	rootCmd.PersistentFlags().StringP("config", "c", configFile, "synk config file location")
+	rootCmd.PersistentFlags().StringP("config", "c", configFile, "synkctl config file location")
+	rootCmd.PersistentFlags().StringP("inverter", "i", "", "SunSynk inverter serial number")
 
 	// Set up viper
 	viper.SetEnvPrefix("SYNK")
 	viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
+	viper.BindPFlag("inverter", rootCmd.PersistentFlags().Lookup("inverter"))
 }
 
 // initConfig reads in ENV variables if set.

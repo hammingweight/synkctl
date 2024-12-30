@@ -22,10 +22,13 @@ func generate(args []string) error {
 	}
 	configFile := viper.GetString("config")
 	password := viper.GetString("password")
+	inverterSN := viper.GetString("inverter")
+	fmt.Println(inverterSN)
 	config := &synk.Configuration{
-		Endpoint: viper.GetString("endpoint"),
-		User:     user,
-		Password: password,
+		Endpoint:          viper.GetString("endpoint"),
+		User:              user,
+		Password:          password,
+		DefaultInverterSN: inverterSN,
 	}
 	err := config.WriteToFile(viper.GetString("config"))
 	if err != nil {
@@ -33,7 +36,7 @@ func generate(args []string) error {
 	}
 	fmt.Printf("Wrote configuration to '%s'.\n", configFile)
 	if password == "" {
-		fmt.Fprintf(os.Stderr, "\nNo password (--password) was supplied; you'll need to edit '%s' to add one.\n", configFile)
+		fmt.Fprintf(os.Stderr, "\nNo password (--password) was supplied; you'll need to edit \"%s\" to add one.\n", configFile)
 	}
 	return nil
 }
