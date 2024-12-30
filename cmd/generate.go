@@ -23,7 +23,6 @@ func generate(args []string) error {
 	configFile := viper.GetString("config")
 	password := viper.GetString("password")
 	inverterSN := viper.GetString("inverter")
-	fmt.Println(inverterSN)
 	config := &synk.Configuration{
 		Endpoint:          viper.GetString("endpoint"),
 		User:              user,
@@ -37,6 +36,9 @@ func generate(args []string) error {
 	fmt.Printf("Wrote configuration to '%s'.\n", configFile)
 	if password == "" {
 		fmt.Fprintf(os.Stderr, "\nNo password (--password) was supplied; you'll need to edit \"%s\" to add one.\n", configFile)
+	}
+	if inverterSN == "" {
+		fmt.Fprintf(os.Stderr, "\nNo inverter serial number (--inverter) was supplied, so no default serial number was written to the config file.\n")
 	}
 	return nil
 }
