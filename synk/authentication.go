@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -76,6 +77,13 @@ func Authenticate(ctx context.Context, configFile string) (*Tokens, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(string(body))
-	return nil, err
+	authResponse := AuthenticationResponse{}
+	err = json.Unmarshal(body, &authResponse)
+	if err != nil {
+		return nil, err
+	}
+	if !authResponse.Success {
+		return nil, errors.New(authResponse.Message)
+	}
+	return &authResponse.Data, err
 }
