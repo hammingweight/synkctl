@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -64,20 +62,10 @@ func Authenticate(ctx context.Context, config *Configuration) (*Tokens, error) {
 	if err != nil {
 		return nil, err
 	}
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("authentication request returned status code %d", resp.StatusCode)
-	}
-	body, err := io.ReadAll(resp.Body)
+	tokens := &Tokens{}
+	err = UmarshallResponseData(resp, tokens)
 	if err != nil {
 		return nil, err
 	}
-	authResponse := AuthenticationResponse{}
-	err = json.Unmarshal(body, &authResponse)
-	if err != nil {
-		return nil, err
-	}
-	if !authResponse.Success {
-		return nil, errors.New(authResponse.Message)
-	}
-	return &authResponse.Data, err
+	return tokens, err
 }
