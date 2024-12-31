@@ -10,7 +10,7 @@ import (
 	"github.com/go-yaml/yaml"
 )
 
-func TestRead(t *testing.T) {
+func TestReadConfiguration(t *testing.T) {
 	configData := `endpoint: http://example.com
 user: carl
 password: secret`
@@ -33,7 +33,7 @@ password: secret`
 	}
 }
 
-func TestReadFromFile(t *testing.T) {
+func TestReadConfigurationFromFile(t *testing.T) {
 	configuration, err := ReadConfigurationFromFile("./testdata/testconfig")
 	if err != nil {
 		t.Fatal("failed with error: ", err)
@@ -55,7 +55,7 @@ func TestReadFromFile(t *testing.T) {
 	}
 }
 
-func TestReadFromFileWithInverterSerialNumber(t *testing.T) {
+func TestReadConfigurationFromFileWithInverterSerialNumber(t *testing.T) {
 	configuration, err := ReadConfigurationFromFile("./testdata/testconfig_with_inverter_id")
 	if err != nil {
 		t.Fatal("failed with error: ", err)
@@ -66,7 +66,7 @@ func TestReadFromFileWithInverterSerialNumber(t *testing.T) {
 	}
 }
 
-func TestWrite(t *testing.T) {
+func TestWriteConfiguration(t *testing.T) {
 	api := "https://example.com/"
 	user := "hamming"
 	password := "weight"
@@ -76,7 +76,7 @@ func TestWrite(t *testing.T) {
 		Password: password,
 	}
 	w := &bytes.Buffer{}
-	err := configuration.write(w)
+	err := writeConfiguration(w, configuration)
 	if err != nil {
 		t.Fatal("error:", err)
 	}
@@ -99,7 +99,7 @@ func TestWrite(t *testing.T) {
 	}
 }
 
-func TestWriteToFile(t *testing.T) {
+func TestWriteConfigurationToFile(t *testing.T) {
 	api := "https://api.sunsynk.net/"
 	user := "carl"
 	password := "Foobar"
@@ -109,7 +109,7 @@ func TestWriteToFile(t *testing.T) {
 		Password: password,
 	}
 	filename := filepath.Join(t.TempDir(), "config")
-	err := configuration.WriteToFile(filename)
+	err := WriteConfigurationToFile(filename, configuration)
 	if err != nil {
 		t.Fatal("error: ", err)
 	}

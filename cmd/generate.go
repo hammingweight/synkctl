@@ -29,7 +29,7 @@ func generate(args []string) error {
 		Password:          password,
 		DefaultInverterSN: inverterSN,
 	}
-	err := config.WriteToFile(viper.GetString("config"))
+	err := synk.WriteConfigurationToFile(viper.GetString("config"), config)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantCreateConfigFile, err)
 	}

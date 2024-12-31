@@ -24,7 +24,7 @@ func createAndOpenFile(filename string) (*os.File, error) {
 	return os.OpenFile(filename, os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0600)
 }
 
-func (configuration *Configuration) write(writer io.Writer) error {
+func writeConfiguration(writer io.Writer, configuration *Configuration) error {
 	marshalledData, err := yaml.Marshal(configuration)
 	if err != nil {
 		return nil
@@ -33,13 +33,13 @@ func (configuration *Configuration) write(writer io.Writer) error {
 	return err
 }
 
-func (configuration *Configuration) WriteToFile(fileName string) error {
+func WriteConfigurationToFile(fileName string, configuration *Configuration) error {
 	writer, err := createAndOpenFile(fileName)
 	if err != nil {
 		return err
 	}
 	defer writer.Close()
-	return configuration.write(writer)
+	return writeConfiguration(writer, configuration)
 }
 
 func readConfiguration(reader io.Reader) (*Configuration, error) {
