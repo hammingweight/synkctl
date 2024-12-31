@@ -16,12 +16,11 @@ func verify(ctx context.Context, args []string) error {
 	if len(args) != 0 {
 		return fmt.Errorf("unexpected argument '%s'", args[0])
 	}
-	config := synk.Configuration{}
-	err := config.ReadFromFile(viper.GetString("config"))
+	config, err := synk.ReadConfigurationFromFile(viper.GetString("config"))
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantAuthenticateUser, err)
 	}
-	_, err = synk.Authenticate(ctx, &config)
+	_, err = synk.Authenticate(ctx, config)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantAuthenticateUser, err)
 	}

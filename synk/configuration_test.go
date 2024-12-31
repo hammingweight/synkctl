@@ -15,8 +15,7 @@ func TestRead(t *testing.T) {
 user: carl
 password: secret`
 	b := bytes.NewBufferString(configData)
-	configuration := &Configuration{}
-	err := configuration.read(b)
+	configuration, err := readConfiguration(b)
 	if err != nil {
 		t.Fatal("error: ", err)
 	}
@@ -35,8 +34,7 @@ password: secret`
 }
 
 func TestReadFromFile(t *testing.T) {
-	configuration := &Configuration{}
-	err := configuration.ReadFromFile("./testdata/testconfig")
+	configuration, err := ReadConfigurationFromFile("./testdata/testconfig")
 	if err != nil {
 		t.Fatal("failed with error: ", err)
 	}
@@ -58,8 +56,7 @@ func TestReadFromFile(t *testing.T) {
 }
 
 func TestReadFromFileWithInverterSerialNumber(t *testing.T) {
-	configuration := &Configuration{}
-	err := configuration.ReadFromFile("./testdata/testconfig_with_inverter_id")
+	configuration, err := ReadConfigurationFromFile("./testdata/testconfig_with_inverter_id")
 	if err != nil {
 		t.Fatal("failed with error: ", err)
 	}

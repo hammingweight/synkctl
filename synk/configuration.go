@@ -42,18 +42,21 @@ func (configuration *Configuration) WriteToFile(fileName string) error {
 	return configuration.write(writer)
 }
 
-func (configuration *Configuration) read(reader io.Reader) error {
+func readConfiguration(reader io.Reader) (*Configuration, error) {
+	configuration := &Configuration{}
 	data, err := io.ReadAll(reader)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return yaml.Unmarshal(data, configuration)
+	err = yaml.Unmarshal(data, configuration)
+	return configuration, err
 }
 
-func (configuration *Configuration) ReadFromFile(fileName string) error {
+func ReadConfigurationFromFile(fileName string) (*Configuration, error) {
 	f, err := os.Open(fileName)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return configuration.read(f)
+	configuration, err := readConfiguration(f)
+	return configuration, err
 }

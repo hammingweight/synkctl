@@ -1,7 +1,6 @@
 package synk
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -21,11 +20,10 @@ func TestAuthenticate(t *testing.T) {
 	}{{Name: "BadResponseCode"}}
 	for _, tc := range tests {
 		t.Run(tc.Name, func(t *testing.T) {
-			url, cleanup := mockServer(func(w http.ResponseWriter, r *http.Request) {
+			_, cleanup := mockServer(func(w http.ResponseWriter, r *http.Request) {
 
 			})
 			defer cleanup()
-			fmt.Println(url)
 		})
 	}
 }
