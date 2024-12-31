@@ -45,13 +45,7 @@ func getAuthRequestBody(config *Configuration) (io.Reader, error) {
 	return bytes.NewReader(r), nil
 }
 
-func Authenticate(ctx context.Context, configFile string) (*Tokens, error) {
-	config := &Configuration{}
-	err := config.ReadFromFile(configFile)
-	if err != nil {
-		return nil, err
-	}
-
+func Authenticate(ctx context.Context, config *Configuration) (*Tokens, error) {
 	url, err := url.JoinPath(config.Endpoint, "oauth/token")
 	if err != nil {
 		return nil, err
