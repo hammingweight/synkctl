@@ -16,7 +16,7 @@ func updateInverterSettings(ctx context.Context) error {
 	essentialOnly := viper.GetString("essential-only")
 	batteryCap := viper.GetString("battery-capacity")
 	if essentialOnly == "" && batteryCap == "" {
-		return fmt.Errorf("%w: %s", ErrCantUpdateInverterSettings, "must supply 'essential-only' or 'battery-capacity' flag")
+		return fmt.Errorf("%w: must supply \"essential-only\" or \"battery-capacity\" flag", ErrCantUpdateInverterSettings)
 	}
 	configFile := viper.GetString("config")
 	config, err := synk.ReadConfigurationFromFile(configFile)
@@ -39,7 +39,6 @@ func updateInverterSettings(ctx context.Context) error {
 		return fmt.Errorf("%w: %w", ErrCantReadInverterSettings, err)
 	}
 	if essentialOnly != "" {
-		fmt.Println(inverterSettings["sysWorkMode"])
 		if inverterSettings["sysWorkMode"] != "1" && inverterSettings["sysWorkMode"] != "2" {
 			return fmt.Errorf("%w: %s (%s)", ErrCantUpdateInverterSettings, "unexpected value for sysWorkMode setting: ", inverterSettings["sysWorkMode"])
 		}
@@ -49,10 +48,10 @@ func updateInverterSettings(ctx context.Context) error {
 		case "false":
 			inverterSettings["sysWorkMode"] = "2"
 		default:
-			return fmt.Errorf("%w: %s", ErrCantUpdateInverterSettings, "essential-only must be true or false")
+			return fmt.Errorf("%w: essential-only must be \"true\" or \"false\", not \"%s\"", ErrCantUpdateInverterSettings, essentialOnly)
 		}
 	}
-	return nil
+	return synk.UpdateInverterSettings(ctx, tokens, config.Endpoint, inverterSn, inverterSettings)
 }
 
 var updateCmd = &cobra.Command{

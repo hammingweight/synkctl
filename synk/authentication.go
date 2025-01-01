@@ -63,7 +63,7 @@ func Authenticate(ctx context.Context, config *Configuration) (*Tokens, error) {
 		return nil, err
 	}
 	tokens := &Tokens{}
-	err = umarshallResponseData(resp, tokens)
+	err = unmarshallResponseData(resp, tokens)
 	if err != nil {
 		return nil, err
 	}

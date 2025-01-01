@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 type SynkResponse struct {
@@ -17,7 +18,7 @@ type SynkResponse struct {
 	Success bool           `json:"success"`
 }
 
-func umarshallResponseData(resp *http.Response, data any) error {
+func unmarshallResponseData(resp *http.Response, data any) error {
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("request returned status code %d", resp.StatusCode)
 	}
@@ -33,13 +34,15 @@ func umarshallResponseData(resp *http.Response, data any) error {
 	if !synkResponse.Success {
 		return errors.New(synkResponse.Message)
 	}
-	dataBytes, err := json.Marshal(synkResponse.Data)
-	if err != nil {
-		return nil
-	}
-	err = json.Unmarshal(dataBytes, data)
-	if err != nil {
-		return nil
+	if data != nil {
+		dataBytes, err := json.Marshal(synkResponse.Data)
+		if err != nil {
+			return nil
+		}
+		err = json.Unmarshal(dataBytes, data)
+		if err != nil {
+			return nil
+		}
 	}
 	return nil
 }
@@ -59,4 +62,24 @@ func readApiV1(ctx context.Context, tokens *Tokens, endpoint string, path ...str
 	req.Header.Set("Authorization", "Bearer "+tokens.AccessToken)
 	resp, err := http.DefaultClient.Do(req)
 	return resp, err
+}
+
+func updateApiV1(ctx context.Context, tokens *Tokens, endpoint string, contents string, path ...string) error {
+	fullPath := []string{"api", "v1"}
+	fullPath = append(fullPath, path...)
+	url, err := url.JoinPath(endpoint, fullPath...)
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, strings.NewReader(contents))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+tokens.AccessToken)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	return unmarshallResponseData(resp, nil)
 }
