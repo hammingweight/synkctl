@@ -6,6 +6,7 @@ func ReadLoad(ctx context.Context, tokens *Tokens, endpoint string, inverterSN s
 	path := []string{"inverter", "load", inverterSN, "realtime"}
 	queryParams := map[string]string{}
 	queryParams["sn"] = inverterSN
+	queryParams["lan"] = "en"
 	resp, err := readApiV1(ctx, tokens, endpoint, queryParams, path...)
 	if err != nil {
 		return nil, err
