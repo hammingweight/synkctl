@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func readLoad(ctx context.Context) error {
+func readBattery(ctx context.Context) error {
 	configFile := viper.GetString("config")
 	config, err := synk.ReadConfigurationFromFile(configFile)
 	if err != nil {
@@ -30,29 +30,29 @@ func readLoad(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantAuthenticateUser, err)
 	}
-	load, err := synk.ReadLoad(ctx, tokens, config.Endpoint, inverterSn)
+	battery, err := synk.ReadBattery(ctx, tokens, config.Endpoint, inverterSn)
 	if err != nil {
-		return fmt.Errorf("%w: %w", ErrCantReadLoadStatistics, err)
+		return fmt.Errorf("%w: %w", ErrCantReadBatteryState, err)
 	}
-	loadBytes, err := json.MarshalIndent(load, "", "    ")
+	batteryBytes, err := json.MarshalIndent(battery, "", "    ")
 	if err != nil {
-		return fmt.Errorf("%w: %w", ErrCantReadLoadStatistics, err)
+		return fmt.Errorf("%w: %w", ErrCantReadBatteryState, err)
 	}
-	fmt.Println(string(loadBytes))
+	fmt.Println(string(batteryBytes))
 	return nil
 }
 
-var getLoadCmd = &cobra.Command{
+var batteryGetCmd = &cobra.Command{
 	Use:   "get",
-	Short: "Gets the inverter's current and cumulative load statistics",
+	Short: "Reads current and cumulative battery statistics",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 0 {
 			return fmt.Errorf("%w '%s'", ErrUnexpectedArgument, args[0])
 		}
-		return readLoad(cmd.Context())
+		return readBattery(cmd.Context())
 	},
 }
 
 func init() {
-	loadCmd.AddCommand(getLoadCmd)
+	batteryCmd.AddCommand(batteryGetCmd)
 }

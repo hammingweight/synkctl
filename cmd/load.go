@@ -9,7 +9,7 @@ import (
 
 var loadCmd = &cobra.Command{
 	Use:   "load",
-	Short: "Reads the inverter's current and cumulative power load",
+	Short: "the inverter's load power state",
 }
 
 func init() {
