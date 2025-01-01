@@ -32,7 +32,7 @@ func readInverterSettings(ctx context.Context) error {
 	}
 	inverterSettings, err := synk.ReadInverterSettings(ctx, tokens, config.Endpoint, inverterSn)
 	if err != nil {
-		return fmt.Errorf("%w: %w", err, err)
+		return fmt.Errorf("%w: %w", ErrCantReadInverterSettings, err)
 	}
 	settingsBytes, err := json.MarshalIndent(inverterSettings, "", "    ")
 	if err != nil {
