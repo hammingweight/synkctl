@@ -66,6 +66,13 @@ func TestReadConfigurationFromFileWithInverterSerialNumber(t *testing.T) {
 	}
 }
 
+func TestReadUnknownKeyInConfigurationFile(t *testing.T) {
+	_, err := ReadConfigurationFromFile("./testdata/testconfig_with_bad_key")
+	if err == nil {
+		t.Error("accepted key 'bad_key'")
+	}
+}
+
 func TestWriteConfiguration(t *testing.T) {
 	api := "https://example.com/"
 	user := "hamming"

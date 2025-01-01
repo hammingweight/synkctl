@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/go-yaml/yaml"
+	"gopkg.in/yaml.v2"
 )
 
 type Configuration struct {
@@ -48,7 +48,7 @@ func readConfiguration(reader io.Reader) (*Configuration, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = yaml.Unmarshal(data, configuration)
+	err = yaml.UnmarshalStrict(data, configuration)
 	return configuration, err
 }
 
