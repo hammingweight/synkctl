@@ -44,7 +44,7 @@ func getAuthRequestBody(config *Configuration) (io.Reader, error) {
 }
 
 func Authenticate(ctx context.Context, config *Configuration) (*Tokens, error) {
-	url, err := url.JoinPath(config.Endpoint, "oauth/token")
+	url, err := url.JoinPath(config.Endpoint, "oauth", "token")
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func Authenticate(ctx context.Context, config *Configuration) (*Tokens, error) {
 		return nil, err
 	}
 	tokens := &Tokens{}
-	err = UmarshallResponseData(resp, tokens)
+	err = umarshallResponseData(resp, tokens)
 	if err != nil {
 		return nil, err
 	}

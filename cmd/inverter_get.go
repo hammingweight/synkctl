@@ -30,11 +30,15 @@ func readInverterSettings(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantAuthenticateUser, err)
 	}
-	inverterDetails, err := synk.ReadInverterSettings(ctx, tokens, inverterSn)
+	inverterSettings, err := synk.ReadInverterSettings(ctx, tokens, config.Endpoint, inverterSn)
 	if err != nil {
 		return fmt.Errorf("%w: %w", err, err)
 	}
-	fmt.Println(json.Marshal(inverterDetails))
+	settingsBytes, err := json.MarshalIndent(inverterSettings, "", "    ")
+	if err != nil {
+		return err
+	}
+	fmt.Println(string(settingsBytes))
 	return nil
 }
 
