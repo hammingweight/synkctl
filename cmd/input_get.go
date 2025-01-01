@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func readInverterSettings(ctx context.Context) error {
+func readInputState(ctx context.Context) error {
 	configFile := viper.GetString("config")
 	config, err := synk.ReadConfigurationFromFile(configFile)
 	if err != nil {
@@ -30,29 +30,27 @@ func readInverterSettings(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantAuthenticateUser, err)
 	}
-	inverterSettings, err := synk.ReadInverterSettings(ctx, tokens, config.Endpoint, inverterSn)
+	input, err := synk.ReadInputState(ctx, tokens, config.Endpoint, inverterSn)
 	if err != nil {
-		return fmt.Errorf("%w: %w", ErrCantReadInverterSettings, err)
+		return fmt.Errorf("%w: %w", ErrCantReadInputState, err)
 	}
-	settingsBytes, err := json.MarshalIndent(inverterSettings, "", "    ")
+	inputBytes, err := json.MarshalIndent(input, "", "    ")
 	if err != nil {
-		return fmt.Errorf("%w: %w", ErrCantReadInverterSettings, err)
+		return fmt.Errorf("%w: %w", ErrCantReadInputState, err)
 	}
-	fmt.Println(string(settingsBytes))
+	fmt.Println(string(inputBytes))
 	return nil
 }
 
-var getCmd = &cobra.Command{
+// getCmd represents the get command
+var inputGetCmd = &cobra.Command{
 	Use:   "get",
-	Short: "Reads the inverter settings",
+	Short: "Gets the state of the inverter's inputs",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) != 0 {
-			return fmt.Errorf("%w '%s'", ErrUnexpectedArgument, args[0])
-		}
-		return readInverterSettings(cmd.Context())
+		return readInputState(cmd.Context())
 	},
 }
 
 func init() {
-	inverterCmd.AddCommand(getCmd)
+	inputCmd.AddCommand(inputGetCmd)
 }

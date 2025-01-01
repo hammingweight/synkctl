@@ -8,6 +8,7 @@ var (
 	ErrCantAuthenticateUser       = errors.New("can't authenticate user")
 	ErrCantCreateConfigFile       = errors.New("can't create config file")
 	ErrCantReadBatteryState       = errors.New("can't read battery state")
+	ErrCantReadInputState         = errors.New("can't read input state")
 	ErrCantReadInverterSettings   = errors.New("can't read inverter settings")
 	ErrCantReadLoadStatistics     = errors.New("can't read load statistics")
 	ErrCantUpdateInverterSettings = errors.New("can't update inverter settings")
