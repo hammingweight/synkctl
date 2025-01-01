@@ -12,10 +12,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func generate(args []string) error {
-	if len(args) != 0 {
-		return fmt.Errorf("unexpected argument '%s'", args[0])
-	}
+func generate() error {
 	user := viper.GetString("user")
 	if user == "" {
 		return fmt.Errorf("%w: a user name (--user) must be supplied", ErrCantCreateConfigFile)
@@ -54,7 +51,10 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return generate(args)
+		if len(args) != 0 {
+			return fmt.Errorf("%w '%s'", ErrUnexpectedArgument, args[0])
+		}
+		return generate()
 	},
 }
 
