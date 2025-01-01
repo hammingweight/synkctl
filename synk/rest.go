@@ -47,7 +47,7 @@ func unmarshallResponseData(resp *http.Response, data any) error {
 	return nil
 }
 
-func readApiV1(ctx context.Context, tokens *Tokens, endpoint string, path ...string) (*http.Response, error) {
+func readApiV1(ctx context.Context, tokens *Tokens, endpoint string, queryParams map[string]string, path ...string) (*http.Response, error) {
 	fullPath := []string{"api", "v1"}
 	fullPath = append(fullPath, path...)
 	url, err := url.JoinPath(endpoint, fullPath...)
@@ -60,6 +60,14 @@ func readApiV1(ctx context.Context, tokens *Tokens, endpoint string, path ...str
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Authorization", "Bearer "+tokens.AccessToken)
+
+	if queryParams != nil {
+		q := req.URL.Query()
+		for k, v := range queryParams {
+			q.Add(k, v)
+		}
+		req.URL.RawQuery = q.Encode()
+	}
 	resp, err := http.DefaultClient.Do(req)
 	return resp, err
 }

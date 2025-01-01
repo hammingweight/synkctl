@@ -9,8 +9,9 @@ import (
 
 // inverterCmd represents the inverter command
 var inverterCmd = &cobra.Command{
-	Use:   "inverter",
-	Short: "Reads and updates the inverter settings",
+	Use:     "inverter",
+	Short:   "Reads and updates the inverter settings",
+	Aliases: []string{"inv"},
 }
 
 func init() {

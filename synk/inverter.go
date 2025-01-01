@@ -7,7 +7,7 @@ import (
 
 func ReadInverterSettings(ctx context.Context, tokens *Tokens, endpoint string, inverterSN string) (map[string]any, error) {
 	path := []string{"common", "setting", inverterSN, "read"}
-	resp, err := readApiV1(ctx, tokens, endpoint, path...)
+	resp, err := readApiV1(ctx, tokens, endpoint, nil, path...)
 	if err != nil {
 		return nil, err
 	}
