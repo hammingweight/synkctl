@@ -4,6 +4,8 @@ Copyright © 2025 Carl Meijer
 package cmd
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/hammingweight/synkctl/synk"
@@ -11,19 +13,28 @@ import (
 	"github.com/spf13/viper"
 )
 
-func readInverterSystemMode() error {
+func readInverterSettings(ctx context.Context) error {
 	configFile := viper.GetString("config")
 	config, err := synk.ReadConfigurationFromFile(configFile)
 	if err != nil {
 		return err
 	}
-	inverterSn := viper.Get("inverter")
+	inverterSn := viper.GetString("inverter")
 	if inverterSn == "" {
 		inverterSn = config.DefaultInverterSN
 		if inverterSn == "" {
 			return ErrNoInverterSerialNumber
 		}
 	}
+	tokens, err := synk.Authenticate(ctx, config)
+	if err != nil {
+		return fmt.Errorf("%w: %w", ErrCantAuthenticateUser, err)
+	}
+	inverterDetails, err := synk.ReadInverterSettings(ctx, tokens, inverterSn)
+	if err != nil {
+		return fmt.Errorf("%w: %w", err, err)
+	}
+	fmt.Println(json.Marshal(inverterDetails))
 	return nil
 }
 
@@ -41,7 +52,7 @@ to quickly create a Cobra application.`,
 		if len(args) != 0 {
 			return fmt.Errorf("%w '%s'", ErrUnexpectedArgument, args[0])
 		}
-		return readInverterSystemMode()
+		return readInverterSettings(cmd.Context())
 	},
 }
 
