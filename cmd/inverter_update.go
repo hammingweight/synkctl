@@ -6,6 +6,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/hammingweight/synkctl/synk"
 	"github.com/spf13/cobra"
@@ -49,6 +50,42 @@ func updateInverterSettings(ctx context.Context) error {
 			inverterSettings["sysWorkMode"] = "2"
 		default:
 			return fmt.Errorf("%w: essential-only must be \"true\" or \"false\", not \"%s\"", ErrCantUpdateInverterSettings, essentialOnly)
+		}
+	}
+
+	if batteryCap != "" {
+		_, err := strconv.Atoi(batteryCap)
+		if err != nil {
+			return fmt.Errorf("%w: battery-capacity must be an integer, not \"%s\"", ErrCantUpdateInverterSettings, batteryCap)
+		}
+		batteryCapUpper, ok := inverterSettings["batteryCap"]
+		if !ok {
+			return fmt.Errorf("%w: can't read upper limit for battery SOC", ErrCantUpdateInverterSettings)
+		}
+		batteryCapUpperInt, _ := strconv.Atoi(batteryCapUpper.(string))
+		batteryCapInt, _ := strconv.Atoi(batteryCap)
+		if batteryCapInt > batteryCapUpperInt {
+			return fmt.Errorf("%w: \"battery-capacity\" cannot be greater than %d", ErrCantUpdateInverterSettings, batteryCapUpperInt)
+		}
+		batteryCapLower, ok := inverterSettings["batteryShutdownCap"]
+		if !ok {
+			return fmt.Errorf("%w: can't read lower limit for battery SOC", ErrCantUpdateInverterSettings)
+		}
+		batteryCapLowerInt, _ := strconv.Atoi(batteryCapLower.(string))
+		if batteryCapInt <= batteryCapLowerInt {
+			return fmt.Errorf("%w: \"battery-capacity\" must be greater than %d", ErrCantUpdateInverterSettings, batteryCapLowerInt)
+		}
+		_, ok = inverterSettings["cap7"]
+		if ok {
+			return fmt.Errorf("%w: more than six battery SOC settings", ErrCantUpdateInverterSettings)
+		}
+		for i := 1; i <= 6; i++ {
+			key := fmt.Sprintf("cap%d", i)
+			_, ok = inverterSettings[key]
+			if !ok {
+				return fmt.Errorf("%w: can't update setting \"%s\"", ErrCantUpdateInverterSettings, key)
+			}
+			inverterSettings[key] = batteryCap
 		}
 	}
 	return synk.UpdateInverterSettings(ctx, tokens, config.Endpoint, inverterSn, inverterSettings)
