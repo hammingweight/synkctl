@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -47,6 +48,8 @@ func init() {
 	rootCmd.PersistentFlags().StringP("inverter", "i", "", "SunSynk inverter serial number")
 
 	// Set up viper
+	replacer := strings.NewReplacer("-", "_")
+	viper.SetEnvKeyReplacer(replacer)
 	viper.SetEnvPrefix("SYNK")
 	viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
 	viper.BindPFlag("inverter", rootCmd.PersistentFlags().Lookup("inverter"))

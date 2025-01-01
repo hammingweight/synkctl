@@ -42,7 +42,6 @@ func readInverterSettings(ctx context.Context) error {
 	return nil
 }
 
-// getCmd represents the get command
 var getCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Reads the inverter settings",
