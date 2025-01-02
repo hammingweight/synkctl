@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/hammingweight/synkctl/synk"
@@ -40,9 +41,12 @@ func listInverters(ctx context.Context) error {
 		}
 		inverterSerialNumbers = append(inverterSerialNumbers, serialNumbers...)
 	}
-	fmt.Println(inverterSerialNumbers)
-
-	return err
+	marshalledBytes, err := json.MarshalIndent(inverterSerialNumbers, "", "    ")
+	if err != nil {
+		return err
+	}
+	fmt.Println(string(marshalledBytes))
+	return nil
 }
 
 var listCmd = &cobra.Command{
