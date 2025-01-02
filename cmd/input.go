@@ -7,11 +7,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// inputCmd represents the input command
 var inputCmd = &cobra.Command{
 	Use:     "input",
 	Short:   "The inverter's input (e.g. solar panels, turbine)",
-	Aliases: []string{"panels", "pv"},
+	Aliases: []string{"panels", "pv", "in", "inputs"},
 }
 
 func init() {

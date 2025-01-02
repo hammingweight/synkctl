@@ -44,7 +44,7 @@ func readBattery(ctx context.Context) error {
 
 var batteryGetCmd = &cobra.Command{
 	Use:   "get",
-	Short: "Reads current and cumulative battery statistics",
+	Short: "Reads battery statistics",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 0 {
 			return fmt.Errorf("%w '%s'", ErrUnexpectedArgument, args[0])
