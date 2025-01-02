@@ -5,46 +5,27 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
-	"github.com/hammingweight/synkctl/synk"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 func readLoad(ctx context.Context) error {
-	configFile := viper.GetString("config")
-	config, err := synk.ReadConfigurationFromFile(configFile)
+	synkClient, err := getClient(ctx)
 	if err != nil {
 		return err
 	}
-	inverterSn := viper.GetString("inverter")
-	if inverterSn == "" {
-		inverterSn = config.DefaultInverterSN
-		if inverterSn == "" {
-			return ErrNoInverterSerialNumber
-		}
-	}
-	tokens, err := synk.Authenticate(ctx, config)
-	if err != nil {
-		return fmt.Errorf("%w: %w", ErrCantAuthenticateUser, err)
-	}
-	load, err := synk.ReadLoad(ctx, tokens, config.Endpoint, inverterSn)
+	load, err := synkClient.ReadLoad(ctx)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadLoadStatistics, err)
 	}
-	loadBytes, err := json.MarshalIndent(load, "", "    ")
-	if err != nil {
-		return fmt.Errorf("%w: %w", ErrCantReadLoadStatistics, err)
-	}
-	fmt.Println(string(loadBytes))
-	return nil
+	return displayState(&load)
 }
 
 var getLoadCmd = &cobra.Command{
-	Use:   "get",
-	Short: "Gets the inverter's current and cumulative load statistics",
+	Use:     "get",
+	Short:   "Gets the inverter's current and cumulative load statistics",
+	Aliases: []string{"read"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 0 {
 			return fmt.Errorf("%w '%s'", ErrUnexpectedArgument, args[0])

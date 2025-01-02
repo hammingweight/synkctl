@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/hammingweight/synkctl/synk"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -19,23 +18,11 @@ func updateInverterSettings(ctx context.Context) error {
 	if essentialOnly == "" && batteryCap == "" {
 		return fmt.Errorf("%w: must supply \"essential-only\" or \"battery-capacity\" flag", ErrCantUpdateInverterSettings)
 	}
-	configFile := viper.GetString("config")
-	config, err := synk.ReadConfigurationFromFile(configFile)
+	synkClient, err := getClient(ctx)
 	if err != nil {
 		return err
 	}
-	inverterSn := viper.GetString("inverter")
-	if inverterSn == "" {
-		inverterSn = config.DefaultInverterSN
-		if inverterSn == "" {
-			return ErrNoInverterSerialNumber
-		}
-	}
-	tokens, err := synk.Authenticate(ctx, config)
-	if err != nil {
-		return fmt.Errorf("%w: %w", ErrCantAuthenticateUser, err)
-	}
-	inverterSettings, err := synk.ReadInverterSettings(ctx, tokens, config.Endpoint, inverterSn)
+	inverterSettings, err := synkClient.ReadInverterSettings(ctx)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadInverterSettings, err)
 	}
@@ -88,7 +75,7 @@ func updateInverterSettings(ctx context.Context) error {
 			inverterSettings[key] = batteryCap
 		}
 	}
-	return synk.UpdateInverterSettings(ctx, tokens, config.Endpoint, inverterSn, inverterSettings)
+	return synkClient.UpdateInverterSettings(ctx, inverterSettings)
 }
 
 var updateCmd = &cobra.Command{

@@ -7,7 +7,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hammingweight/synkctl/synk"
+	"github.com/hammingweight/synkctl/configuration"
+	"github.com/hammingweight/synkctl/rest"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -16,11 +17,11 @@ func verify(ctx context.Context, args []string) error {
 	if len(args) != 0 {
 		return fmt.Errorf("unexpected argument '%s'", args[0])
 	}
-	config, err := synk.ReadConfigurationFromFile(viper.GetString("config"))
+	config, err := configuration.ReadConfigurationFromFile(viper.GetString("config"))
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantAuthenticateUser, err)
 	}
-	_, err = synk.Authenticate(ctx, config)
+	_, err = rest.Authenticate(ctx, config)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantAuthenticateUser, err)
 	}

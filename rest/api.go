@@ -1,4 +1,4 @@
-package synk
+package rest
 
 import (
 	"context"
@@ -17,6 +17,8 @@ type SynkResponse struct {
 	Data    map[string]any `json:"data"`
 	Success bool           `json:"success"`
 }
+
+type SynkObject map[string]any
 
 func unmarshallResponseData(resp *http.Response, data any) error {
 	if resp.StatusCode != http.StatusOK {
@@ -47,10 +49,10 @@ func unmarshallResponseData(resp *http.Response, data any) error {
 	return nil
 }
 
-func readApiV1(ctx context.Context, tokens *Tokens, endpoint string, queryParams map[string]string, path ...string) (*http.Response, error) {
+func (synkClient *SynkClient) readApiV1(ctx context.Context, queryParams map[string]string, path ...string) (SynkObject, error) {
 	fullPath := []string{"api", "v1"}
 	fullPath = append(fullPath, path...)
-	url, err := url.JoinPath(endpoint, fullPath...)
+	url, err := url.JoinPath(synkClient.endpoint, fullPath...)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +61,7 @@ func readApiV1(ctx context.Context, tokens *Tokens, endpoint string, queryParams
 		return nil, err
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("Authorization", "Bearer "+tokens.AccessToken)
+	req.Header.Set("Authorization", "Bearer "+synkClient.tokens.AccessToken)
 
 	if queryParams != nil {
 		q := req.URL.Query()
@@ -69,13 +71,21 @@ func readApiV1(ctx context.Context, tokens *Tokens, endpoint string, queryParams
 		req.URL.RawQuery = q.Encode()
 	}
 	resp, err := http.DefaultClient.Do(req)
-	return resp, err
+	if err != nil {
+		return nil, err
+	}
+	synkObject := &SynkObject{}
+	err = unmarshallResponseData(resp, synkObject)
+	if err != nil {
+		return nil, err
+	}
+	return *synkObject, nil
 }
 
-func updateApiV1(ctx context.Context, tokens *Tokens, endpoint string, contents string, path ...string) error {
+func updateApiV1(ctx context.Context, synkClient *SynkClient, contents string, path ...string) error {
 	fullPath := []string{"api", "v1"}
 	fullPath = append(fullPath, path...)
-	url, err := url.JoinPath(endpoint, fullPath...)
+	url, err := url.JoinPath(synkClient.endpoint, fullPath...)
 	if err != nil {
 		return err
 	}
@@ -84,7 +94,7 @@ func updateApiV1(ctx context.Context, tokens *Tokens, endpoint string, contents 
 		return err
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+tokens.AccessToken)
+	req.Header.Set("Authorization", "Bearer "+synkClient.tokens.AccessToken)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return err

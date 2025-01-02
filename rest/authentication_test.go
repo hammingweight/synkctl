@@ -1,4 +1,4 @@
-package synk
+package rest
 
 import (
 	"net/http"

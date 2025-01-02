@@ -5,46 +5,27 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
-	"github.com/hammingweight/synkctl/synk"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 func readInverterSettings(ctx context.Context) error {
-	configFile := viper.GetString("config")
-	config, err := synk.ReadConfigurationFromFile(configFile)
+	synkClient, err := getClient(ctx)
 	if err != nil {
 		return err
 	}
-	inverterSn := viper.GetString("inverter")
-	if inverterSn == "" {
-		inverterSn = config.DefaultInverterSN
-		if inverterSn == "" {
-			return ErrNoInverterSerialNumber
-		}
-	}
-	tokens, err := synk.Authenticate(ctx, config)
-	if err != nil {
-		return fmt.Errorf("%w: %w", ErrCantAuthenticateUser, err)
-	}
-	inverterSettings, err := synk.ReadInverterSettings(ctx, tokens, config.Endpoint, inverterSn)
+	inverterSettings, err := synkClient.ReadInverterSettings(ctx)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadInverterSettings, err)
 	}
-	settingsBytes, err := json.MarshalIndent(inverterSettings, "", "    ")
-	if err != nil {
-		return fmt.Errorf("%w: %w", ErrCantReadInverterSettings, err)
-	}
-	fmt.Println(string(settingsBytes))
-	return nil
+	return displayState(&inverterSettings)
 }
 
 var getCmd = &cobra.Command{
-	Use:   "get",
-	Short: "Reads the inverter settings",
+	Use:     "get",
+	Short:   "Reads the inverter settings",
+	Aliases: []string{"read"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 0 {
 			return fmt.Errorf("%w '%s'", ErrUnexpectedArgument, args[0])

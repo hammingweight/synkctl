@@ -10,6 +10,7 @@ import (
 var loadCmd = &cobra.Command{
 	Use:   "load",
 	Short: "The inverter's load statistics",
+	Aliases: []string{"ld"},
 }
 
 func init() {

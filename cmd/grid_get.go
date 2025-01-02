@@ -10,30 +10,30 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func readInputState(ctx context.Context) error {
+func readGrid(ctx context.Context) error {
 	synkClient, err := getClient(ctx)
 	if err != nil {
 		return err
 	}
-	input, err := synkClient.ReadInputState(ctx)
+	grid, err := synkClient.ReadGrid(ctx)
 	if err != nil {
-		return fmt.Errorf("%w: %w", ErrCantReadInputState, err)
+		return fmt.Errorf("%w: %w", ErrCantReadGridState, err)
 	}
-	return displayState(&input)
+	return displayState(&grid)
 }
 
-var inputGetCmd = &cobra.Command{
+var gridGetCmd = &cobra.Command{
 	Use:     "get",
+	Short:   "Gets the state of the grid connection",
 	Aliases: []string{"read"},
-	Short:   "Gets the state of the inverter's inputs",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 0 {
 			return fmt.Errorf("%w '%s'", ErrUnexpectedArgument, args[0])
 		}
-		return readInputState(cmd.Context())
+		return readGrid(cmd.Context())
 	},
 }
 
 func init() {
-	inputCmd.AddCommand(inputGetCmd)
+	gridCmd.AddCommand(gridGetCmd)
 }

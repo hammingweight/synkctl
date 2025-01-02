@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/hammingweight/synkctl/synk"
+	"github.com/hammingweight/synkctl/configuration"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -20,13 +20,13 @@ func generate() error {
 	configFile := viper.GetString("config")
 	password := viper.GetString("password")
 	inverterSN := viper.GetString("inverter")
-	config := &synk.Configuration{
+	config := &configuration.Configuration{
 		Endpoint:          viper.GetString("endpoint"),
 		User:              user,
 		Password:          password,
 		DefaultInverterSN: inverterSN,
 	}
-	err := synk.WriteConfigurationToFile(viper.GetString("config"), config)
+	err := configuration.WriteConfigurationToFile(viper.GetString("config"), config)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantCreateConfigFile, err)
 	}
@@ -43,13 +43,7 @@ func generate() error {
 // generateCmd represents the create command
 var generateCmd = &cobra.Command{
 	Use:   "generate",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Creates a configuration file",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 0 {
 			return fmt.Errorf("%w '%s'", ErrUnexpectedArgument, args[0])
@@ -61,7 +55,7 @@ to quickly create a Cobra application.`,
 func init() {
 	configurationCmd.AddCommand(generateCmd)
 
-	generateCmd.Flags().StringP("endpoint", "e", "https://api.sunsynk.net", "SunSynk API endpoint")
+	generateCmd.Flags().StringP("endpoint", "e", configuration.DefaultEndpoint, "SunSynk API endpoint")
 	generateCmd.Flags().StringP("user", "u", "", "SunSynk user")
 	generateCmd.Flags().StringP("password", "p", "", "SunSynk user's password")
 

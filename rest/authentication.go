@@ -1,4 +1,4 @@
-package synk
+package rest
 
 import (
 	"bytes"
@@ -7,9 +7,11 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+
+	"github.com/hammingweight/synkctl/configuration"
 )
 
-type Tokens struct {
+type tokens struct {
 	AccessToken  string `json:"access_token"`
 	TokenType    string `json:"token_type"`
 	RefreshToken string `json:"refresh_token"`
@@ -17,21 +19,20 @@ type Tokens struct {
 	Scope        string `json:"scope"`
 }
 
-type AuthenticationRequest struct {
+type SynkClient struct {
+	endpoint     string
+	tokens       tokens
+	SerialNumber string
+}
+
+type authenticationRequest struct {
 	GrantType string `json:"grant_type"`
 	User      string `json:"username"`
 	Password  string `json:"password"`
 }
 
-type AuthenticationResponse struct {
-	Code    int    `json:"code"`
-	Message string `json:"msg"`
-	Data    Tokens `json:"data"`
-	Success bool   `json:"success"`
-}
-
-func getAuthRequestBody(config *Configuration) (io.Reader, error) {
-	authRequest := AuthenticationRequest{
+func newAuthRequestBody(config *configuration.Configuration) (io.Reader, error) {
+	authRequest := authenticationRequest{
 		GrantType: "password",
 		User:      config.User,
 		Password:  config.Password,
@@ -43,12 +44,12 @@ func getAuthRequestBody(config *Configuration) (io.Reader, error) {
 	return bytes.NewReader(r), nil
 }
 
-func Authenticate(ctx context.Context, config *Configuration) (*Tokens, error) {
+func Authenticate(ctx context.Context, config *configuration.Configuration) (*SynkClient, error) {
 	url, err := url.JoinPath(config.Endpoint, "oauth", "token")
 	if err != nil {
 		return nil, err
 	}
-	authRequest, err := getAuthRequestBody(config)
+	authRequest, err := newAuthRequestBody(config)
 	if err != nil {
 		return nil, err
 	}
@@ -62,10 +63,10 @@ func Authenticate(ctx context.Context, config *Configuration) (*Tokens, error) {
 	if err != nil {
 		return nil, err
 	}
-	tokens := &Tokens{}
+	tokens := &tokens{}
 	err = unmarshallResponseData(resp, tokens)
 	if err != nil {
 		return nil, err
 	}
-	return tokens, err
+	return &SynkClient{endpoint: config.Endpoint, tokens: *tokens}, err
 }

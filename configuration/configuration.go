@@ -1,12 +1,15 @@
-package synk
+package configuration
 
 import (
+	"errors"
 	"io"
 	"os"
 	"path/filepath"
 
-	"gopkg.in/yaml.v2"
+	"github.com/go-yaml/yaml"
 )
+
+const DefaultEndpoint = "https://api.sunsynk.net"
 
 type Configuration struct {
 	Endpoint          string `yaml:"endpoint"`
@@ -59,4 +62,26 @@ func ReadConfigurationFromFile(fileName string) (*Configuration, error) {
 	}
 	configuration, err := readConfiguration(f)
 	return configuration, err
+}
+
+func New(user string, password string) (*Configuration, error) {
+	if user == "" {
+		return nil, errors.New("'user' cannot be empty")
+	}
+	if password == "" {
+		return nil, errors.New("'password' cannot be empty")
+	}
+	return &Configuration{User: user, Password: password, Endpoint: DefaultEndpoint}, nil
+}
+
+func NewWithEndpoint(user string, password string, endpoint string) (*Configuration, error) {
+	config, err := New(user, password)
+	if err != nil {
+		return nil, err
+	}
+	if endpoint == "" {
+		return nil, errors.New("'endpoint' cannot be empty")
+	}
+	config.Endpoint = endpoint
+	return config, err
 }

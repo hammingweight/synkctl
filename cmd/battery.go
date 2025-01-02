@@ -8,8 +8,9 @@ import (
 )
 
 var batteryCmd = &cobra.Command{
-	Use:   "battery",
-	Short: "The inverter's battery state",
+	Use:     "battery",
+	Short:   "The inverter's battery state and statistics",
+	Aliases: []string{"bat", "batteries"},
 }
 
 func init() {
