@@ -41,7 +41,7 @@ var batteryGetCmd = &cobra.Command{
 	Aliases: []string{"read"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 0 {
-			return fmt.Errorf("%w '%s'", ErrUnexpectedArgument, args[0])
+			return fmt.Errorf("%w '%v'", ErrUnexpectedArguments, args)
 		}
 		return readBattery(cmd.Context())
 	},

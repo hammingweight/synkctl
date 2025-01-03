@@ -59,7 +59,7 @@ var generateCmd = &cobra.Command{
 	Short: "Creates a configuration file",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 0 {
-			return fmt.Errorf("%w '%s'", ErrUnexpectedArgument, args[0])
+			return fmt.Errorf("%w '%v'", ErrUnexpectedArguments, args)
 		}
 		return generate()
 	},

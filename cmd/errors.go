@@ -30,5 +30,5 @@ var (
 	ErrCantReadLoadStatistics     = errors.New("can't read load statistics")
 	ErrCantUpdateInverterSettings = errors.New("can't update inverter settings")
 	ErrNoInverterSerialNumber     = errors.New("no inverter serial number (--inverter) supplied")
-	ErrUnexpectedArgument         = errors.New("unexpected argument")
+	ErrUnexpectedArguments        = errors.New("unexpected argument(s)")
 )

@@ -96,7 +96,7 @@ var updateCmd = &cobra.Command{
 	Short: "Basic options to update the inverter settings",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 0 {
-			return fmt.Errorf("%w '%s'", ErrUnexpectedArgument, args[0])
+			return fmt.Errorf("%w '%v'", ErrUnexpectedArguments, args)
 		}
 		return updateInverterSettings(cmd.Context())
 	},
