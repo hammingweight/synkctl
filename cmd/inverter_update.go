@@ -82,17 +82,16 @@ func updateInverterSettings(ctx context.Context) error {
 		if batteryCapInt <= batteryCapLowerInt {
 			return fmt.Errorf("%w: \"battery-capacity\" must be greater than %d", ErrCantUpdateInverterSettings, batteryCapLowerInt)
 		}
+		for i := 1; i <= 6; i++ {
+			key := fmt.Sprintf("cap%d", i)
+			err = inverterSettings.Update(key, batteryCap)
+			if err != nil {
+				return fmt.Errorf("%w: '%w'", ErrCantUpdateInverterSettings, err)
+			}
+		}
 		_, ok = inverterSettings["cap7"]
 		if ok {
 			return fmt.Errorf("%w: more than six battery SOC settings", ErrCantUpdateInverterSettings)
-		}
-		for i := 1; i <= 6; i++ {
-			key := fmt.Sprintf("cap%d", i)
-			_, ok = inverterSettings[key]
-			if !ok {
-				return fmt.Errorf("%w: can't update setting \"%s\"", ErrCantUpdateInverterSettings, key)
-			}
-			inverterSettings[key] = batteryCap
 		}
 	}
 	return synkClient.UpdateInverterSettings(ctx, inverterSettings)
