@@ -20,10 +20,10 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 	"time"
 
+	"github.com/hammingweight/synkctl/configuration"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -35,7 +35,7 @@ var rootCmd = &cobra.Command{
 	Long: `SynkCtl is a CLI for querying and updating SunSynk hybrid inverters and getting
 the state of the battery, grid and input (e.g. solar panels) connected to the
 inverter.`,
-	Version: "0.2.0",
+	Version: "0.3.0",
 }
 
 func Execute() {
@@ -52,14 +52,11 @@ func init() {
 
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 
-	// Get a default path to the synk config file.
-	home, err := os.UserHomeDir()
+	configFile, err := configuration.GetDefaultConfigurationFile()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	configFile := filepath.Join(home, ".synk", "config")
-
 	// Arguments that apply to all subcommands.
 	rootCmd.PersistentFlags().StringP("config", "c", configFile, "synkctl config file location")
 	rootCmd.PersistentFlags().StringP("inverter", "i", "", "SunSynk inverter serial number")

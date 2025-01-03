@@ -101,3 +101,12 @@ func NewWithEndpoint(user string, password string, endpoint string) (*Configurat
 	config.Endpoint = endpoint
 	return config, err
 }
+
+func GetDefaultConfigurationFile() (string, error) {
+	// Get a default path to the synk config file.
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(home, ".synk", "config"), nil
+}
