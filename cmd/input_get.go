@@ -23,6 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Reads the state of the input (e.g. solar panels) feeding the inverter
 func readInputState(ctx context.Context) error {
 	synkClient, err := newClient(ctx)
 	if err != nil {
@@ -35,6 +36,7 @@ func readInputState(ctx context.Context) error {
 	return displayState(&input)
 }
 
+// The input command allows an operator to get the state of the inputs feeding the inverter.
 var inputGetCmd = &cobra.Command{
 	Use:     "get",
 	Aliases: []string{"read"},

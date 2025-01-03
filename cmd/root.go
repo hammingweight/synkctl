@@ -28,7 +28,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// rootCmd represents the base command when called without any subcommands
+// rootCmd represents the base command and subcommands are added to it
 var rootCmd = &cobra.Command{
 	Use:   "synkctl",
 	Short: "A CLI for SunSynk hybrid inverters",
@@ -39,6 +39,7 @@ inverter.`,
 }
 
 func Execute() {
+	// Ensure that commands timeout after 30 seconds
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	err := rootCmd.ExecuteContext(ctx)

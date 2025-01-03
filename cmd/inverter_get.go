@@ -23,6 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Reads the inverter's settings (e.g. battery discharge threshold)
 func readInverterSettings(ctx context.Context) error {
 	synkClient, err := newClient(ctx)
 	if err != nil {
@@ -35,7 +36,8 @@ func readInverterSettings(ctx context.Context) error {
 	return displayState(&inverterSettings)
 }
 
-var getCmd = &cobra.Command{
+// The inverter command allows an operator to get/set the imverter's settings
+var inverterGetCmd = &cobra.Command{
 	Use:     "get",
 	Short:   "Reads the inverter settings",
 	Aliases: []string{"read"},
@@ -48,5 +50,5 @@ var getCmd = &cobra.Command{
 }
 
 func init() {
-	inverterCmd.AddCommand(getCmd)
+	inverterCmd.AddCommand(inverterGetCmd)
 }

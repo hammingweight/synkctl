@@ -20,6 +20,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// The state of the grid
 var gridCmd = &cobra.Command{
 	Use:   "grid",
 	Short: "The state of the connection to the power grid",

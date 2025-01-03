@@ -20,7 +20,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// inverterCmd represents the inverter command
+// The inverter settings
 var inverterCmd = &cobra.Command{
 	Use:     "inverter",
 	Short:   "The inverter's settings",

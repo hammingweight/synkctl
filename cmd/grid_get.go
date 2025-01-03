@@ -23,6 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Reads the state of the grid (power being drawn from the grid, relay status, etc.)
 func readGrid(ctx context.Context) error {
 	synkClient, err := newClient(ctx)
 	if err != nil {
@@ -35,6 +36,7 @@ func readGrid(ctx context.Context) error {
 	return displayState(&grid)
 }
 
+// The grid command allows an operator to get the grid's state
 var gridGetCmd = &cobra.Command{
 	Use:     "get",
 	Short:   "Gets the state of the grid connection",

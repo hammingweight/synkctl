@@ -20,6 +20,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// The load on the inverter
 var loadCmd = &cobra.Command{
 	Use:     "load",
 	Short:   "The inverter's load statistics",

@@ -25,12 +25,14 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Updates the lower threshold battery capacity and/or the system work mode
 func updateInverterSettings(ctx context.Context) error {
 	essentialOnly := viper.GetString("essential-only")
 	batteryCap := viper.GetString("battery-capacity")
 	if essentialOnly == "" && batteryCap == "" {
 		return fmt.Errorf("%w: must supply \"essential-only\" or \"battery-capacity\" flag", ErrCantUpdateInverterSettings)
 	}
+
 	synkClient, err := newClient(ctx)
 	if err != nil {
 		return err
@@ -39,6 +41,9 @@ func updateInverterSettings(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadInverterSettings, err)
 	}
+
+	// Check that we support only sysWorkModes "1" (power the essential loads only) and "2" (power all home circuits), i.e. we don't support
+	// exporting to the grid
 	if essentialOnly != "" {
 		if inverterSettings["sysWorkMode"] != "1" && inverterSettings["sysWorkMode"] != "2" {
 			return fmt.Errorf("%w: %s (%s)", ErrCantUpdateInverterSettings, "unexpected value for sysWorkMode setting: ", inverterSettings["sysWorkMode"])
@@ -53,6 +58,8 @@ func updateInverterSettings(ctx context.Context) error {
 		}
 	}
 
+	// This code assumes that there are exactly six battery capacity settings and checks that we don't exceed the lower and upper
+	// capacities of the battery
 	if batteryCap != "" {
 		_, err := strconv.Atoi(batteryCap)
 		if err != nil {
@@ -91,6 +98,8 @@ func updateInverterSettings(ctx context.Context) error {
 	return synkClient.UpdateInverterSettings(ctx, inverterSettings)
 }
 
+// Updates the configured lower discharge threshold for the bettery and whether to power all home circuits or
+// only the essential circuits
 var updateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "Basic options to update the inverter settings",

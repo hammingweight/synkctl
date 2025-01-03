@@ -20,6 +20,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// The state of the input (e.g. panels) to the inverter
 var inputCmd = &cobra.Command{
 	Use:     "input",
 	Short:   "The inverter's input (e.g. solar panels, turbine)",
