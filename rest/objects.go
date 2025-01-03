@@ -16,7 +16,13 @@ limitations under the License.
 
 package rest
 
-import "context"
+import (
+	"context"
+	"fmt"
+	"reflect"
+)
+
+type SynkObject map[string]any
 
 func (synkClient *SynkClient) ReadBattery(ctx context.Context) (SynkObject, error) {
 	path := []string{"inverter", "battery", synkClient.SerialNumber, "realtime"}
@@ -40,4 +46,16 @@ func (synkClient *SynkClient) ReadLoad(ctx context.Context) (SynkObject, error) 
 	path := []string{"inverter", "load", synkClient.SerialNumber, "realtime"}
 	queryParams := map[string]string{"sn": synkClient.SerialNumber, "lan": "en"}
 	return synkClient.readApiV1(ctx, queryParams, path...)
+}
+
+func (synkObject *SynkObject) Update(key string, value any) error {
+	_, ok := (*synkObject)[key]
+	if !ok {
+		return fmt.Errorf("key '%s' does not exist", key)
+	}
+	if reflect.TypeOf(value) != reflect.TypeOf((*synkObject)[key]) {
+		return fmt.Errorf("key %s does not have value of type %T", key, value)
+	}
+	(*synkObject)[key] = value
+	return nil
 }

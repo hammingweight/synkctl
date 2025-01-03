@@ -34,8 +34,6 @@ type SynkResponse struct {
 	Success bool           `json:"success"`
 }
 
-type SynkObject map[string]any
-
 func unmarshallResponseData(resp *http.Response, data any) error {
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("request returned status code %d", resp.StatusCode)
