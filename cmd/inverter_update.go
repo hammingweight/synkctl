@@ -31,7 +31,7 @@ func updateInverterSettings(ctx context.Context) error {
 	if essentialOnly == "" && batteryCap == "" {
 		return fmt.Errorf("%w: must supply \"essential-only\" or \"battery-capacity\" flag", ErrCantUpdateInverterSettings)
 	}
-	synkClient, err := getClient(ctx)
+	synkClient, err := newClient(ctx)
 	if err != nil {
 		return err
 	}

@@ -23,8 +23,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Reads the battery state (SoC, charging/discharging, etc)
 func readBattery(ctx context.Context) error {
-	synkClient, err := getClient(ctx)
+	synkClient, err := newClient(ctx)
 	if err != nil {
 		return err
 	}
@@ -35,6 +36,7 @@ func readBattery(ctx context.Context) error {
 	return displayState(&battery)
 }
 
+// The battery command allows an operator to get the battery's state.
 var batteryGetCmd = &cobra.Command{
 	Use:     "get",
 	Short:   "Reads battery statistics",

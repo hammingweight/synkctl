@@ -26,7 +26,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-func getClient(ctx context.Context) (*rest.SynkClient, error) {
+// Constructs a client to communicate with the SunSynk API
+func newClient(ctx context.Context) (*rest.SynkClient, error) {
 	configFile := viper.GetString("config")
 	config, err := configuration.ReadConfigurationFromFile(configFile)
 	if err != nil {
@@ -47,6 +48,7 @@ func getClient(ctx context.Context) (*rest.SynkClient, error) {
 	return synkClient, nil
 }
 
+// Prints the state of a SunSynk object (battery, inverter, etc)
 func displayState(object *rest.SynkObject) error {
 	objectBytes, err := json.MarshalIndent(object, "", "    ")
 	if err != nil {

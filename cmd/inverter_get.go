@@ -24,7 +24,7 @@ import (
 )
 
 func readInverterSettings(ctx context.Context) error {
-	synkClient, err := getClient(ctx)
+	synkClient, err := newClient(ctx)
 	if err != nil {
 		return err
 	}

@@ -20,6 +20,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// The state of the inverter's battery
 var batteryCmd = &cobra.Command{
 	Use:     "battery",
 	Short:   "The inverter's battery state and statistics",

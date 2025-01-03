@@ -23,8 +23,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Reads the current load from the inverter
 func readLoad(ctx context.Context) error {
-	synkClient, err := getClient(ctx)
+	synkClient, err := newClient(ctx)
 	if err != nil {
 		return err
 	}
@@ -35,6 +36,7 @@ func readLoad(ctx context.Context) error {
 	return displayState(&load)
 }
 
+// The load command displays load statistics
 var getLoadCmd = &cobra.Command{
 	Use:     "get",
 	Short:   "Gets the inverter's current and cumulative load statistics",
