@@ -25,6 +25,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Writes the access credentials to a file
 func generate() error {
 	user := viper.GetString("user")
 	if user == "" {
@@ -53,7 +54,7 @@ func generate() error {
 	return nil
 }
 
-// generateCmd represents the create command
+// The generate command creates a configuration file
 var generateCmd = &cobra.Command{
 	Use:   "generate",
 	Short: "Creates a configuration file",

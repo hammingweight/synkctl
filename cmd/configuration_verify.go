@@ -26,6 +26,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Invoke the SunSynk OAUTH endpoint and check that the request succeeds
 func verify(ctx context.Context, args []string) error {
 	if len(args) != 0 {
 		return fmt.Errorf("unexpected argument '%s'", args[0])
@@ -42,7 +43,7 @@ func verify(ctx context.Context, args []string) error {
 	return nil
 }
 
-// verifyCmd represents the verify command
+// The verify command checks that the access credentials work
 var verifyCmd = &cobra.Command{
 	Use:   "verify",
 	Short: "A brief description of your command",
