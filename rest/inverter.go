@@ -20,17 +20,24 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
 )
 
-func (synkClient *SynkClient) ReadInverterSettings(ctx context.Context) (*SynkObject, error) {
+type Inverter struct{ *SynkObject }
+
+func (synkClient *SynkClient) ReadInverterSettings(ctx context.Context) (*Inverter, error) {
 	path := []string{"common", "setting", synkClient.SerialNumber, "read"}
-	return synkClient.readApiV1(ctx, nil, path...)
+	o, err := synkClient.readApiV1(ctx, nil, path...)
+	if err != nil {
+		return nil, err
+	}
+	return &Inverter{o}, nil
 }
 
-func (synkClient *SynkClient) UpdateInverterSettings(ctx context.Context, settings *SynkObject) error {
+func (synkClient *SynkClient) UpdateInverterSettings(ctx context.Context, settings *Inverter) error {
 	path := []string{"common", "setting", synkClient.SerialNumber, "set"}
-	postData, err := json.Marshal(settings)
+	postData, err := json.Marshal(settings.SynkObject)
 	if err != nil {
 		return err
 	}
@@ -93,4 +100,47 @@ func (synkClient *SynkClient) ListInverters(ctx context.Context) ([]string, erro
 		inverterSerialNumbers = append(inverterSerialNumbers, serialNumbers...)
 	}
 	return inverterSerialNumbers, nil
+}
+
+func (settings *Inverter) SetLimitToLoad(limitToLoad bool) error {
+	if (*settings.SynkObject)["sysWorkMode"] != "1" && (*settings.SynkObject)["sysWorkMode"] != "2" {
+		return fmt.Errorf("unexpected value for sysWorkMode setting: \"%s\"", (*settings.SynkObject)["sysWorkMode"])
+	}
+
+	if limitToLoad {
+		return settings.Update("sysWorkMode", "1")
+	} else {
+		return settings.Update("sysWorkMode", "2")
+	}
+}
+
+func (settings *Inverter) SetBatteryCapacity(batteryCap int) error {
+	batteryCapUpper, ok := (*settings.SynkObject)["batteryCap"]
+	if !ok {
+		return errors.New("can't read upper limit for battery SOC")
+	}
+	batteryCapUpperInt, _ := strconv.Atoi(batteryCapUpper.(string))
+	if batteryCap > batteryCapUpperInt {
+		return fmt.Errorf("\"battery-capacity\" cannot be greater than %d", batteryCapUpperInt)
+	}
+	batteryCapLower, ok := (*settings.SynkObject)["batteryShutdownCap"]
+	if !ok {
+		return errors.New("can't read lower limit for battery SOC")
+	}
+	batteryCapLowerInt, _ := strconv.Atoi(batteryCapLower.(string))
+	if batteryCap <= batteryCapLowerInt {
+		return fmt.Errorf("\"battery-capacity\" must be greater than %d", batteryCapLowerInt)
+	}
+	for i := 1; i <= 6; i++ {
+		key := fmt.Sprintf("cap%d", i)
+		err := settings.Update(key, fmt.Sprintf("%d", batteryCap))
+		if err != nil {
+			return err
+		}
+	}
+	_, ok = (*settings.SynkObject)["cap7"]
+	if ok {
+		return errors.New("more than six battery SOC settings")
+	}
+	return nil
 }
