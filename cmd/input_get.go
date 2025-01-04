@@ -25,7 +25,7 @@ import (
 
 // Reads the state of the input (e.g. solar panels) feeding the inverter
 func readInputState(ctx context.Context) error {
-	synkClient, err := newClient(ctx)
+	synkClient, err := newClient(ctx, true)
 	if err != nil {
 		return err
 	}
@@ -33,7 +33,8 @@ func readInputState(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadInputState, err)
 	}
-	return displayState(&input)
+	fmt.Println(input)
+	return nil
 }
 
 // The input command allows an operator to get the state of the inputs feeding the inverter.

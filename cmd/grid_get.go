@@ -25,7 +25,7 @@ import (
 
 // Reads the state of the grid (power being drawn from the grid, relay status, etc.)
 func readGrid(ctx context.Context) error {
-	synkClient, err := newClient(ctx)
+	synkClient, err := newClient(ctx, true)
 	if err != nil {
 		return err
 	}
@@ -33,7 +33,8 @@ func readGrid(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadGridState, err)
 	}
-	return displayState(&grid)
+	fmt.Println(grid)
+	return nil
 }
 
 // The grid command allows an operator to get the grid's state

@@ -23,12 +23,12 @@ import (
 	"strconv"
 )
 
-func (synkClient *SynkClient) ReadInverterSettings(ctx context.Context) (SynkObject, error) {
+func (synkClient *SynkClient) ReadInverterSettings(ctx context.Context) (*SynkObject, error) {
 	path := []string{"common", "setting", synkClient.SerialNumber, "read"}
 	return synkClient.readApiV1(ctx, nil, path...)
 }
 
-func (synkClient *SynkClient) UpdateInverterSettings(ctx context.Context, settings SynkObject) error {
+func (synkClient *SynkClient) UpdateInverterSettings(ctx context.Context, settings *SynkObject) error {
 	path := []string{"common", "setting", synkClient.SerialNumber, "set"}
 	postData, err := json.Marshal(settings)
 	if err != nil {
@@ -43,7 +43,7 @@ func (synkClient *SynkClient) countInverters(ctx context.Context) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	return int(resp["total"].(float64)), err
+	return int((*resp)["total"].(float64)), err
 }
 
 const pageSize = 10
@@ -59,7 +59,7 @@ func (synkClient *SynkClient) getInverterSerialNumbers(ctx context.Context, page
 	if err != nil {
 		return nil, err
 	}
-	allInverters, ok := resp["infos"]
+	allInverters, ok := (*resp)["infos"]
 	if !ok {
 		return nil, errors.New("can't retrieve serial numbers from response")
 	}

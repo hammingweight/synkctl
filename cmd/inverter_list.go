@@ -21,22 +21,14 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/hammingweight/synkctl/configuration"
-	"github.com/hammingweight/synkctl/rest"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // Lists all the inverter's that the user can view
 func listInverters(ctx context.Context) error {
-	configFile := viper.GetString("config")
-	config, err := configuration.ReadConfigurationFromFile(configFile)
+	synkClient, err := newClient(ctx, false)
 	if err != nil {
-		return err
-	}
-	synkClient, err := rest.Authenticate(ctx, config)
-	if err != nil {
-		return fmt.Errorf("%w: %w", ErrCantAuthenticateUser, err)
+		return nil
 	}
 	inverterSerialNumbers, err := synkClient.ListInverters(ctx)
 	if err != nil {

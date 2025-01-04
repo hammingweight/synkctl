@@ -25,7 +25,7 @@ import (
 
 // Reads the current load from the inverter
 func readLoad(ctx context.Context) error {
-	synkClient, err := newClient(ctx)
+	synkClient, err := newClient(ctx, true)
 	if err != nil {
 		return err
 	}
@@ -33,7 +33,8 @@ func readLoad(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadLoadStatistics, err)
 	}
-	return displayState(&load)
+	fmt.Println(load)
+	return nil
 }
 
 // The load command displays load statistics

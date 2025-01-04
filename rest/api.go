@@ -63,7 +63,7 @@ func unmarshallResponseData(resp *http.Response, data any) error {
 	return nil
 }
 
-func (synkClient *SynkClient) readApiV1(ctx context.Context, queryParams map[string]string, path ...string) (SynkObject, error) {
+func (synkClient *SynkClient) readApiV1(ctx context.Context, queryParams map[string]string, path ...string) (*SynkObject, error) {
 	fullPath := []string{"api", "v1"}
 	fullPath = append(fullPath, path...)
 	url, err := url.JoinPath(synkClient.endpoint, fullPath...)
@@ -93,7 +93,7 @@ func (synkClient *SynkClient) readApiV1(ctx context.Context, queryParams map[str
 	if err != nil {
 		return nil, err
 	}
-	return *synkObject, nil
+	return synkObject, nil
 }
 
 func updateApiV1(ctx context.Context, synkClient *SynkClient, contents string, path ...string) error {

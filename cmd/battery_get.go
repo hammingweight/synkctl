@@ -25,7 +25,7 @@ import (
 
 // Reads the battery state (SoC, charging/discharging, etc)
 func readBattery(ctx context.Context) error {
-	synkClient, err := newClient(ctx)
+	synkClient, err := newClient(ctx, true)
 	if err != nil {
 		return err
 	}
@@ -33,7 +33,8 @@ func readBattery(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadBatteryState, err)
 	}
-	return displayState(&battery)
+	fmt.Println(battery)
+	return nil
 }
 
 // The battery command allows an operator to get the battery's state.

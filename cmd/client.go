@@ -18,7 +18,6 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	"github.com/hammingweight/synkctl/configuration"
@@ -27,33 +26,25 @@ import (
 )
 
 // Constructs a client to communicate with the SunSynk API
-func newClient(ctx context.Context) (*rest.SynkClient, error) {
+func newClient(ctx context.Context, configureSN bool) (*rest.SynkClient, error) {
 	configFile := viper.GetString("config")
 	config, err := configuration.ReadConfigurationFromFile(configFile)
 	if err != nil {
 		return nil, err
 	}
-	inverterSn := viper.GetString("inverter")
-	if inverterSn == "" {
-		inverterSn = config.DefaultInverterSN
-		if inverterSn == "" {
-			return nil, ErrNoInverterSerialNumber
-		}
-	}
 	synkClient, err := rest.Authenticate(ctx, config)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %w", ErrCantAuthenticateUser, err)
 	}
-	synkClient.SerialNumber = inverterSn
-	return synkClient, nil
-}
-
-// Prints the state of a SunSynk object (battery, inverter, etc)
-func displayState(object *rest.SynkObject) error {
-	objectBytes, err := json.MarshalIndent(object, "", "    ")
-	if err != nil {
-		return err
+	if configureSN {
+		inverterSn := viper.GetString("inverter")
+		if inverterSn == "" {
+			inverterSn = config.DefaultInverterSN
+			if inverterSn == "" {
+				return nil, ErrNoInverterSerialNumber
+			}
+		}
+		synkClient.SerialNumber = inverterSn
 	}
-	_, err = fmt.Println(string(objectBytes))
-	return err
+	return synkClient, nil
 }

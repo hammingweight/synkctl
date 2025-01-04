@@ -25,7 +25,7 @@ import (
 
 // Reads the inverter's settings (e.g. battery discharge threshold)
 func readInverterSettings(ctx context.Context) error {
-	synkClient, err := newClient(ctx)
+	synkClient, err := newClient(ctx, true)
 	if err != nil {
 		return err
 	}
@@ -33,7 +33,8 @@ func readInverterSettings(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadInverterSettings, err)
 	}
-	return displayState(&inverterSettings)
+	fmt.Println(inverterSettings)
+	return nil
 }
 
 // The inverter command allows an operator to get/set the imverter's settings

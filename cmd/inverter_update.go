@@ -33,7 +33,7 @@ func updateInverterSettings(ctx context.Context) error {
 		return fmt.Errorf("%w: must supply \"essential-only\" or \"battery-capacity\" flag", ErrCantUpdateInverterSettings)
 	}
 
-	synkClient, err := newClient(ctx)
+	synkClient, err := newClient(ctx, true)
 	if err != nil {
 		return err
 	}
@@ -45,14 +45,14 @@ func updateInverterSettings(ctx context.Context) error {
 	// Check that we support only sysWorkModes "1" (power the essential loads only) and "2" (power all home circuits), i.e. we don't support
 	// exporting to the grid
 	if essentialOnly != "" {
-		if inverterSettings["sysWorkMode"] != "1" && inverterSettings["sysWorkMode"] != "2" {
-			return fmt.Errorf("%w: %s (%s)", ErrCantUpdateInverterSettings, "unexpected value for sysWorkMode setting: ", inverterSettings["sysWorkMode"])
+		if (*inverterSettings)["sysWorkMode"] != "1" && (*inverterSettings)["sysWorkMode"] != "2" {
+			return fmt.Errorf("%w: %s (%s)", ErrCantUpdateInverterSettings, "unexpected value for sysWorkMode setting: ", (*inverterSettings)["sysWorkMode"])
 		}
 		switch essentialOnly {
 		case "true":
-			inverterSettings["sysWorkMode"] = "1"
+			(*inverterSettings)["sysWorkMode"] = "1"
 		case "false":
-			inverterSettings["sysWorkMode"] = "2"
+			(*inverterSettings)["sysWorkMode"] = "2"
 		default:
 			return fmt.Errorf("%w: essential-only must be \"true\" or \"false\", not \"%s\"", ErrCantUpdateInverterSettings, essentialOnly)
 		}
@@ -65,7 +65,7 @@ func updateInverterSettings(ctx context.Context) error {
 		if err != nil {
 			return fmt.Errorf("%w: battery-capacity must be an integer, not \"%s\"", ErrCantUpdateInverterSettings, batteryCap)
 		}
-		batteryCapUpper, ok := inverterSettings["batteryCap"]
+		batteryCapUpper, ok := (*inverterSettings)["batteryCap"]
 		if !ok {
 			return fmt.Errorf("%w: can't read upper limit for battery SOC", ErrCantUpdateInverterSettings)
 		}
@@ -74,7 +74,7 @@ func updateInverterSettings(ctx context.Context) error {
 		if batteryCapInt > batteryCapUpperInt {
 			return fmt.Errorf("%w: \"battery-capacity\" cannot be greater than %d", ErrCantUpdateInverterSettings, batteryCapUpperInt)
 		}
-		batteryCapLower, ok := inverterSettings["batteryShutdownCap"]
+		batteryCapLower, ok := (*inverterSettings)["batteryShutdownCap"]
 		if !ok {
 			return fmt.Errorf("%w: can't read lower limit for battery SOC", ErrCantUpdateInverterSettings)
 		}
@@ -89,7 +89,7 @@ func updateInverterSettings(ctx context.Context) error {
 				return fmt.Errorf("%w: '%w'", ErrCantUpdateInverterSettings, err)
 			}
 		}
-		_, ok = inverterSettings["cap7"]
+		_, ok = (*inverterSettings)["cap7"]
 		if ok {
 			return fmt.Errorf("%w: more than six battery SOC settings", ErrCantUpdateInverterSettings)
 		}
