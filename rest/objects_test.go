@@ -55,3 +55,14 @@ func TestUpdateWrongTypes(t *testing.T) {
 		t.Errorf("updated bar value with wrong type")
 	}
 }
+
+func TestGetNotOk(t *testing.T) {
+	object := SynkObject{"foo": 3, "bar": "baz"}
+	v, ok := object.Get("key")
+	if ok {
+		t.Error("unexpectedly got value")
+	}
+	if v != nil {
+		t.Errorf("Expected nil, got %v", v)
+	}
+}

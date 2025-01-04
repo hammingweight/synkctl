@@ -45,9 +45,6 @@ func updateInverterSettings(ctx context.Context) error {
 	// Check that we support only sysWorkModes "1" (power the essential loads only) and "2" (power all home circuits), i.e. we don't support
 	// exporting to the grid
 	if essentialOnly != "" {
-		if (*inverterSettings.SynkObject)["sysWorkMode"] != "1" && (*inverterSettings.SynkObject)["sysWorkMode"] != "2" {
-			return fmt.Errorf("%w: %s (%s)", ErrCantUpdateInverterSettings, "unexpected value for sysWorkMode setting: ", (*inverterSettings.SynkObject)["sysWorkMode"])
-		}
 		flag, err := strconv.ParseBool(essentialOnly)
 		if err != nil {
 			return fmt.Errorf("%w: essential-only must be \"true\" or \"false\", not \"%s\"", ErrCantUpdateInverterSettings, essentialOnly)
@@ -58,8 +55,6 @@ func updateInverterSettings(ctx context.Context) error {
 		}
 	}
 
-	// This code assumes that there are exactly six battery capacity settings and checks that we don't exceed the lower and upper
-	// capacities of the battery
 	if batteryCap != "" {
 		batteryCapInt, err := strconv.Atoi(batteryCap)
 		if err != nil {

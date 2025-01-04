@@ -92,3 +92,8 @@ func (synkObject *SynkObject) Update(key string, value any) error {
 	(*synkObject)[key] = value
 	return nil
 }
+
+func (synkObject *SynkObject) Get(key string) (any, bool) {
+	value, ok := (*synkObject)[key]
+	return value, ok
+}

@@ -103,8 +103,12 @@ func (synkClient *SynkClient) ListInverters(ctx context.Context) ([]string, erro
 }
 
 func (settings *Inverter) SetLimitToLoad(limitToLoad bool) error {
-	if (*settings.SynkObject)["sysWorkMode"] != "1" && (*settings.SynkObject)["sysWorkMode"] != "2" {
-		return fmt.Errorf("unexpected value for sysWorkMode setting: \"%s\"", (*settings.SynkObject)["sysWorkMode"])
+	sysWorkMode, ok := settings.Get("sysWorkMode")
+	if !ok {
+		return errors.New("could not get \"sysWorkMode\"")
+	}
+	if sysWorkMode != "1" && sysWorkMode != "2" {
+		return fmt.Errorf("unexpected value for sysWorkMode setting: \"%s\"", sysWorkMode)
 	}
 
 	if limitToLoad {
@@ -114,8 +118,12 @@ func (settings *Inverter) SetLimitToLoad(limitToLoad bool) error {
 	}
 }
 
+func (settings *Inverter) GetLimitToLoad() (bool, error) {
+	return false, nil
+}
+
 func (settings *Inverter) SetBatteryCapacity(batteryCap int) error {
-	batteryCapUpper, ok := (*settings.SynkObject)["batteryCap"]
+	batteryCapUpper, ok := settings.Get("batteryCap")
 	if !ok {
 		return errors.New("can't read upper limit for battery SOC")
 	}
@@ -123,7 +131,7 @@ func (settings *Inverter) SetBatteryCapacity(batteryCap int) error {
 	if batteryCap > batteryCapUpperInt {
 		return fmt.Errorf("\"battery-capacity\" cannot be greater than %d", batteryCapUpperInt)
 	}
-	batteryCapLower, ok := (*settings.SynkObject)["batteryShutdownCap"]
+	batteryCapLower, ok := settings.Get("batteryShutdownCap")
 	if !ok {
 		return errors.New("can't read lower limit for battery SOC")
 	}
@@ -138,9 +146,23 @@ func (settings *Inverter) SetBatteryCapacity(batteryCap int) error {
 			return err
 		}
 	}
-	_, ok = (*settings.SynkObject)["cap7"]
+	_, ok = settings.Get("cap7")
 	if ok {
 		return errors.New("more than six battery SOC settings")
 	}
 	return nil
+}
+
+func (settings *Inverter) GetBatteryCapacity() (int, error) {
+	cap1, ok := settings.Get("cap1")
+	if !ok {
+		return 0, errors.New("cannot get battery capacity \"cap1\"")
+	}
+	for i := 2; i <= 6; i++ {
+		key := fmt.Sprintf("cap%d", i)
+		if (*settings.SynkObject)[key] == cap1 {
+			return 0, fmt.Errorf("battery capacity depends on the time of day")
+		}
+	}
+	return strconv.Atoi(cap1.(string))
 }
