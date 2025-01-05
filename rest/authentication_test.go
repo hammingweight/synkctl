@@ -17,9 +17,12 @@ limitations under the License.
 package rest
 
 import (
+	"context"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/hammingweight/synkctl/configuration"
 )
 
 func mockServer(h http.HandlerFunc) (string, func()) {
@@ -33,12 +36,57 @@ func mockServer(h http.HandlerFunc) (string, func()) {
 func TestAuthenticate(t *testing.T) {
 	tests := []struct {
 		Name string
-	}{{Name: "BadResponseCode"}}
+		Resp struct {
+			Code int
+			Body string
+		}
+		ExpectErr   bool
+		AccessToken string
+	}{{Name: "BadResponseCode",
+		Resp: struct {
+			Code int
+			Body string
+		}{404, ""},
+		ExpectErr: true},
+		{Name: "BadResponseBody",
+			Resp: struct {
+				Code int
+				Body string
+			}{200, "{this isn't json"},
+			ExpectErr: true},
+		{Name: "Unsuccessful",
+			Resp: struct {
+				Code int
+				Body string
+			}{200, `{"code":100, "msg":"this is a failure", "success":false, "data":{}}`},
+			ExpectErr: true},
+		{Name: "Successful",
+			Resp: struct {
+				Code int
+				Body string
+			}{200, `{"code":0, "msg":"", "success":true, "data":{"access_token":"12345"}}`},
+			ExpectErr:   false,
+			AccessToken: "12345"},
+	}
 	for _, tc := range tests {
 		t.Run(tc.Name, func(t *testing.T) {
-			_, cleanup := mockServer(func(w http.ResponseWriter, r *http.Request) {
-
+			url, cleanup := mockServer(func(w http.ResponseWriter, r *http.Request) {
+				w.WriteHeader(tc.Resp.Code)
+				w.Write([]byte(tc.Resp.Body))
 			})
+			config := configuration.Configuration{Endpoint: url}
+			client, err := Authenticate(context.Background(), &config)
+			if tc.ExpectErr && err == nil {
+				t.Error("Request should have failed")
+			}
+			if !tc.ExpectErr {
+				if err != nil {
+					t.Error("Request should have succeeded")
+				}
+				if tc.AccessToken != client.tokens.AccessToken {
+					t.Errorf("Expected token %s, got %s\n", tc.AccessToken, client.tokens.AccessToken)
+				}
+			}
 			defer cleanup()
 		})
 	}

@@ -34,7 +34,7 @@ func (s *SynkObject) Get(key string) (any, bool) {
 	return v, ok
 }
 
-// String returns a JSON representation of an SynkObject (inverter, battery, load, etc.)
+// String returns a JSON representation of a SynkObject (grid, battery, load, etc.)
 func (s SynkObject) String() string {
 	m, err := json.MarshalIndent(s, "", "    ")
 	if err != nil {

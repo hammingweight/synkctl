@@ -120,8 +120,11 @@ func (settings *Inverter) SetLimitedToLoad(limitToLoad bool) error {
 	return nil
 }
 
-func (settings *Inverter) IsLimitedToLoad() bool {
-	return settings.SysWorkMode == "1"
+func (settings *Inverter) IsLimitedToLoad() (bool, error) {
+	if settings.SysWorkMode != "1" && settings.SysWorkMode != "2" {
+		return false, fmt.Errorf("unexpected value for sysWorkMode attribute: %v", settings.SysWorkMode)
+	}
+	return settings.SysWorkMode == "1", nil
 }
 
 func (settings *Inverter) SetBatteryCapacity(batteryCap int) error {
