@@ -24,6 +24,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/hammingweight/synkctl/rest"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -48,23 +49,11 @@ func applyInverterSettings(ctx context.Context, in *os.File) error {
 	if err != nil {
 		return err
 	}
-	var newSettings map[string]any
-	err = json.Unmarshal(data, &newSettings)
+	settings := &rest.Inverter{}
+	err = json.Unmarshal(data, settings)
 	if err != nil {
 		return err
 	}
-
-	settings, err := client.ReadInverterSettings(ctx)
-	if err != nil {
-		return err
-	}
-	for k, v := range newSettings {
-		err = settings.Update(k, v)
-		if err != nil {
-			return err
-		}
-	}
-
 	return client.UpdateInverterSettings(ctx, settings)
 }
 

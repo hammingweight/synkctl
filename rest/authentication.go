@@ -80,7 +80,7 @@ func Authenticate(ctx context.Context, config *configuration.Configuration) (*Sy
 		return nil, err
 	}
 	tokens := &tokens{}
-	err = unmarshallResponseData(resp, tokens)
+	err = unmarshalResponseData(resp, tokens)
 	if err != nil {
 		return nil, err
 	}

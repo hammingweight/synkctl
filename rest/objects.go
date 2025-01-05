@@ -19,8 +19,6 @@ package rest
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"reflect"
 )
 
 type SynkObject map[string]any
@@ -30,7 +28,7 @@ type Battery struct{ *SynkObject }
 func (s SynkObject) String() string {
 	m, err := json.MarshalIndent(s, "", "    ")
 	if err != nil {
-		panic("can't marshall object")
+		panic(err)
 	}
 	return string(m)
 }
@@ -38,10 +36,8 @@ func (s SynkObject) String() string {
 func (synkClient *SynkClient) ReadBattery(ctx context.Context) (*Battery, error) {
 	path := []string{"inverter", "battery", synkClient.SerialNumber, "realtime"}
 	queryParams := map[string]string{"sn": synkClient.SerialNumber, "lan": "en"}
-	o, err := synkClient.readApiV1(ctx, queryParams, path...)
-	if err != nil {
-		return nil, err
-	}
+	o := &SynkObject{}
+	err := synkClient.readApiV1(ctx, o, queryParams, path...)
 	return &Battery{o}, err
 }
 
@@ -50,11 +46,9 @@ type Grid struct{ *SynkObject }
 func (synkClient *SynkClient) ReadGrid(ctx context.Context) (*Grid, error) {
 	path := []string{"inverter", "grid", synkClient.SerialNumber, "realtime"}
 	queryParams := map[string]string{"sn": synkClient.SerialNumber}
-	o, err := synkClient.readApiV1(ctx, queryParams, path...)
-	if err != nil {
-		return nil, err
-	}
-	return &Grid{o}, nil
+	o := &SynkObject{}
+	err := synkClient.readApiV1(ctx, o, queryParams, path...)
+	return &Grid{o}, err
 }
 
 type InputState struct{ *SynkObject }
@@ -62,11 +56,9 @@ type InputState struct{ *SynkObject }
 func (synkClient *SynkClient) ReadInputState(ctx context.Context) (*InputState, error) {
 	path := []string{"inverter", synkClient.SerialNumber, "realtime", "input"}
 	queryParams := map[string]string{"sn": synkClient.SerialNumber, "lan": "en"}
-	o, err := synkClient.readApiV1(ctx, queryParams, path...)
-	if err != nil {
-		return nil, err
-	}
-	return &InputState{o}, nil
+	o := &SynkObject{}
+	err := synkClient.readApiV1(ctx, o, queryParams, path...)
+	return &InputState{o}, err
 }
 
 type Load struct{ *SynkObject }
@@ -74,26 +66,7 @@ type Load struct{ *SynkObject }
 func (synkClient *SynkClient) ReadLoad(ctx context.Context) (*Load, error) {
 	path := []string{"inverter", "load", synkClient.SerialNumber, "realtime"}
 	queryParams := map[string]string{"sn": synkClient.SerialNumber, "lan": "en"}
-	o, err := synkClient.readApiV1(ctx, queryParams, path...)
-	if err != nil {
-		return nil, err
-	}
-	return &Load{o}, nil
-}
-
-func (synkObject *SynkObject) Update(key string, value any) error {
-	_, ok := (*synkObject)[key]
-	if !ok {
-		return fmt.Errorf("key '%s' does not exist", key)
-	}
-	if reflect.TypeOf(value) != reflect.TypeOf((*synkObject)[key]) {
-		return fmt.Errorf("key %s does not have value of type %T", key, value)
-	}
-	(*synkObject)[key] = value
-	return nil
-}
-
-func (synkObject *SynkObject) Get(key string) (any, bool) {
-	value, ok := (*synkObject)[key]
-	return value, ok
+	o := &SynkObject{}
+	err := synkClient.readApiV1(ctx, o, queryParams, path...)
+	return &Load{o}, err
 }

@@ -34,7 +34,7 @@ type SynkResponse struct {
 	Success bool           `json:"success"`
 }
 
-func unmarshallResponseData(resp *http.Response, data any) error {
+func unmarshalResponseData(resp *http.Response, data any) error {
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("request returned status code %d", resp.StatusCode)
 	}
@@ -63,16 +63,16 @@ func unmarshallResponseData(resp *http.Response, data any) error {
 	return nil
 }
 
-func (synkClient *SynkClient) readApiV1(ctx context.Context, queryParams map[string]string, path ...string) (*SynkObject, error) {
+func (synkClient *SynkClient) readApiV1(ctx context.Context, synkObject any, queryParams map[string]string, path ...string) error {
 	fullPath := []string{"api", "v1"}
 	fullPath = append(fullPath, path...)
 	url, err := url.JoinPath(synkClient.endpoint, fullPath...)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Authorization", "Bearer "+synkClient.tokens.AccessToken)
@@ -86,14 +86,13 @@ func (synkClient *SynkClient) readApiV1(ctx context.Context, queryParams map[str
 	}
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	synkObject := &SynkObject{}
-	err = unmarshallResponseData(resp, synkObject)
+	err = unmarshalResponseData(resp, synkObject)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return synkObject, nil
+	return nil
 }
 
 func updateApiV1(ctx context.Context, synkClient *SynkClient, contents string, path ...string) error {
@@ -113,5 +112,5 @@ func updateApiV1(ctx context.Context, synkClient *SynkClient, contents string, p
 	if err != nil {
 		return err
 	}
-	return unmarshallResponseData(resp, nil)
+	return unmarshalResponseData(resp, nil)
 }

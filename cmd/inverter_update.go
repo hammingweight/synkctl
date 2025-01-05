@@ -49,7 +49,7 @@ func updateInverterSettings(ctx context.Context) error {
 		if err != nil {
 			return fmt.Errorf("%w: essential-only must be \"true\" or \"false\", not \"%s\"", ErrCantUpdateInverterSettings, essentialOnly)
 		}
-		err = inverterSettings.SetLimitToLoad(flag)
+		err = inverterSettings.SetLimitedToLoad(flag)
 		if err != nil {
 			return fmt.Errorf("%w: %w", ErrCantUpdateInverterSettings, err)
 		}

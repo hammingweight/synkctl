@@ -73,7 +73,7 @@ func readConfiguration(reader io.Reader) (*Configuration, error) {
 	return configuration, err
 }
 
-// Unnmarshalls a configuration object from a YAML file
+// Unnmarshals a configuration object from a YAML file
 func ReadConfigurationFromFile(fileName string) (*Configuration, error) {
 	f, err := os.Open(fileName)
 	if err != nil {
