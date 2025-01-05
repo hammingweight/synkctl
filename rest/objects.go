@@ -17,56 +17,28 @@ limitations under the License.
 package rest
 
 import (
-	"context"
 	"encoding/json"
 )
 
+// SynkObject is an abstraction of JSON objects returned by the SunSynk REST API. Concrete objects like
+// Grid, Load or Battery encapsulate an instance of SynkObject that maps attributes of the object to values.
+// The SynkObject type is "read only" and types derived from it should not be updated.
+
+// Note: The Inverter abstraction does not encapsulate an instance of this type. The Inverter type is
+// special since it can be updated (e.g. to set the battery discharge threshold.)
 type SynkObject map[string]any
 
-type Battery struct{ *SynkObject }
+// Get returns the value of an attribute for an object returned by the SunSynk REST API.
+func (s *SynkObject) Get(key string) (any, bool) {
+	v, ok := (*s)[key]
+	return v, ok
+}
 
+// String returns a JSON representation of an SynkObject (inverter, battery, load, etc.)
 func (s SynkObject) String() string {
 	m, err := json.MarshalIndent(s, "", "    ")
 	if err != nil {
 		panic(err)
 	}
 	return string(m)
-}
-
-func (synkClient *SynkClient) ReadBattery(ctx context.Context) (*Battery, error) {
-	path := []string{"inverter", "battery", synkClient.SerialNumber, "realtime"}
-	queryParams := map[string]string{"sn": synkClient.SerialNumber, "lan": "en"}
-	o := &SynkObject{}
-	err := synkClient.readApiV1(ctx, o, queryParams, path...)
-	return &Battery{o}, err
-}
-
-type Grid struct{ *SynkObject }
-
-func (synkClient *SynkClient) ReadGrid(ctx context.Context) (*Grid, error) {
-	path := []string{"inverter", "grid", synkClient.SerialNumber, "realtime"}
-	queryParams := map[string]string{"sn": synkClient.SerialNumber}
-	o := &SynkObject{}
-	err := synkClient.readApiV1(ctx, o, queryParams, path...)
-	return &Grid{o}, err
-}
-
-type InputState struct{ *SynkObject }
-
-func (synkClient *SynkClient) ReadInputState(ctx context.Context) (*InputState, error) {
-	path := []string{"inverter", synkClient.SerialNumber, "realtime", "input"}
-	queryParams := map[string]string{"sn": synkClient.SerialNumber, "lan": "en"}
-	o := &SynkObject{}
-	err := synkClient.readApiV1(ctx, o, queryParams, path...)
-	return &InputState{o}, err
-}
-
-type Load struct{ *SynkObject }
-
-func (synkClient *SynkClient) ReadLoad(ctx context.Context) (*Load, error) {
-	path := []string{"inverter", "load", synkClient.SerialNumber, "realtime"}
-	queryParams := map[string]string{"sn": synkClient.SerialNumber, "lan": "en"}
-	o := &SynkObject{}
-	err := synkClient.readApiV1(ctx, o, queryParams, path...)
-	return &Load{o}, err
 }
