@@ -46,7 +46,7 @@ func readInverterSettings(ctx context.Context) error {
 	return nil
 }
 
-// The inverter command allows an operator to get/set the imverter's settings
+// The inverter get command allows an operator to get the imverter's settings
 var inverterGetCmd = &cobra.Command{
 	Use:     "get",
 	Short:   "Reads the inverter settings",
