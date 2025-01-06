@@ -25,14 +25,7 @@ import (
 	"strconv"
 )
 
-func (settings *Inverter) String() string {
-	m, err := json.MarshalIndent(settings, "", "    ")
-	if err != nil {
-		panic(err)
-	}
-	return string(m)
-}
-
+// ReadInverterSettings gets the SunSynk model of an inverter from the API.
 func (synkClient *SynkClient) ReadInverterSettings(ctx context.Context) (*Inverter, error) {
 	path := []string{"common", "setting", synkClient.SerialNumber, "read"}
 	inverter := &Inverter{}
@@ -40,6 +33,8 @@ func (synkClient *SynkClient) ReadInverterSettings(ctx context.Context) (*Invert
 	return inverter, err
 }
 
+// UpdateInverterSettings issues a POST request to the SunSynk API to reconfigure the inverter. For
+// example, the battery capacity can be changed or powering non-essential circuits can be disabled.
 func (synkClient *SynkClient) UpdateInverterSettings(ctx context.Context, settings *Inverter) error {
 	path := []string{"common", "setting", synkClient.SerialNumber, "set"}
 	postData, err := json.Marshal(settings)
@@ -86,6 +81,7 @@ func (synkClient *SynkClient) getInverterSerialNumbers(ctx context.Context, page
 	return responseList, nil
 }
 
+// ListInverters returns the serial numbers of all inverters that the user can view.
 func (synkClient *SynkClient) ListInverters(ctx context.Context) ([]string, error) {
 	count, err := synkClient.countInverters(ctx)
 	if err != nil {
@@ -106,6 +102,9 @@ func (synkClient *SynkClient) ListInverters(ctx context.Context) ([]string, erro
 	return inverterSerialNumbers, nil
 }
 
+// SetLimitedToLoad is a method that can disable (enable) power to non-essential loads.
+// Passing the value 'true' will disable power from the inverter flowing to non-essential
+// circuits (i.e. those powered by the CT coil).
 func (settings *Inverter) SetLimitedToLoad(limitToLoad bool) error {
 	sysWorkMode := settings.SysWorkMode
 	if sysWorkMode != "1" && sysWorkMode != "2" {
@@ -120,6 +119,8 @@ func (settings *Inverter) SetLimitedToLoad(limitToLoad bool) error {
 	return nil
 }
 
+// IsLimitedToLoad returns true if the inverter powers only essential loads. If the inverter can
+// power circuits connected to the CT, this method returns false.
 func (settings *Inverter) IsLimitedToLoad() (bool, error) {
 	if settings.SysWorkMode != "1" && settings.SysWorkMode != "2" {
 		return false, fmt.Errorf("unexpected value for sysWorkMode attribute: %v", settings.SysWorkMode)
@@ -127,6 +128,9 @@ func (settings *Inverter) IsLimitedToLoad() (bool, error) {
 	return settings.SysWorkMode == "1", nil
 }
 
+// Sets the battery state of charge at which point the inverter will use the grid rather than batteries
+// to power circuits. It is an error to set the capacity at a value higher than the maximum allowed
+// SoC for the battery (typically, 100%) or below the shutdown capacity of the battery (e.g. 10%).
 func (settings *Inverter) SetBatteryCapacity(batteryCap int) error {
 	batteryCapUpperInt, _ := strconv.Atoi(settings.BatteryCap)
 	if batteryCap > batteryCapUpperInt {
@@ -149,6 +153,8 @@ func (settings *Inverter) SetBatteryCapacity(batteryCap int) error {
 	return nil
 }
 
+// Gets the battery state of charge at which point the inverter will use the grid rather than batteries
+// to power circuits.
 func (settings *Inverter) GetBatteryCapacity() (int, error) {
 	c := make([]int, 6)
 	for i, s := range []string{settings.Cap1, settings.Cap2, settings.Cap3, settings.Cap4, settings.Cap5, settings.Cap6} {

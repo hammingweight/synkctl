@@ -57,6 +57,7 @@ func applyInverterSettings(ctx context.Context, in *os.File) error {
 	return client.UpdateInverterSettings(ctx, settings)
 }
 
+// Updates the inverter settings from a file.
 var inverterApplyCmd = &cobra.Command{
 	Use:   "apply",
 	Short: "Applies the inverter settings from a file or stdin",

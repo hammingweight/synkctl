@@ -34,6 +34,9 @@ func (synkClient *SynkClient) ReadLoad(ctx context.Context) (*Load, error) {
 	return &Load{o}, err
 }
 
+// GetPower returns the current power (in watts, W) being consumed by the load.
+// This is a convenience method that reads the totalPower attribute of a Load
+// instance.
 func (load *Load) GetPower() (int, error) {
 	v, ok := load.Get("totalPower")
 	if !ok {

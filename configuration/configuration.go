@@ -25,6 +25,7 @@ import (
 	"github.com/go-yaml/yaml"
 )
 
+// The endpoint of SunSynk's region 1 endpoint.
 const DefaultEndpoint = "https://api.sunsynk.net"
 
 // A configuration object stores the credentials to access the SunSynk API
@@ -95,7 +96,7 @@ func New(user string, password string) (*Configuration, error) {
 	return &Configuration{User: user, Password: password, Endpoint: DefaultEndpoint}, nil
 }
 
-// Construcs a configuration object with username/password credentials and an
+// Constructs a configuration object with username/password credentials and an
 // overridden API endpoint
 func NewWithEndpoint(user string, password string, endpoint string) (*Configuration, error) {
 	config, err := New(user, password)
@@ -109,7 +110,7 @@ func NewWithEndpoint(user string, password string, endpoint string) (*Configurat
 	return config, err
 }
 
-// Get a default path to the synk config file.
+// Get the path to the default location of the synk config file ($HOME/.synk/config on Linux).
 func GetDefaultConfigurationFile() (string, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {

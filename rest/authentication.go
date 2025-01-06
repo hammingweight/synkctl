@@ -35,6 +35,9 @@ type tokens struct {
 	Scope        string `json:"scope"`
 }
 
+// SynkClient is a type that is needed for accessing the SunSynk API; it includes the API endpoint and OAuth
+// tokens. It also includes the serial number for an inverter since most requests use the serial number to
+// identify which object is being requested (e.g. the details of a battery connected to the inverter.)
 type SynkClient struct {
 	endpoint     string
 	tokens       tokens
@@ -60,6 +63,8 @@ func newAuthRequestBody(config *configuration.Configuration) (io.Reader, error) 
 	return bytes.NewReader(r), nil
 }
 
+// Authenticate uses a specify configuration to authenticate a user. If successful, a SynkClient is
+// returned that can be used to make requests against the API.
 func Authenticate(ctx context.Context, config *configuration.Configuration) (*SynkClient, error) {
 	url, err := url.JoinPath(config.Endpoint, "oauth", "token")
 	if err != nil {

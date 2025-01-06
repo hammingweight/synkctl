@@ -28,6 +28,8 @@ import (
 	"strings"
 )
 
+// SynkResponse is the response returned by the SunSynk API to any HTTP GET. The "data" field encapsulates
+// the object that was requested (e.g. OAuth tokens or details about an inverter, battery, etc.)
 type SynkResponse struct {
 	Code    int            `json:"code"`
 	Message string         `json:"msg"`

@@ -21,6 +21,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // Reads the inverter's settings (e.g. battery discharge threshold)
@@ -33,7 +34,15 @@ func readInverterSettings(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadInverterSettings, err)
 	}
-	fmt.Println(inverterSettings)
+	if viper.GetBool("short") {
+		shortForm, err := inverterSettings.GetShortForm()
+		if err != nil {
+			return err
+		}
+		fmt.Println(shortForm)
+	} else {
+		fmt.Println(inverterSettings)
+	}
 	return nil
 }
 
@@ -52,4 +61,7 @@ var inverterGetCmd = &cobra.Command{
 
 func init() {
 	inverterCmd.AddCommand(inverterGetCmd)
+
+	inverterGetCmd.Flags().BoolP("short", "s", false, "Get short output (get only fields that can be updated)")
+	viper.BindPFlag("short", inverterGetCmd.Flags().Lookup("short"))
 }

@@ -20,6 +20,7 @@ import (
 	"errors"
 )
 
+// Errors that the CLI can return to the user.
 var (
 	ErrCantAuthenticateUser       = errors.New("can't authenticate user")
 	ErrCantCreateConfigFile       = errors.New("can't create config file")

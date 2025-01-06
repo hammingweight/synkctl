@@ -16,7 +16,11 @@ limitations under the License.
 
 package rest
 
+import "encoding/json"
+
 // Inverter is the complete SunSynk model of the inverter including fields that cannot be updated.
+// For example, the batteryShutdownCap field is included in the response which can be useful but this
+// REST API does not allow the field to be updated.
 type Inverter struct {
 	AbsorptionVolt               string `json:"absorptionVolt,omitempty"`
 	AcCoupleFreqUpper            string `json:"acCoupleFreqUpper,omitempty"`
@@ -352,4 +356,102 @@ type Inverter struct {
 	WednesdayOn                  any    `json:"wednesdayOn,omitempty"`
 	WorkState                    string `json:"workState,omitempty"`
 	ZeroExportPower              string `json:"zeroExportPower,omitempty"`
+}
+
+// String() returns a pretty-printed JSON representation of an Inverter.
+func (inverter *Inverter) String() string {
+	m, err := json.MarshalIndent(inverter, "", "    ")
+	if err != nil {
+		panic(err)
+	}
+	return string(m)
+}
+
+// InverterShortForm is a struct that includes only Inverter fields that can be updated.
+type InverterShortForm struct {
+	BattMode          string `json:"battMode,omitempty"`
+	Cap1              string `json:"cap1,omitempty"`
+	Cap2              string `json:"cap2,omitempty"`
+	Cap3              string `json:"cap3,omitempty"`
+	Cap4              string `json:"cap4,omitempty"`
+	Cap5              string `json:"cap5,omitempty"`
+	Cap6              string `json:"cap6,omitempty"`
+	EnergyMode        string `json:"energyMode,omitempty"`
+	FridayOn          any    `json:"fridayOn,omitempty"`
+	GenTime1on        any    `json:"genTime1on,omitempty"`
+	GenTime2on        any    `json:"genTime2on,omitempty"`
+	GenTime3on        any    `json:"genTime3on,omitempty"`
+	GenTime4on        any    `json:"genTime4on,omitempty"`
+	GenTime5on        any    `json:"genTime5on,omitempty"`
+	GenTime6on        any    `json:"genTime6on,omitempty"`
+	MondayOn          any    `json:"mondayOn,omitempty"`
+	PeakAndVallery    string `json:"peakAndVallery,omitempty"`
+	PvMaxLimit        string `json:"pvMaxLimit,omitempty"`
+	SafetyType        string `json:"safetyType,omitempty"`
+	SaturdayOn        any    `json:"saturdayOn,omitempty"`
+	SellTime1Pac      string `json:"sellTime1Pac,omitempty"`
+	SellTime1         string `json:"sellTime1,omitempty"`
+	SellTime1Volt     string `json:"sellTime1Volt,omitempty"`
+	SellTime2Pac      string `json:"sellTime2Pac,omitempty"`
+	SellTime2         string `json:"sellTime2,omitempty"`
+	SellTime2Volt     string `json:"sellTime2Volt,omitempty"`
+	SellTime3Pac      string `json:"sellTime3Pac,omitempty"`
+	SellTime3         string `json:"sellTime3,omitempty"`
+	SellTime3Volt     string `json:"sellTime3Volt,omitempty"`
+	SellTime4Pac      string `json:"sellTime4Pac,omitempty"`
+	SellTime4         string `json:"sellTime4,omitempty"`
+	SellTime4Volt     string `json:"sellTime4Volt,omitempty"`
+	SellTime5Pac      string `json:"sellTime5Pac,omitempty"`
+	SellTime5         string `json:"sellTime5,omitempty"`
+	SellTime5Volt     string `json:"sellTime5Volt,omitempty"`
+	SellTime6Pac      string `json:"sellTime6Pac,omitempty"`
+	SellTime6         string `json:"sellTime6,omitempty"`
+	SellTime6Volt     string `json:"sellTime6Volt,omitempty"`
+	SN                string `json:"sn,omitempty"`
+	SolarMaxSellPower string `json:"solarMaxSellPower,omitempty"`
+	SolarSell         string `json:"solarSell,omitempty"`
+	SundayOn          any    `json:"sundayOn,omitempty"`
+	SysWorkMode       string `json:"sysWorkMode,omitempty"`
+	ThursdayOn        any    `json:"thursdayOn,omitempty"`
+	Time1on           any    `json:"time1on,omitempty"`
+	Time2on           any    `json:"time2on,omitempty"`
+	Time3on           any    `json:"time3on,omitempty"`
+	Time4on           any    `json:"time4on,omitempty"`
+	Time5on           any    `json:"time5on,omitempty"`
+	Time6on           any    `json:"time6on,omitempty"`
+	TuesdayOn         any    `json:"tuesdayOn,omitempty"`
+	WednesdayOn       any    `json:"wednesdayOn,omitempty"`
+	ZeroExportPower   string `json:"zeroExportPower,omitempty"`
+}
+
+// String() returns a pretty-printed JSON representation of an InverterShortForm.
+func (inverter *InverterShortForm) String() string {
+	m, err := json.MarshalIndent(inverter, "", "    ")
+	if err != nil {
+		panic(err)
+	}
+	return string(m)
+}
+
+// GetShortForm returns the short form of an Inverter.
+func (inverter *Inverter) GetShortForm() (*InverterShortForm, error) {
+	data, err := json.Marshal(inverter)
+	if err != nil {
+		return nil, err
+	}
+	is := &InverterShortForm{}
+	err = json.Unmarshal(data, is)
+	return is, err
+}
+
+// GetLongForm returns a struct with all Inverter fields. Fields that are not defined
+// in the short form will be unpopulated.
+func (inverter *InverterShortForm) GetLongForm() (*Inverter, error) {
+	data, err := json.Marshal(inverter)
+	if err != nil {
+		return nil, err
+	}
+	il := &Inverter{}
+	err = json.Unmarshal(data, il)
+	return il, err
 }
