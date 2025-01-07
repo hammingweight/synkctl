@@ -33,8 +33,7 @@ func readBattery(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadBatteryState, err)
 	}
-	fmt.Println(battery)
-	return nil
+	return displayObject(battery.SynkObject)
 }
 
 // The battery command allows an operator to get the battery's state.

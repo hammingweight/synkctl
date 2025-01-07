@@ -33,8 +33,7 @@ func readLoad(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadLoadStatistics, err)
 	}
-	fmt.Println(load)
-	return nil
+	return displayObject(load.SynkObject)
 }
 
 // The load command displays load statistics

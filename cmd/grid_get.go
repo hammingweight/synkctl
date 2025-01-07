@@ -33,8 +33,7 @@ func readGrid(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadGridState, err)
 	}
-	fmt.Println(grid)
-	return nil
+	return displayObject(grid.SynkObject)
 }
 
 // The grid command allows an operator to get the grid's state

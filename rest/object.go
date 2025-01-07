@@ -18,6 +18,7 @@ package rest
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 // SynkObject is an abstraction of JSON objects returned by the SunSynk REST API. Concrete objects like
@@ -41,4 +42,17 @@ func (s SynkObject) String() string {
 		panic(err)
 	}
 	return string(m)
+}
+
+// ExtractKeys returns a subset of the fields of a SynkObject
+func (s *SynkObject) ExtractKeys(keys []string) (*SynkObject, error) {
+	res := &SynkObject{}
+	for _, k := range keys {
+		v, ok := (*s)[k]
+		if !ok {
+			return nil, fmt.Errorf("no such key: %s", k)
+		}
+		(*res)[k] = v
+	}
+	return res, nil
 }

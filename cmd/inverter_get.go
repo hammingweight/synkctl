@@ -40,10 +40,14 @@ func readInverterSettings(ctx context.Context) error {
 			return err
 		}
 		fmt.Println(shortForm)
+		return nil
 	} else {
-		fmt.Println(inverterSettings)
+		so, err := inverterSettings.ToSynkObject()
+		if err != nil {
+			return err
+		}
+		return displayObject(so)
 	}
-	return nil
 }
 
 // The inverter get command allows an operator to get the imverter's settings

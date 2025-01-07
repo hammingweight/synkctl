@@ -433,7 +433,7 @@ func (inverter *InverterShortForm) String() string {
 	return string(m)
 }
 
-// GetShortForm returns the short form of an Inverter.
+// ToShortForm returns the short form of an Inverter.
 func (inverter *Inverter) ToShortForm() (*InverterShortForm, error) {
 	data, err := json.Marshal(inverter)
 	if err != nil {
@@ -444,7 +444,7 @@ func (inverter *Inverter) ToShortForm() (*InverterShortForm, error) {
 	return is, err
 }
 
-// GetLongForm returns a struct with all Inverter fields. Fields that are not defined
+// ToLongForm returns a struct with all Inverter fields. Fields that are not defined
 // in the short form will be unpopulated.
 func (inverter *InverterShortForm) ToLongForm() (*Inverter, error) {
 	data, err := json.Marshal(inverter)
@@ -454,4 +454,15 @@ func (inverter *InverterShortForm) ToLongForm() (*Inverter, error) {
 	il := &Inverter{}
 	err = json.Unmarshal(data, il)
 	return il, err
+}
+
+// ToSynkObject is an adapter that returns a SynkObject adaptation of an Inverter type.
+func (inverter *Inverter) ToSynkObject() (*SynkObject, error) {
+	data, err := json.Marshal(inverter)
+	if err != nil {
+		return nil, err
+	}
+	so := &SynkObject{}
+	err = json.Unmarshal(data, so)
+	return so, err
 }
