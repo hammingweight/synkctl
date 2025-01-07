@@ -89,5 +89,5 @@ func Authenticate(ctx context.Context, config *configuration.Configuration) (*Sy
 	if err != nil {
 		return nil, err
 	}
-	return &SynkClient{endpoint: config.Endpoint, tokens: *tokens}, err
+	return &SynkClient{endpoint: config.Endpoint, tokens: *tokens, SerialNumber: config.DefaultInverterSN}, err
 }
