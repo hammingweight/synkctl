@@ -85,3 +85,51 @@ To use the (Go) REST client, you need to
  * Create a `Configuration` instance (typically by reading it from a config file)
  * Call an `Authenticate` function which, if successful, returns a `SynkClient` object
  * Invoke `Read` or `Update` methods on the `SynkClient`
+
+```
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/hammingweight/synkctl/configuration"
+	"github.com/hammingweight/synkctl/rest"
+)
+
+func main() {
+	configFile, _ := configuration.DefaultConfigurationFile()
+	config, _ := configuration.ReadConfigurationFromFile(configFile)
+	ctx := context.Background()
+	client, _ := rest.Authenticate(ctx, config)
+
+	// Read Input (e.g. solar panels) and display the total energy
+	// generated (etotal)
+	input, _ := client.Input(ctx)
+	eTotal, _ := input.Get("etotal")
+	fmt.Println("Total energy generated:\t", eTotal)
+
+	// For some useful attributes, there are convenience methods. For exmple
+	// battery.SOC() is equivalent to battery.Get("bmsSoc")
+	battery, _ := client.Battery(ctx)
+	fmt.Println("Battery SOC:\t\t", battery.SOC())
+
+	// We can update inverter settings. For example, increase the lower
+	// threshold for the battery capacity by 5% or allow the inverter to
+	// power non-essential circuits if the solar panels are producing
+	// more than 1000W.
+	inverter, _ := client.Inverter(ctx)
+	oldBatteryCapacity := inverter.BatteryCapacity()
+	newBatteryCapacity := oldBatteryCapacity + 5
+	inverter.SetBatteryCapacity(newBatteryCapacity)
+	if input.Power() > 1000 {
+		inverter.SetLimitedToLoad(false)
+	}
+
+	// Write the updated settings to the API.
+	err := client.UpdateInverter(ctx, inverter)
+	if err != nil {
+		fmt.Println("failed to update inverter settings: ", err)
+	}
+}
+```
