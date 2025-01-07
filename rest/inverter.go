@@ -128,9 +128,10 @@ func (settings *Inverter) LimitedToLoad() bool {
 	return settings.SysWorkMode == "1"
 }
 
-// Sets the battery state of charge at which point the inverter will use the grid rather than batteries
-// to power circuits. It is an error to set the capacity at a value higher than the maximum allowed
-// SoC for the battery (typically, 100%) or below the shutdown capacity of the battery (e.g. 10%).
+// SetBatteryCapacity sets the battery state of charge at which point the inverter will use the grid
+// rather than batteries to power circuits. It is an error to set the capacity at a value higher than the
+// maximum allowed SoC for the battery (typically, 100%) or below the shutdown capacity of the
+// battery (e.g. 10%).
 func (settings *Inverter) SetBatteryCapacity(batteryCap int) error {
 	batteryCapUpperInt, _ := strconv.Atoi(settings.BatteryCap)
 	if batteryCap > batteryCapUpperInt {
@@ -153,16 +154,16 @@ func (settings *Inverter) SetBatteryCapacity(batteryCap int) error {
 	return nil
 }
 
-// Gets the battery state of charge at which point the inverter will use the grid rather than batteries
+// BatteryCapacity gets the battery state of charge at which point the inverter will use the grid rather than batteries
 // to power circuits.
-func (settings *Inverter) GetBatteryCapacity() (int, error) {
+func (settings *Inverter) BatteryCapacity() int {
 	c := make([]int, 6)
 	for i, s := range []string{settings.Cap1, settings.Cap2, settings.Cap3, settings.Cap4, settings.Cap5, settings.Cap6} {
 		cc, err := strconv.Atoi(s)
 		if err != nil {
-			return 0, err
+			panic(err)
 		}
 		c[i] = cc
 	}
-	return slices.Min(c), nil
+	return slices.Min(c)
 }
