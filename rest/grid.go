@@ -18,7 +18,6 @@ package rest
 
 import (
 	"context"
-	"errors"
 )
 
 // Grid is the SunSynk model of the electricity grid connected to an inverter.
@@ -41,10 +40,10 @@ func (synkClient *SynkClient) Grid(ctx context.Context) (*Grid, error) {
 //	grid.Get("acRealyStatus")
 //
 // to get the state of the grid (Note: "Realy" should probably be "Relay")
-func (grid *Grid) IsUp() (bool, error) {
+func (grid *Grid) IsUp() bool {
 	v, ok := grid.Get("acRealyStatus")
 	if !ok {
-		return false, errors.New("cannot determine whether the grid is up")
+		panic("cannot determine whether the grid is up")
 	}
-	return int(v.(float64)) == 1, nil
+	return int(v.(float64)) == 1
 }

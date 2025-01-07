@@ -18,7 +18,6 @@ package rest
 
 import (
 	"context"
-	"errors"
 )
 
 // Battery is a model of a battery connected to an inverter.
@@ -39,11 +38,11 @@ func (synkClient *SynkClient) Battery(ctx context.Context) (*Battery, error) {
 //	battery.Get("bmsSoc")
 //
 // since "bmsSoc" is the attribute used by the SunSynk REST API.
-func (battery *Battery) SOC() (int, error) {
+func (battery *Battery) SOC() int {
 	v, ok := battery.Get("bmsSoc")
 	if ok {
-		return int(v.(float64)), nil
+		return int(v.(float64))
 	} else {
-		return 0, errors.New("cannot retrieve the SOC")
+		panic("cannot retrieve the SOC")
 	}
 }

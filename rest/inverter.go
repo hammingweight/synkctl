@@ -121,11 +121,11 @@ func (settings *Inverter) SetLimitedToLoad(limitToLoad bool) error {
 
 // LimitedToLoad returns true if the inverter powers only essential loads. If the inverter can
 // power circuits connected to the CT, this method returns false.
-func (settings *Inverter) LimitedToLoad() (bool, error) {
+func (settings *Inverter) LimitedToLoad() bool {
 	if settings.SysWorkMode != "1" && settings.SysWorkMode != "2" {
-		return false, fmt.Errorf("unexpected value for sysWorkMode attribute: %v", settings.SysWorkMode)
+		panic("unexpected value for sysWorkMode attribute: " + settings.SysWorkMode)
 	}
-	return settings.SysWorkMode == "1", nil
+	return settings.SysWorkMode == "1"
 }
 
 // Sets the battery state of charge at which point the inverter will use the grid rather than batteries
