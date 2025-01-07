@@ -7,7 +7,7 @@
 
 Since it's written in Go, **synkctl** runs on Linux, Windows and MacOS and on AMD64 and Arm CPUs.
 
-## Getting started with the CLI
+## The **synkctl** CLI
 Running `synkctl`  without any arguments, provides help
 
 ```
@@ -30,16 +30,17 @@ Available Commands:
   load          The inverter's load statistics
 
 Flags:
-  -c, --config string     synkctl config file location (default "/home/cmeijer/.synk/config")
+  -c, --config string     synkctl config file location
   -h, --help              help for synkctl
   -i, --inverter string   SunSynk inverter serial number
+  -k, --keys string       Extract specific keys from response
   -v, --version           version for synkctl
 
 Use "synkctl [command] --help" for more information about a command.
 ```
 
-### Configuring *synkctl*
-To use *synkctl* you need to create a configuration file. The easiest way to do that is to run
+### Configuring **synkctl**
+To use **synkctl** you need to create a configuration file. The easiest way to do that is to run
 
 ```
 $ synkctl configuration generate -u <username> -p <password>
@@ -78,3 +79,9 @@ To check that your credentials work
 $ synkctl configuration verify
 OK.
 ```
+
+## The **synkctl** REST Client
+To use the (Go) REST client, you need to
+ * Create a `Configuration` instance (typically by reading it from a config file)
+ * Call an `Authenticate` function which, if successful, returns a `SynkClient` object
+ * Invoke `Read` or `Update` methods on the `SynkClient`
