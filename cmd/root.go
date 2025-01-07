@@ -35,7 +35,7 @@ var rootCmd = &cobra.Command{
 	Long: `SynkCtl is a CLI for querying and updating SunSynk hybrid inverters and getting
 the state of the battery, grid and input (e.g. solar panels) connected to the
 inverter.`,
-	Version: "0.13.0",
+	Version: "0.14.0",
 }
 
 // Executes the command supplied by the user.
@@ -52,7 +52,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	configFile, err := configuration.GetDefaultConfigurationFile()
+	configFile, err := configuration.DefaultConfigurationFile()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

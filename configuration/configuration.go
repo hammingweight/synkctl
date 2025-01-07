@@ -111,7 +111,7 @@ func NewWithEndpoint(user string, password string, endpoint string) (*Configurat
 }
 
 // Get the path to the default location of the synk config file ($HOME/.synk/config on Linux).
-func GetDefaultConfigurationFile() (string, error) {
+func DefaultConfigurationFile() (string, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return "", err
