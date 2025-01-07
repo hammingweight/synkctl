@@ -29,7 +29,7 @@ func readBattery(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	battery, err := synkClient.ReadBattery(ctx)
+	battery, err := synkClient.Battery(ctx)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadBatteryState, err)
 	}

@@ -25,17 +25,17 @@ import (
 	"strconv"
 )
 
-// ReadInverterSettings gets the SunSynk model of an inverter from the API.
-func (synkClient *SynkClient) ReadInverterSettings(ctx context.Context) (*Inverter, error) {
+// ReadInverter gets the settings of an inverter from the API.
+func (synkClient *SynkClient) Inverter(ctx context.Context) (*Inverter, error) {
 	path := []string{"common", "setting", synkClient.SerialNumber, "read"}
 	inverter := &Inverter{}
 	err := synkClient.readApiV1(ctx, inverter, nil, path...)
 	return inverter, err
 }
 
-// UpdateInverterSettings issues a POST request to the SunSynk API to reconfigure the inverter. For
+// UpdateInverter issues a POST request to the SunSynk API to reconfigure the inverter. For
 // example, the battery capacity can be changed or powering non-essential circuits can be disabled.
-func (synkClient *SynkClient) UpdateInverterSettings(ctx context.Context, settings *Inverter) error {
+func (synkClient *SynkClient) UpdateInverter(ctx context.Context, settings *Inverter) error {
 	path := []string{"common", "setting", synkClient.SerialNumber, "set"}
 	postData, err := json.Marshal(settings)
 	if err != nil {
@@ -53,7 +53,7 @@ func (synkClient *SynkClient) countInverters(ctx context.Context) (int, error) {
 
 const pageSize = 10
 
-func (synkClient *SynkClient) getInverterSerialNumbers(ctx context.Context, page int) ([]string, error) {
+func (synkClient *SynkClient) inverterSerialNumbers(ctx context.Context, page int) ([]string, error) {
 	path := []string{"inverters"}
 	queryParams := map[string]string{}
 	queryParams["page"] = strconv.Itoa(page)
@@ -93,7 +93,7 @@ func (synkClient *SynkClient) ListInverters(ctx context.Context) ([]string, erro
 	}
 	inverterSerialNumbers := []string{}
 	for i := 1; i <= numPages; i++ {
-		serialNumbers, err := synkClient.getInverterSerialNumbers(ctx, i)
+		serialNumbers, err := synkClient.inverterSerialNumbers(ctx, i)
 		if err != nil {
 			return nil, err
 		}
@@ -119,9 +119,9 @@ func (settings *Inverter) SetLimitedToLoad(limitToLoad bool) error {
 	return nil
 }
 
-// IsLimitedToLoad returns true if the inverter powers only essential loads. If the inverter can
+// LimitedToLoad returns true if the inverter powers only essential loads. If the inverter can
 // power circuits connected to the CT, this method returns false.
-func (settings *Inverter) IsLimitedToLoad() (bool, error) {
+func (settings *Inverter) LimitedToLoad() (bool, error) {
 	if settings.SysWorkMode != "1" && settings.SysWorkMode != "2" {
 		return false, fmt.Errorf("unexpected value for sysWorkMode attribute: %v", settings.SysWorkMode)
 	}

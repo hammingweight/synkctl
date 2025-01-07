@@ -54,7 +54,7 @@ func applyInverterSettings(ctx context.Context, in *os.File) error {
 	if err != nil {
 		return err
 	}
-	return client.UpdateInverterSettings(ctx, settings)
+	return client.UpdateInverter(ctx, settings)
 }
 
 // Updates the inverter settings from a file.

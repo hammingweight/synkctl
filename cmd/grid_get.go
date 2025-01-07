@@ -29,7 +29,7 @@ func readGrid(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	grid, err := synkClient.ReadGrid(ctx)
+	grid, err := synkClient.Grid(ctx)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadGridState, err)
 	}

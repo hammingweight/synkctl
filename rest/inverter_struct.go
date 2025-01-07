@@ -434,7 +434,7 @@ func (inverter *InverterShortForm) String() string {
 }
 
 // GetShortForm returns the short form of an Inverter.
-func (inverter *Inverter) GetShortForm() (*InverterShortForm, error) {
+func (inverter *Inverter) ToShortForm() (*InverterShortForm, error) {
 	data, err := json.Marshal(inverter)
 	if err != nil {
 		return nil, err
@@ -446,7 +446,7 @@ func (inverter *Inverter) GetShortForm() (*InverterShortForm, error) {
 
 // GetLongForm returns a struct with all Inverter fields. Fields that are not defined
 // in the short form will be unpopulated.
-func (inverter *InverterShortForm) GetLongForm() (*Inverter, error) {
+func (inverter *InverterShortForm) ToLongForm() (*Inverter, error) {
 	data, err := json.Marshal(inverter)
 	if err != nil {
 		return nil, err

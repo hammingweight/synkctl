@@ -30,12 +30,12 @@ func readInverterSettings(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	inverterSettings, err := synkClient.ReadInverterSettings(ctx)
+	inverterSettings, err := synkClient.Inverter(ctx)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadInverterSettings, err)
 	}
 	if viper.GetBool("short") {
-		shortForm, err := inverterSettings.GetShortForm()
+		shortForm, err := inverterSettings.ToShortForm()
 		if err != nil {
 			return err
 		}

@@ -37,7 +37,7 @@ func updateInverterSettings(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	inverterSettings, err := synkClient.ReadInverterSettings(ctx)
+	inverterSettings, err := synkClient.Inverter(ctx)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadInverterSettings, err)
 	}
@@ -65,7 +65,7 @@ func updateInverterSettings(ctx context.Context) error {
 			return fmt.Errorf("%w: %w", ErrCantUpdateInverterSettings, err)
 		}
 	}
-	return synkClient.UpdateInverterSettings(ctx, inverterSettings)
+	return synkClient.UpdateInverter(ctx, inverterSettings)
 }
 
 // Updates the configured lower discharge threshold for the bettery and whether to power all home circuits or

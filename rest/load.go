@@ -25,8 +25,8 @@ import (
 // The most important attribute of the load is the power being consumed.
 type Load struct{ *SynkObject }
 
-// ReadLoad calls the SunSynk REST API to get the state of the load.
-func (synkClient *SynkClient) ReadLoad(ctx context.Context) (*Load, error) {
+// Load calls the SunSynk REST API to get the state of the load.
+func (synkClient *SynkClient) Load(ctx context.Context) (*Load, error) {
 	path := []string{"inverter", "load", synkClient.SerialNumber, "realtime"}
 	queryParams := map[string]string{"sn": synkClient.SerialNumber, "lan": "en"}
 	o := &SynkObject{}
@@ -34,10 +34,10 @@ func (synkClient *SynkClient) ReadLoad(ctx context.Context) (*Load, error) {
 	return &Load{o}, err
 }
 
-// GetPower returns the current power (in watts, W) being consumed by the load.
+// Power returns the current power (in watts, W) being consumed by the load.
 // This is a convenience method that reads the totalPower attribute of a Load
 // instance.
-func (load *Load) GetPower() (int, error) {
+func (load *Load) Power() (int, error) {
 	v, ok := load.Get("totalPower")
 	if !ok {
 		return 0, errors.New("cannot determine the power being consumed")

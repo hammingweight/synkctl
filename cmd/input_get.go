@@ -29,7 +29,7 @@ func readInputState(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	input, err := synkClient.ReadInputState(ctx)
+	input, err := synkClient.Input(ctx)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadInputState, err)
 	}

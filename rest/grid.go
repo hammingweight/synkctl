@@ -27,7 +27,7 @@ import (
 type Grid struct{ *SynkObject }
 
 // ReadBattery calls the SunSynk REST API to get the state of the power grid.
-func (synkClient *SynkClient) ReadGrid(ctx context.Context) (*Grid, error) {
+func (synkClient *SynkClient) Grid(ctx context.Context) (*Grid, error) {
 	path := []string{"inverter", "grid", synkClient.SerialNumber, "realtime"}
 	queryParams := map[string]string{"sn": synkClient.SerialNumber}
 	o := &SynkObject{}

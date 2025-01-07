@@ -26,8 +26,8 @@ import (
 // two MPPTs) and the power being supplied by the input.
 type Input struct{ *SynkObject }
 
-// ReadInput calls the SunSynk REST API to get the state of the input.
-func (synkClient *SynkClient) ReadInputState(ctx context.Context) (*Input, error) {
+// Input calls the SunSynk REST API to get the state of the input.
+func (synkClient *SynkClient) Input(ctx context.Context) (*Input, error) {
 	path := []string{"inverter", synkClient.SerialNumber, "realtime", "input"}
 	queryParams := map[string]string{"sn": synkClient.SerialNumber, "lan": "en"}
 	o := &SynkObject{}
@@ -35,8 +35,8 @@ func (synkClient *SynkClient) ReadInputState(ctx context.Context) (*Input, error
 	return &Input{o}, err
 }
 
-// GetPower returns the most recent reading of the power (in watts, W) being generated.
-func (input *Input) GetPower() (int, error) {
+// Power returns the most recent reading of the power (in watts, W) being generated.
+func (input *Input) Power() (int, error) {
 	v, ok := input.Get("pac")
 	if !ok {
 		return 0, errors.New("cannot read the power being generated")

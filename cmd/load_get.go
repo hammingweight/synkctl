@@ -29,7 +29,7 @@ func readLoad(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	load, err := synkClient.ReadLoad(ctx)
+	load, err := synkClient.Load(ctx)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadLoadStatistics, err)
 	}
