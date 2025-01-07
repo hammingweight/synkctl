@@ -12,7 +12,7 @@ Running **synkctl**  without any arguments, provides help
 
 ```
 $ synkctl 
-**synkctl** is a CLI for querying and updating SunSynk hybrid inverters and getting
+synkctl is a CLI for querying and updating SunSynk hybrid inverters and getting
 the state of the battery, grid and input (e.g. solar panels) connected to the
 inverter.
 
