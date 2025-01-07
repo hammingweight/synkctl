@@ -25,7 +25,7 @@ import (
 	"strconv"
 )
 
-// ReadInverter gets the settings of an inverter from the API.
+// Inverter gets the settings of an inverter from the API.
 func (synkClient *SynkClient) Inverter(ctx context.Context) (*Inverter, error) {
 	path := []string{"common", "setting", synkClient.SerialNumber, "read"}
 	inverter := &Inverter{}
