@@ -32,7 +32,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "synkctl",
 	Short: "A CLI for SunSynk hybrid inverters",
-	Long: `SynkCtl is a CLI for querying and updating SunSynk hybrid inverters and getting
+	Long: `synkctl is a CLI for querying and updating SunSynk hybrid inverters and getting
 the state of the battery, grid and input (e.g. solar panels) connected to the
 inverter.`,
 	Version: "0.17.0",

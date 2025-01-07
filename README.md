@@ -8,11 +8,11 @@
 Since it's written in Go, **synkctl** runs on Linux, Windows and MacOS and on AMD64 and Arm CPUs.
 
 ## The **synkctl** CLI
-Running `synkctl`  without any arguments, provides help
+Running **synkctl**  without any arguments, provides help
 
 ```
 $ synkctl 
-SynkCtl is a CLI for querying and updating SunSynk hybrid inverters and getting
+**synkctl** is a CLI for querying and updating SunSynk hybrid inverters and getting
 the state of the battery, grid and input (e.g. solar panels) connected to the
 inverter.
 
