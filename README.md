@@ -80,6 +80,58 @@ $ synkctl configuration verify
 OK.
 ```
 
+### Listing all inverters
+To see all the inverters that you can inspect, run `synkctl inverters list`, e.g.
+
+```
+$ synkctl inverter list
+[
+    "2401010001",
+    "2401020123"
+]
+```
+
+### Reading state and statistics
+**synkctl** can read the state of statistics of the inverter, battery, input (e.g. panels) and grid by passing the "get" verb on the associated object:
+
+```
+synkctl inverter get
+synkctl battery get
+synkctl input get
+synkctl grid get
+```
+
+If you have not specified a default inverter serial number (or you want to override the default serial number); for example,
+
+```
+$ synkctl -i 2401020123 grid get
+{
+    "acRealyStatus": 1,
+    "etodayFrom": "0.5",
+    "etodayTo": "0.0",
+    "etotalFrom": "1944.6",
+    "etotalTo": "20.4",
+    "fac": 50.05,
+    "limiterPowerArr": [
+        0,
+        0
+    ],
+    "limiterTotalPower": 0,
+    "pac": 0,
+    "pf": 1,
+    "qac": 0,
+    "status": 0,
+    "vip": [
+        {
+            "current": "1.3",
+            "power": 0,
+            "volt": "236.2"
+        }
+    ]
+}
+```
+
+
 ## The **synkctl** REST Client
 To use the (Go) REST client, you need to
  * Create a `Configuration` instance (typically by reading it from a config file)
