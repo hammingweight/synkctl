@@ -101,7 +101,7 @@ synkctl input get
 synkctl grid get
 ```
 
-If you have not specified a default inverter serial number (or you want to override the default serial number); for example,
+If you have not specified a default inverter serial number (or you want to override the default serial number), you can pass the serial number as a command line argument (using the `-i` or `--inverter` switch); for example,
 
 ```
 $ synkctl -i 2401020123 grid get
