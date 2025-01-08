@@ -111,7 +111,7 @@ $ synkctl -i 2401020123 grid get
     "etodayTo": "0.0",
     "etotalFrom": "1944.6",
     "etotalTo": "20.4",
-    "fac": 50.05,
+    "fac": 49.91,
     "limiterPowerArr": [
         0,
         0
@@ -129,6 +129,25 @@ $ synkctl -i 2401020123 grid get
         }
     ]
 }
+```
+
+The output from `get` can be very lengthy. If you are only interested in certain fields you can specify those fields as comma-separated values following the `-k` switch
+
+```
+$ synkctl -i 2201020123 grid get -k etodayFrom,fac
+{
+    "etodayFrom": "0.5",
+    "fac": 49.91
+}
+
+```
+
+If you want to extract nested values, you should use a more sophisticated tool like `jq` and pipe the output to the tool. For example
+
+```
+$ synkctl -i 2201020123 grid get | jq .vip[0].volt
+"236.2"
+
 ```
 
 
