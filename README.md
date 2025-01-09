@@ -1,5 +1,5 @@
 # synkctl 
-**synkctl** is a CLI and REST Client for SunSynk<sup>:registered:</sup> inverters that allows you to:
+**synkctl** is a (Cobra/Viper) CLI and Go REST Client for SunSynk<sup>:registered:</sup> inverters that allows you to:
  * Read your inverter settings
  * Read the state of the attached power sources (solar panels, grid and battery)
  * Read load statistics
@@ -150,9 +150,54 @@ $ synkctl -i 2201020123 grid get | jq .vip[0].volt
 
 ```
 
+### Updating the inverter settings
+There are two verbs for updating the inverter's settings:
+ * `update` for the two common use-cases
+ * `apply` for fine-grained updates to the inverter
+
+* Unless you have an installer account, attempts to update your inverter will fail! *
+*  
+#### `update`
+The `update` operation allows you to
+ * Set the minimum battery SOC (i.e. the SOC at which the inverter will use the grid to power circuits - assuming that the grid is up, obviously)
+ * Enable or disable providing power to the CT coil (i.e. allowing or preventing the inverter from powering non-essential circuits)
+
+For example, to ensure that the battery won't be discharged below 50% if the grid is up
+
+```
+$ synkctl inverter update --battery-capacity 50
+```
+
+To allow the inverter to power non-essential circuits via the CT coil
+
+```
+$ synkctl inverter update --essential-only false
+```
+
+#### `apply`
+The `update` operation is limited and coarse. For example, a SunSynk inverter allows an operator to set up to six different battery SOCs (`cap1` to `cap6`) depending on the time of day,
+but the `update` operation will set all the values `cap1` to `cap6` to the same value. For fine-grained updates to the inverter settings, use the `apply` subcommand and a JSON file (or pipe JSON to stdin)
+with the inverter settings.
+
+To get the current inverter settings and all fields that can be updated, you could run
+
+```
+$ synkctl inverter get --short` > settings.json
+```
+
+(The `--short` flag directive ensures that only updateable inverter settings will be returned.) 
+
+Edit the JSON file with your new settings and use the `apply` subcommand
+
+```
+$ vi settings.json
+$ synkctl inverter apply -f settings.json --force`
+```
+
+Note that the `--force` argument must be supplied to acknowledge that you are doing something potentially dangerous: There is no validation of the settings.
 
 ## The **synkctl** REST Client
-To use the (Go) REST client, you need to
+To use the REST client, you need to
  * Create a `Configuration` instance (typically by reading it from a config file)
  * Call an `Authenticate` function which, if successful, returns a `SynkClient` object
  * Invoke `Read` or `Update` methods on the `SynkClient`
