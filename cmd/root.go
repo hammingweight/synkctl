@@ -35,7 +35,7 @@ var rootCmd = &cobra.Command{
 	Long: `synkctl is a CLI for querying and updating SunSynk hybrid inverters and getting
 the state of the battery, grid and input (e.g. solar panels) connected to the
 inverter.`,
-	Version: "0.17.0",
+	Version: "0.18.0",
 }
 
 // Executes the command supplied by the user.

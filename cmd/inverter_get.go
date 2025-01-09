@@ -18,6 +18,7 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -35,6 +36,9 @@ func readInverterSettings(ctx context.Context) error {
 		return fmt.Errorf("%w: %w", ErrCantReadInverterSettings, err)
 	}
 	if viper.GetBool("short") {
+		if viper.GetString("keys") != "" {
+			return errors.New("cannot specify both \"--keys\" and \"--short\"")
+		}
 		shortForm, err := inverterSettings.ToShortForm()
 		if err != nil {
 			return err
