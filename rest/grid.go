@@ -25,12 +25,12 @@ import (
 // most importantly, whether the grid is up.
 type Grid struct{ *SynkObject }
 
-// ReadBattery calls the SunSynk REST API to get the state of the power grid.
+// Grid calls the SunSynk REST API to get the state of the power grid.
 func (synkClient *SynkClient) Grid(ctx context.Context) (*Grid, error) {
 	path := []string{"inverter", "grid", synkClient.SerialNumber, "realtime"}
 	queryParams := map[string]string{"sn": synkClient.SerialNumber}
 	o := &SynkObject{}
-	err := synkClient.readApiV1(ctx, o, queryParams, path...)
+	err := synkClient.readAPIV1(ctx, o, queryParams, path...)
 	return &Grid{o}, err
 }
 

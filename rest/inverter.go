@@ -29,7 +29,7 @@ import (
 func (synkClient *SynkClient) Inverter(ctx context.Context) (*Inverter, error) {
 	path := []string{"common", "setting", synkClient.SerialNumber, "read"}
 	inverter := &Inverter{}
-	err := synkClient.readApiV1(ctx, inverter, nil, path...)
+	err := synkClient.readAPIV1(ctx, inverter, nil, path...)
 	return inverter, err
 }
 
@@ -41,13 +41,13 @@ func (synkClient *SynkClient) UpdateInverter(ctx context.Context, settings *Inve
 	if err != nil {
 		return err
 	}
-	return updateApiV1(ctx, synkClient, string(postData), path...)
+	return updateAPIV1(ctx, synkClient, string(postData), path...)
 }
 
 func (synkClient *SynkClient) countInverters(ctx context.Context) (int, error) {
 	path := []string{"inverters", "count"}
 	resp := &map[string]any{}
-	err := synkClient.readApiV1(ctx, resp, nil, path...)
+	err := synkClient.readAPIV1(ctx, resp, nil, path...)
 	return int((*resp)["total"].(float64)), err
 }
 
@@ -61,7 +61,7 @@ func (synkClient *SynkClient) inverterSerialNumbers(ctx context.Context, page in
 	queryParams["type"] = "-2"
 	queryParams["status"] = "-1"
 	resp := &map[string]any{}
-	err := synkClient.readApiV1(ctx, resp, queryParams, path...)
+	err := synkClient.readAPIV1(ctx, resp, queryParams, path...)
 	if err != nil {
 		return nil, err
 	}

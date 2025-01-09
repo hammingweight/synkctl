@@ -29,7 +29,7 @@ func (synkClient *SynkClient) Load(ctx context.Context) (*Load, error) {
 	path := []string{"inverter", "load", synkClient.SerialNumber, "realtime"}
 	queryParams := map[string]string{"sn": synkClient.SerialNumber, "lan": "en"}
 	o := &SynkObject{}
-	err := synkClient.readApiV1(ctx, o, queryParams, path...)
+	err := synkClient.readAPIV1(ctx, o, queryParams, path...)
 	return &Load{o}, err
 }
 

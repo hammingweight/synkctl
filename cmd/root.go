@@ -35,10 +35,10 @@ var rootCmd = &cobra.Command{
 	Long: `synkctl is a CLI for querying and updating SunSynk hybrid inverters and getting
 the state of the battery, grid and input (e.g. solar panels) connected to the
 inverter.`,
-	Version: "0.20.0",
+	Version: "0.21.0",
 }
 
-// Executes the command supplied by the user.
+// Execute the command supplied by the user.
 func Execute() {
 	// Ensure that commands timeout after 30 seconds
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)

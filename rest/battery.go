@@ -29,7 +29,7 @@ func (synkClient *SynkClient) Battery(ctx context.Context) (*Battery, error) {
 	path := []string{"inverter", "battery", synkClient.SerialNumber, "realtime"}
 	queryParams := map[string]string{"sn": synkClient.SerialNumber, "lan": "en"}
 	o := &SynkObject{}
-	err := synkClient.readApiV1(ctx, o, queryParams, path...)
+	err := synkClient.readAPIV1(ctx, o, queryParams, path...)
 	return &Battery{o}, err
 }
 
@@ -42,7 +42,6 @@ func (battery *Battery) SOC() int {
 	v, ok := battery.Get("bmsSoc")
 	if ok {
 		return int(v.(float64))
-	} else {
-		panic("cannot retrieve the SOC")
 	}
+	panic("cannot retrieve the SOC")
 }

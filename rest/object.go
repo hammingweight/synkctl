@@ -24,7 +24,7 @@ import (
 // SynkObject is an abstraction of JSON objects returned by the SunSynk REST API. Concrete objects like
 // Grid, Load or Battery encapsulate an instance of SynkObject that maps attributes of the object to values.
 // The SynkObject type is "read only" and types derived from it should not be updated.
-
+//
 // Note: The Inverter abstraction does not encapsulate an instance of this type. The Inverter type is
 // special since it can be updated (e.g. to set the battery discharge threshold.)
 type SynkObject map[string]any
