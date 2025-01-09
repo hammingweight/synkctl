@@ -18,5 +18,6 @@ jobs:
         with:
           go-version: 1.23.0
       - uses: actions/checkout@v2
+      - run: golint ./...
       - name: unit test
         run: go test -v ./...
