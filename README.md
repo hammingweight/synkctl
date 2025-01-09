@@ -155,8 +155,8 @@ There are two verbs for updating the inverter's settings:
  * `update` for the two common use-cases
  * `apply` for fine-grained updates to the inverter
 
-* Unless you have an installer account, attempts to update your inverter will fail! *
-*  
+  _Unless you have an installer account, attempts to update your inverter will fail!_
+  
 #### `update`
 The `update` operation allows you to
  * Set the minimum battery SOC (i.e. the SOC at which the inverter will use the grid to power circuits - assuming that the grid is up, obviously)
