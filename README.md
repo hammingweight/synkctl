@@ -197,10 +197,19 @@ $ synkctl inverter apply -f settings.json --force`
 Note that the `--force` argument must be supplied to acknowledge that you are doing something potentially dangerous: There is no validation of the settings.
 
 ## The **synkctl** REST Client
+A CLI can be useful but for more complex scenarios, it's better to have a program that monitors and adjust settings by making API calls. For example:
+ * At the end of each day, check the battery SOC and adjust the minimum SOC (for example, increase the minimum SOC as the seasons change from summer to winter)
+ * Only allow the inverter to power non-essential circuits if the battery SOC is above somethreshold and the input are producing some minimum amount of power (this ensures that the battery isn't drained too rapidly)
+
+The API is written in Go.
+
+### Using the REST Client
 To use the REST client, you need to
  * Create a `Configuration` instance (typically by reading it from a config file)
  * Call an `Authenticate` function which, if successful, returns a `SynkClient` object
  * Invoke `Read` or `Update` methods on the `SynkClient`
+
+The code below is illustrative of what's required (although you shouldn't discard returned `error`s)
 
 ```
 package main
