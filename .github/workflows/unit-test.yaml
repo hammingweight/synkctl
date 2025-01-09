@@ -18,6 +18,9 @@ jobs:
         with:
           go-version: 1.23.0
       - uses: actions/checkout@v2
-      - run: golint ./...
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.60
       - name: unit test
         run: go test -v ./...
