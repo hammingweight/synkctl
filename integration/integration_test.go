@@ -14,13 +14,28 @@ import (
 var client *rest.SynkClient
 
 func init() {
+	// If we can't create a client, no tests will pass so
+	// we just panic if something goes wrong.
 	username := os.Getenv("TEST_USER")
+	if username == "" {
+		panic("the TEST_USER environment variable must be set")
+	}
 	password := os.Getenv("TEST_PASSWORD")
+	if password == "" {
+		panic("the TEST_PASSWORD environment variable must be set")
+	}
 	config, err := configuration.New(username, password)
 	if err != nil {
 		panic(err)
 	}
-	config.DefaultInverterSN = os.Getenv("TEST_INVERTER_SN")
+	if os.Getenv("TEST_ENDPOINT") != "" {
+		config.Endpoint = os.Getenv("TEST_ENDPOINT")
+	}
+	serialNumber := os.Getenv("TEST_INVERTER_SN")
+	if serialNumber == "" {
+		panic("the TEST_INVERTER_SN environment variable must be set")
+	}
+	config.DefaultInverterSN = serialNumber
 	client, err = rest.Authenticate(context.Background(), config)
 	if err != nil {
 		panic(err)
@@ -54,6 +69,7 @@ func TestInput(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	// The next line will panic if we can't read the power.
 	input.Power()
 }
 
@@ -73,5 +89,6 @@ func TestLoad(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	// The next line will panic if we can't read the power.
 	load.Power()
 }
