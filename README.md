@@ -13,6 +13,18 @@
 **synkctl** is written in Go and uses the [Cobra](https://github.com/spf13/cobra) and [Viper](https://github.com/spf13/viper) libraries.
 
 ## The **synkctl** CLI
+
+### Getting the **synkctl** CLI
+You can download **synkctl** for Windows, macOS or Linux from [Releases](https://github.com/hammingweight/synkctl/releases).
+
+If you have Go installed, you can get the latest version by running
+
+```
+go install github.com/hammingweight/synkctl@latest
+```
+
+
+### Using the **synkctl** CLI
 Running **synkctl**  without any arguments, provides help
 
 ```
@@ -44,7 +56,7 @@ Flags:
 Use "synkctl [command] --help" for more information about a command.
 ```
 
-### Configuring **synkctl**
+#### Configuring **synkctl**
 To use **synkctl** you need to create a configuration file. The easiest way to do that is to run
 
 ```
@@ -85,25 +97,26 @@ $ synkctl configuration verify
 OK.
 ```
 
-### Listing all inverters
+#### Listing all inverters
 To see all the inverters that you can inspect, run `synkctl inverters list`, e.g.
 
 ```
-$ synkctl inverter list
+$ synkctl inverters list
 [
     "2401010001",
     "2401020123"
 ]
 ```
 
-### Reading state and statistics
-**synkctl** can read the state of statistics of the inverter, battery, input (e.g. panels) and grid by passing the "get" verb on the associated object:
+#### Reading state and statistics
+**synkctl** can read the state of statistics of the inverter, battery, input (e.g. panels), grid and load by passing the "get" verb on the associated object:
 
 ```
 synkctl inverter get
 synkctl battery get
 synkctl input get
 synkctl grid get
+synkctl load get
 ```
 
 If you have not specified a default inverter serial number (or you want to override the default serial number), you can pass the serial number as a command line argument (using the `-i` or `--inverter` switch); for example,
@@ -155,14 +168,14 @@ $ synkctl -i 2201020123 grid get | jq .vip[0].volt
 
 ```
 
-### Updating the inverter settings
+#### Updating the inverter settings
 There are two verbs for updating the inverter's settings:
  * `update` for the two common use-cases
  * `apply` for fine-grained updates to the inverter
 
   _Unless you have an installer account, attempts to update your inverter will fail!_
   
-#### `update`
+##### `update`
 The `update` operation allows you to
  * Set the minimum battery SOC (i.e. the SOC at which the inverter will use the grid to power circuits - assuming that the grid is up, obviously)
  * Enable or disable providing power to the CT coil (i.e. allowing or preventing the inverter from powering non-essential circuits)
@@ -179,7 +192,7 @@ To allow the inverter to power non-essential circuits via the CT coil
 $ synkctl inverter update --essential-only false
 ```
 
-#### `apply`
+##### `apply`
 The `update` operation is limited and coarse. For example, a SunSynk inverter allows an operator to set up to six different battery SOCs (`cap1` to `cap6`) depending on the time of day,
 but the `update` operation will set all the values `cap1` to `cap6` to the same value. For fine-grained updates to the inverter settings, use the `apply` subcommand and a JSON file (or pipe JSON to stdin)
 with the inverter settings.
@@ -205,6 +218,14 @@ Note that the `--force` argument must be supplied to acknowledge that you are do
 A CLI can be useful but for more complex scenarios, it's better to have a program that monitors and adjust settings by making API calls. For example:
  * At the end of each day, check the battery SOC and adjust the minimum SOC (for example, increase the minimum SOC as the seasons change from summer to winter)
  * Only allow the inverter to power non-essential circuits if the battery SOC is above some threshold and the input are producing some minimum amount of power (this ensures that the battery isn't drained too rapidly)
+
+### Installing the REST Client
+To add the **synkctl** module as a dependency to a project, run
+
+```
+$ go get github.com/hammingweight/synkctl@latest
+```
+
 
 ### Using the REST Client
 To use the REST client, you need to
