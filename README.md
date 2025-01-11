@@ -2,6 +2,7 @@
 <img src="/images/synkctl.jpg" align="right" width="200px">
 
 ![](https://github.com/hammingweight/synkctl/actions/workflows/build.yml/badge.svg)
+![](https://github.com/hammingweight/synkctl/actions/workflows/integrationtest.yml/badge.svg)
 
 **synkctl** is a CLI and Go REST Client for SunSynk<sup>:registered:</sup> inverters that allows you to:
  * Read your inverter settings
