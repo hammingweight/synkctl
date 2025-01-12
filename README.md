@@ -8,7 +8,7 @@ SunSynk<sup>:registered:</sup> is a manufacturer of popular hybrid inverters tha
 or direct access to the inverter. While the inverter's user interfaces are functional, they may not be ideal for automated management
 of settings. 
 
-The **synkctl** tool simplifies the onitoring of an inverter's state and the automatic updating of an inverter's settings.
+The **synkctl** tool simplifies monitoring an inverter's state and automatic updating of its settings.
 
 **synkctl** is a CLI and Go REST Client for SunSynk<sup>:registered:</sup> inverters that allows you to:
  * Read your inverter settings
