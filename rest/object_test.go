@@ -16,7 +16,10 @@ limitations under the License.
 
 package rest
 
-import "testing"
+import (
+	"encoding/json"
+	"testing"
+)
 
 func TestExtractOk(t *testing.T) {
 	o := SynkObject{}
@@ -47,5 +50,37 @@ func TestNoSuchKey(t *testing.T) {
 	}
 	if subset != nil {
 		t.Error("no SynkObject should have been returned")
+	}
+}
+
+func TestGet(t *testing.T) {
+	o := SynkObject{"foo": 3, "bar": "baz"}
+	v, ok := o.Get("foo")
+	if !ok {
+		t.Error("Couldn't retrieve key foo")
+	}
+	if v != 3 {
+		t.Errorf("Expected value 3, got %d", v)
+	}
+	_, ok = o.Get("baz")
+	if ok {
+		t.Error("Retrieved non-existent key baz")
+	}
+}
+
+func TestString(t *testing.T) {
+	// Test that the String method returns valid JSON
+	s := SynkObject{"foo": 3, "bar": "baz"}.String()
+	data := map[string]any{}
+	err := json.Unmarshal([]byte(s), &data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(data) != 2 {
+		t.Errorf("Expected 2 keys, got %d", len(data))
+	}
+	_, ok := data["foo"]
+	if !ok {
+		t.Error("Couldn't retrieve key foo")
 	}
 }
