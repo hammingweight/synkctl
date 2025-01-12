@@ -4,6 +4,11 @@
 ![](https://github.com/hammingweight/synkctl/actions/workflows/build.yml/badge.svg)
 ![](https://github.com/hammingweight/synkctl/actions/workflows/integrationtest.yml/badge.svg)
 
+SunSynk<sup>:registered:</sup> is a manufacturer of popular hybrid inverters that can be managed via a mobile app, web interface
+or by direct access to the inverter. While the inverter's user interfaces are good, they are not ideal for automated management of settings. 
+
+The **synkctl** tool simplifies the onitoring of an inverter's state and the automatic updating of an inverter's settings.
+
 **synkctl** is a CLI and Go REST Client for SunSynk<sup>:registered:</sup> inverters that allows you to:
  * Read your inverter settings
  * Read the state of the attached power sources (solar panels, grid and battery)
