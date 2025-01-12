@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// Package cmd dispatches commands to handlers.
 package cmd
 
 import (

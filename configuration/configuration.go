@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// Package configuration configures credentials for accessing the
+// SunSynk API.
 package configuration
 
 import (

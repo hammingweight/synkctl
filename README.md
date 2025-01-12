@@ -173,7 +173,7 @@ There are two verbs for updating the inverter's settings:
  * `update` for the two common use-cases
  * `apply` for fine-grained updates to the inverter
 
-  _Unless you have an installer account, attempts to update your inverter will fail!_
+  _Unless you have an installer account, attempts to update your inverter settings will fail._
   
 ##### `update`
 The `update` operation allows you to
@@ -217,7 +217,7 @@ Note that the `--force` argument must be supplied to acknowledge that you are do
 ## The **synkctl** REST Client
 A CLI can be useful but for more complex scenarios, it's better to have a program that monitors and adjust settings by making API calls. For example:
  * At the end of each day, check the battery SOC and adjust the minimum SOC (for example, increase the minimum SOC as the seasons change from summer to winter)
- * Only allow the inverter to power non-essential circuits if the battery SOC is above some threshold and the input are producing some minimum amount of power (this ensures that the battery isn't drained too rapidly)
+ * Only allow the inverter to power non-essential circuits if the battery SOC is above some threshold and the input is producing some minimum amount of power (this ensures that the battery won't be drained too rapidly)
 
 ### Installing the REST Client
 To add the **synkctl** module as a dependency to a project, run
