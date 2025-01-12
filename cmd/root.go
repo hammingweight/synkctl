@@ -30,7 +30,7 @@ import (
 )
 
 // Version references the tagged version number in GitHub.
-var Version string = "1.0.0"
+var Version string = ""
 
 // rootCmd represents the base command and subcommands are added to it
 var rootCmd = &cobra.Command{
