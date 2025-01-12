@@ -63,7 +63,8 @@ Use "synkctl [command] --help" for more information about a command.
 ```
 
 #### Configuring **synkctl**
-To use **synkctl** you need to create a configuration file. The easiest way to do that is to run
+To use **synkctl** you need to create a configuration file; the easiest way to generate a
+file is to run
 
 ```
 $ synkctl configuration generate -u <username> -p <password>
