@@ -7,7 +7,6 @@ variables
 $ export TEST_USER=carl@example.com
 $ export TEST_PASSWORD="verySecret"
 $ export TEST_INVERTER_SN=1234567890
-
 ```
 
 Then, to run the tests:
