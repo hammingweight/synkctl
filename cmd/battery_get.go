@@ -41,10 +41,8 @@ var batteryGetCmd = &cobra.Command{
 	Use:     "get",
 	Short:   "Reads battery statistics",
 	Aliases: []string{"read"},
+	Args:    cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) != 0 {
-			return fmt.Errorf("%w '%v'", ErrUnexpectedArguments, args)
-		}
 		return readBattery(cmd.Context())
 	},
 }

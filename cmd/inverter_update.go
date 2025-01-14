@@ -73,10 +73,8 @@ func updateInverterSettings(ctx context.Context) error {
 var updateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "Basic options to update the inverter settings",
+	Args:  cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) != 0 {
-			return fmt.Errorf("%w '%v'", ErrUnexpectedArguments, args)
-		}
 		return updateInverterSettings(cmd.Context())
 	},
 }
