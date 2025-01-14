@@ -8,7 +8,7 @@ SunSynk<sup>:registered:</sup> is a manufacturer of popular hybrid inverters tha
 or direct access to the inverter. While the inverter's user interfaces are functional, they may not be ideal for automated management
 of settings. 
 
-The **synkctl** tool simplifies monitoring an inverter's state and automatic updating of its settings.
+The **synkctl** tool simplifies the monitoring of an inverter's state and the application of automatic updates to its settings.
 
 **synkctl** is a CLI and Go REST Client for SunSynk<sup>:registered:</sup> inverters that allows you to:
  * Read your inverter settings
@@ -116,7 +116,7 @@ $ synkctl inverters list
 ```
 
 #### Reading state and statistics
-**synkctl** can read the state of statistics of the inverter, battery, input (e.g. panels), grid and load by passing the "get" verb on the associated object:
+**synkctl** can read the state of the inverter, battery, input (e.g. panels), grid and load by passing the "get" verb on the associated object:
 
 ```
 synkctl inverter get
@@ -156,7 +156,7 @@ $ synkctl -i 2401020123 grid get
 }
 ```
 
-The output from `get` can be very lengthy. If you are only interested in certain fields, you can specify those fields as comma-separated values following the `-k` switch
+The output from `get` can be very lengthy; if you are only interested in certain fields, you can specify those fields as comma-separated values following the `-k` switch
 
 ```
 $ synkctl -i 2201020123 grid get -k etodayFrom,fac
@@ -204,7 +204,8 @@ The `update` operation is limited and coarse. For example, a SunSynk inverter al
 but the `update` operation will set all the values `cap1` to `cap6` to the same value. For fine-grained updates to the inverter settings, use the `apply` subcommand and a JSON file (or pipe JSON to stdin)
 with the inverter settings.
 
-To get the current inverter settings and all fields that can be updated, you could run
+To get the current inverter settings and all fields that can be updated (and to redirect the output to a JSON file),
+you could run
 
 ```
 $ synkctl inverter get --short` > settings.json
@@ -222,7 +223,7 @@ $ synkctl inverter apply -f settings.json force`
 Note that the `force` argument must be supplied to acknowledge that you are doing something potentially dangerous: There is no validation of the settings.
 
 ## The **synkctl** REST Client
-A CLI can be useful but for more complex scenarios, it's better to have a program that monitors and adjust settings by making API calls. For example:
+A CLI can be useful but for more complex scenarios, it's better to run a program that monitors and adjust settings by making API calls. For example:
  * At the end of each day, check the battery SOC and adjust the minimum SOC (for example, increase the minimum SOC as the seasons change from summer to winter)
  * Only allow the inverter to power non-essential circuits if the battery SOC is above some threshold and the input is producing some minimum amount of power (this ensures that the battery won't be drained too rapidly)
 
