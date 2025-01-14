@@ -216,10 +216,10 @@ Edit the JSON file with your new settings and use the `apply` subcommand
 
 ```
 $ vi settings.json
-$ synkctl inverter apply -f settings.json --force`
+$ synkctl inverter apply -f settings.json force`
 ```
 
-Note that the `--force` argument must be supplied to acknowledge that you are doing something potentially dangerous: There is no validation of the settings.
+Note that the `force` argument must be supplied to acknowledge that you are doing something potentially dangerous: There is no validation of the settings.
 
 ## The **synkctl** REST Client
 A CLI can be useful but for more complex scenarios, it's better to have a program that monitors and adjust settings by making API calls. For example:
