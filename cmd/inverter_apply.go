@@ -30,7 +30,7 @@ import (
 )
 
 func confirmApply() bool {
-	fmt.Println("You did not specify \"--force=true\". Do you really want to proceed?")
+	fmt.Println("You did not pass the argument \"force\". Do you really want to proceed?")
 	fmt.Println("[yes/NO])")
 	var resp string
 	fmt.Scan(&resp)
@@ -61,9 +61,9 @@ func applyInverterSettings(ctx context.Context, in *os.File) error {
 var inverterApplyCmd = &cobra.Command{
 	Use:   "apply",
 	Short: "Applies the inverter settings from a file or stdin",
-	Args:  cobra.ExactArgs(0),
+	Args:  cobra.MatchAll(cobra.MaximumNArgs(1), cobra.OnlyValidArgs),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if !forceFlag {
+		if len(args) != 1 {
 			if !confirmApply() {
 				fmt.Println("aborting")
 				os.Exit(1)
@@ -80,13 +80,11 @@ var inverterApplyCmd = &cobra.Command{
 		}
 		return applyInverterSettings(cmd.Context(), in)
 	},
+	ValidArgs: []string{"force"},
 }
-
-var forceFlag bool
 
 func init() {
 	inverterCmd.AddCommand(inverterApplyCmd)
-	inverterApplyCmd.Flags().BoolVar(&forceFlag, "force", false, "Acknowledge the risks")
 	inverterApplyCmd.Flags().StringP("file", "f", "", "JSON file with inverter settings")
 	viper.BindPFlag("file", inverterApplyCmd.Flags().Lookup("file"))
 }
