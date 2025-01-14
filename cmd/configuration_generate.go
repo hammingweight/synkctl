@@ -58,10 +58,8 @@ func generate() error {
 var generateCmd = &cobra.Command{
 	Use:   "generate",
 	Short: "Creates a configuration file",
+	Args:  cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) != 0 {
-			return fmt.Errorf("%w '%v'", ErrUnexpectedArguments, args)
-		}
 		return generate()
 	},
 }

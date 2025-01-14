@@ -41,10 +41,8 @@ var inputGetCmd = &cobra.Command{
 	Use:     "get",
 	Aliases: []string{"read"},
 	Short:   "Gets the state of the inverter's inputs",
+	Args:    cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) != 0 {
-			return fmt.Errorf("%w '%v'", ErrUnexpectedArguments, args)
-		}
 		return readInputState(cmd.Context())
 	},
 }

@@ -27,10 +27,7 @@ import (
 )
 
 // Invoke the SunSynk OAUTH endpoint and check that the request succeeds
-func verify(ctx context.Context, args []string) error {
-	if len(args) != 0 {
-		return fmt.Errorf("unexpected argument '%s'", args[0])
-	}
+func verify(ctx context.Context) error {
 	config, err := configuration.ReadConfigurationFromFile(viper.GetString("config"))
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantAuthenticateUser, err)
@@ -53,8 +50,9 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
+	Args: cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return verify(cmd.Context(), args)
+		return verify(cmd.Context())
 	},
 }
 

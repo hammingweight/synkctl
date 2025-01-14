@@ -41,10 +41,8 @@ var getLoadCmd = &cobra.Command{
 	Use:     "get",
 	Short:   "Gets the inverter's current and cumulative load statistics",
 	Aliases: []string{"read"},
+	Args:    cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) != 0 {
-			return fmt.Errorf("%w '%v'", ErrUnexpectedArguments, args)
-		}
 		return readLoad(cmd.Context())
 	},
 }

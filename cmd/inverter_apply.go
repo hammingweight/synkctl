@@ -61,10 +61,8 @@ func applyInverterSettings(ctx context.Context, in *os.File) error {
 var inverterApplyCmd = &cobra.Command{
 	Use:   "apply",
 	Short: "Applies the inverter settings from a file or stdin",
+	Args:  cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) != 0 {
-			return fmt.Errorf("%w '%v'", ErrUnexpectedArguments, args)
-		}
 		if !forceFlag {
 			if !confirmApply() {
 				fmt.Println("aborting")
