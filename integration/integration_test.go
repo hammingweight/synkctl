@@ -1,3 +1,5 @@
+//go:build integration
+
 /*
 Copyright 2025 Carl Meijer.
 
@@ -13,8 +15,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
-//go:build integration
 
 package integration
 
@@ -58,7 +58,14 @@ func init() {
 	}
 }
 
+func panicRecover(t *testing.T) {
+	if v := recover(); v != nil {
+		t.Fatal(v)
+	}
+}
+
 func TestBattery(t *testing.T) {
+	defer panicRecover(t)
 	battery, err := client.Battery(context.Background())
 	if err != nil {
 		t.Fatal(err)
@@ -70,6 +77,7 @@ func TestBattery(t *testing.T) {
 }
 
 func TestGrid(t *testing.T) {
+	defer panicRecover(t)
 	grid, err := client.Grid(context.Background())
 	if err != nil {
 		t.Fatal(err)
@@ -81,6 +89,7 @@ func TestGrid(t *testing.T) {
 }
 
 func TestInput(t *testing.T) {
+	defer panicRecover(t)
 	input, err := client.Input(context.Background())
 	if err != nil {
 		t.Fatal(err)
@@ -90,6 +99,7 @@ func TestInput(t *testing.T) {
 }
 
 func TestInverter(t *testing.T) {
+	defer panicRecover(t)
 	inverter, err := client.Inverter(context.Background())
 	if err != nil {
 		t.Fatal(err)
@@ -101,6 +111,7 @@ func TestInverter(t *testing.T) {
 }
 
 func TestLoad(t *testing.T) {
+	defer panicRecover(t)
 	load, err := client.Load(context.Background())
 	if err != nil {
 		t.Fatal(err)
