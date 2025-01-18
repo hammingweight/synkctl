@@ -72,8 +72,7 @@ func TestString(t *testing.T) {
 	// Test that the String method returns valid JSON
 	s := SynkObject{"foo": 3, "bar": "baz"}.String()
 	data := map[string]any{}
-	err := json.Unmarshal([]byte(s), &data)
-	if err != nil {
+	if err := json.Unmarshal([]byte(s), &data); err != nil {
 		t.Fatal(err)
 	}
 	if len(data) != 2 {

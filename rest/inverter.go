@@ -61,8 +61,7 @@ func (synkClient *SynkClient) inverterSerialNumbers(ctx context.Context, page in
 	queryParams["type"] = "-2"
 	queryParams["status"] = "-1"
 	resp := &map[string]any{}
-	err := synkClient.readAPIV1(ctx, resp, queryParams, path...)
-	if err != nil {
+	if err := synkClient.readAPIV1(ctx, resp, queryParams, path...); err != nil {
 		return nil, err
 	}
 	allInverters, ok := (*resp)["infos"]

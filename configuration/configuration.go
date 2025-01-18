@@ -40,8 +40,7 @@ type Configuration struct {
 
 func createAndOpenFile(filename string) (*os.File, error) {
 	dir := filepath.Dir(filename)
-	err := os.MkdirAll(dir, 0700)
-	if err != nil {
+	if err := os.MkdirAll(dir, 0700); err != nil {
 		return nil, err
 	}
 	return os.OpenFile(filename, os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0600)
