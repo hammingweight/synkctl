@@ -142,8 +142,7 @@ func TestWriteConfigurationToFile(t *testing.T) {
 		t.Fatal("error: ", err)
 	}
 	configMap := map[string]string{}
-	err = yaml.Unmarshal(data, configMap)
-	if err != nil {
+	if err = yaml.Unmarshal(data, configMap); err != nil {
 		t.Fatal("error: ", err)
 	}
 	if len(configMap) != 3 {

@@ -49,8 +49,7 @@ func updateInverterSettings(ctx context.Context) error {
 		if err != nil {
 			return fmt.Errorf("%w: essential-only must be \"true\" or \"false\", not \"%s\"", ErrCantUpdateInverterSettings, essentialOnly)
 		}
-		err = inverterSettings.SetLimitedToLoad(flag)
-		if err != nil {
+		if err = inverterSettings.SetLimitedToLoad(flag); err != nil {
 			return fmt.Errorf("%w: %w", ErrCantUpdateInverterSettings, err)
 		}
 	}
@@ -60,8 +59,7 @@ func updateInverterSettings(ctx context.Context) error {
 		if err != nil {
 			return fmt.Errorf("%w: battery-capacity must be an integer, not \"%s\"", ErrCantUpdateInverterSettings, batteryCap)
 		}
-		err = inverterSettings.SetBatteryCapacity(batteryCapInt)
-		if err != nil {
+		if err = inverterSettings.SetBatteryCapacity(batteryCapInt); err != nil {
 			return fmt.Errorf("%w: %w", ErrCantUpdateInverterSettings, err)
 		}
 	}
