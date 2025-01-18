@@ -99,13 +99,11 @@ func TestWriteConfiguration(t *testing.T) {
 		Password: password,
 	}
 	w := &bytes.Buffer{}
-	err := writeConfiguration(w, configuration)
-	if err != nil {
+	if err := writeConfiguration(w, configuration); err != nil {
 		t.Fatal("error:", err)
 	}
 	configMap := map[string]string{}
-	err = yaml.Unmarshal(w.Bytes(), configMap)
-	if err != nil {
+	if err := yaml.Unmarshal(w.Bytes(), configMap); err != nil {
 		t.Fatal("error:", err)
 	}
 	if len(configMap) != 3 {
@@ -132,8 +130,7 @@ func TestWriteConfigurationToFile(t *testing.T) {
 		Password: password,
 	}
 	filename := filepath.Join(t.TempDir(), "config")
-	err := WriteConfigurationToFile(filename, configuration)
-	if err != nil {
+	if err := WriteConfigurationToFile(filename, configuration); err != nil {
 		t.Fatal("error: ", err)
 	}
 	f, err := os.Open(filename)

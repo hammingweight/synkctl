@@ -40,8 +40,7 @@ func generate() error {
 		Password:          password,
 		DefaultInverterSN: inverterSN,
 	}
-	err := configuration.WriteConfigurationToFile(viper.GetString("config"), config)
-	if err != nil {
+	if err := configuration.WriteConfigurationToFile(viper.GetString("config"), config); err != nil {
 		return fmt.Errorf("%w: %w", ErrCantCreateConfigFile, err)
 	}
 	fmt.Printf("Wrote configuration to '%s'.\n", configFile)

@@ -47,8 +47,7 @@ func Execute() {
 	// Ensure that commands timeout after 30 seconds
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	err := rootCmd.ExecuteContext(ctx)
-	if err != nil {
+	if err := rootCmd.ExecuteContext(ctx); err != nil {
 		os.Exit(1)
 	}
 }
