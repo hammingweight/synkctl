@@ -29,7 +29,6 @@ func displayObject(o *rest.SynkObject) error {
 		var err error
 		o, err = o.ExtractKeys(strings.Split(viper.GetString("keys"), ","))
 		if err != nil {
-			fmt.Println(err)
 			return err
 		}
 	}
