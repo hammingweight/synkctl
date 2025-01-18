@@ -46,8 +46,7 @@ func unmarshalResponseData(resp *http.Response, data any) error {
 		return err
 	}
 	synkResponse := SynkResponse{}
-	err = json.Unmarshal(body, &synkResponse)
-	if err != nil {
+	if err = json.Unmarshal(body, &synkResponse); err != nil {
 		return err
 	}
 	if !synkResponse.Success {
@@ -58,8 +57,7 @@ func unmarshalResponseData(resp *http.Response, data any) error {
 		if err != nil {
 			return nil
 		}
-		err = json.Unmarshal(dataBytes, data)
-		if err != nil {
+		if err = json.Unmarshal(dataBytes, data); err != nil {
 			return nil
 		}
 	}
@@ -91,8 +89,7 @@ func (synkClient *SynkClient) readAPIV1(ctx context.Context, synkObject any, que
 	if err != nil {
 		return err
 	}
-	err = unmarshalResponseData(resp, synkObject)
-	if err != nil {
+	if err = unmarshalResponseData(resp, synkObject); err != nil {
 		return err
 	}
 	return nil

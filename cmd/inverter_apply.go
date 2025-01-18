@@ -50,8 +50,7 @@ func applyInverterSettings(ctx context.Context, in *os.File) error {
 		return err
 	}
 	settings := &rest.Inverter{}
-	err = json.Unmarshal(data, settings)
-	if err != nil {
+	if err = json.Unmarshal(data, settings); err != nil {
 		return err
 	}
 	return client.UpdateInverter(ctx, settings)

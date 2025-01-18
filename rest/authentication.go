@@ -85,8 +85,7 @@ func Authenticate(ctx context.Context, config *configuration.Configuration) (*Sy
 		return nil, err
 	}
 	tokens := &tokens{}
-	err = unmarshalResponseData(resp, tokens)
-	if err != nil {
+	if err = unmarshalResponseData(resp, tokens); err != nil {
 		return nil, err
 	}
 	return &SynkClient{endpoint: config.Endpoint, tokens: *tokens, SerialNumber: config.DefaultInverterSN}, err
