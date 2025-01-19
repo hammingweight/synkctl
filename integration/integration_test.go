@@ -22,6 +22,7 @@ import (
 	"context"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/hammingweight/synkctl/configuration"
 	"github.com/hammingweight/synkctl/rest"
@@ -52,10 +53,17 @@ func init() {
 		panic("the TEST_INVERTER_SN environment variable must be set")
 	}
 	config.DefaultInverterSN = serialNumber
-	client, err = rest.Authenticate(context.Background(), config)
-	if err != nil {
-		panic(err)
+
+	// Allow three attempts to authenticate, in case of flakiness somewhere.
+	// Also, increase the delay between attempts.
+	for i := 0; i < 3; i++ {
+		time.Sleep(time.Duration(i) * time.Minute)
+		client, err = rest.Authenticate(context.Background(), config)
+		if err == nil {
+			return
+		}
 	}
+	panic(err)
 }
 
 func panicRecover(t *testing.T) {
