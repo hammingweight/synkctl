@@ -21,14 +21,14 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
+
+var batteryCap percentage
+var essentialOnly onOff
+var gridCharge onOff
 
 // Updates the lower threshold battery capacity and/or the system work mode
 func updateInverterSettings(ctx context.Context) error {
-	essentialOnly := onOff(viper.GetString("essential-only"))
-	batteryCap := percentage(viper.GetString("battery-capacity"))
-	gridCharge := onOff(viper.GetString("grid-charge"))
 	if essentialOnly == "" && batteryCap == "" && gridCharge == "" {
 		return fmt.Errorf("%w: must supply \"essential-only\", \"battery-capacity\" or \"grid-charge\" flag",
 			ErrCantUpdateInverterSettings)
@@ -75,14 +75,7 @@ var updateCmd = &cobra.Command{
 func init() {
 	inverterCmd.AddCommand(updateCmd)
 
-	var batteryCap percentage
 	updateCmd.Flags().VarP(&batteryCap, "battery-capacity", "b", "The minimum battery capacity")
-	var essentialOnly onOff
 	updateCmd.Flags().VarP(&essentialOnly, "essential-only", "e", "Power essential only (on) or all (off) circuits")
-	var gridCharge onOff
 	updateCmd.Flags().VarP(&gridCharge, "grid-charge", "g", "Enable (on) or disable (off) grid charging of the battery")
-
-	viper.BindPFlag("battery-capacity", updateCmd.Flags().Lookup("battery-capacity"))
-	viper.BindPFlag("essential-only", updateCmd.Flags().Lookup("essential-only"))
-	viper.BindPFlag("grid-charge", updateCmd.Flags().Lookup("grid-charge"))
 }
