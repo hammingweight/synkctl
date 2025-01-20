@@ -47,3 +47,27 @@ func (flag *onOff) Set(v string) error {
 	}
 	return nil
 }
+
+type percentage string
+
+func (p *percentage) String() string {
+	return string(*p)
+}
+
+func (p *percentage) Type() string {
+	return "percentage"
+}
+
+func (p *percentage) Set(v string) error {
+	_, err := strconv.Atoi(v)
+	if err != nil {
+		return err
+	}
+	*p = percentage(v)
+	return nil
+}
+
+func (p *percentage) Int() int {
+	v, _ := strconv.Atoi(p.String())
+	return v
+}
