@@ -177,7 +177,7 @@ $ synkctl -i 2201020123 grid get | jq .vip[0].volt
 
 #### Updating the inverter settings
 There are two verbs for updating the inverter's settings:
- * `update` for the two common use-cases
+ * `update` for the common use-cases
  * `apply` for fine-grained updates to the inverter
 
   _Unless you have an installer account, attempts to update your inverter settings will fail._
@@ -186,6 +186,7 @@ There are two verbs for updating the inverter's settings:
 The `update` operation allows you to
  * Set the minimum battery SOC (i.e. the SOC at which the inverter will use the grid to power circuits - assuming that the grid is up, obviously)
  * Enable or disable providing power to the CT coil (i.e. allowing or preventing the inverter from powering non-essential circuits)
+ * Enable or disable recharging of the battery from the grid
 
 For example, to ensure that the battery won't be discharged below 50% if the grid is up
 
@@ -196,8 +197,15 @@ $ synkctl inverter update --battery-capacity 50
 To allow the inverter to power non-essential circuits via the CT coil
 
 ```
-$ synkctl inverter update --essential-only false
+$ synkctl inverter update --essential-only off
 ```
+
+To allow the grid to recharge the battery if the battery SOC drops below the discharge threshold
+
+```
+$ synkctl inverter update --grid-charge on
+```
+
 
 ##### `apply`
 The `update` operation is limited and coarse. For example, a SunSynk inverter allows an operator to set up to six different battery SOCs (`cap1` to `cap6`) depending on the time of day,
