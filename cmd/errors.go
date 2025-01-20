@@ -31,4 +31,5 @@ var (
 	ErrCantReadLoadStatistics     = errors.New("can't read load statistics")
 	ErrCantUpdateInverterSettings = errors.New("can't update inverter settings")
 	ErrNoInverterSerialNumber     = errors.New("no inverter serial number (--inverter) supplied")
+	ErrInvalidFlag                = errors.New("must be on/true or off/false")
 )
