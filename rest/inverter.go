@@ -166,3 +166,37 @@ func (settings *Inverter) BatteryCapacity() int {
 	}
 	return slices.Min(c)
 }
+
+// GridChargeOn returns true if the grid is used at any time to charge the battery.
+func (settings *Inverter) GridChargeOn() bool {
+	gridCharge := []any{settings.Time1on, settings.Time2on, settings.Time3on, settings.Time4on, settings.Time5on, settings.Time6on}
+	for _, c := range gridCharge {
+		switch c := c.(type) {
+		case string:
+			b, err := strconv.ParseBool(c)
+			if err != nil {
+				panic(err)
+			}
+			if b {
+				return b
+			}
+		case bool:
+			if c {
+				return c
+			}
+		default:
+			panic(fmt.Sprintf("unexpected value for time-on setting: %v", c))
+		}
+	}
+	return false
+}
+
+// SetGridChargeOn sets whether to enable (true) or disable (false) grid charging of the battery.
+func (settings *Inverter) SetGridChargeOn(on bool) {
+	settings.Time1on = on
+	settings.Time2on = on
+	settings.Time3on = on
+	settings.Time4on = on
+	settings.Time5on = on
+	settings.Time6on = on
+}

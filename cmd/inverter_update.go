@@ -29,8 +29,10 @@ import (
 func updateInverterSettings(ctx context.Context) error {
 	essentialOnly := viper.GetString("essential-only")
 	batteryCap := viper.GetString("battery-capacity")
-	if essentialOnly == "" && batteryCap == "" {
-		return fmt.Errorf("%w: must supply \"essential-only\" or \"battery-capacity\" flag", ErrCantUpdateInverterSettings)
+	gridCharge := viper.GetString("grid-charge")
+	if essentialOnly == "" && batteryCap == "" && gridCharge == "" {
+		return fmt.Errorf("%w: must supply \"essential-only\", \"battery-capacity\" or \"grid-charge\" flag",
+			ErrCantUpdateInverterSettings)
 	}
 
 	synkClient, err := newClient(ctx, true)
@@ -42,8 +44,6 @@ func updateInverterSettings(ctx context.Context) error {
 		return fmt.Errorf("%w: %w", ErrCantReadInverterSettings, err)
 	}
 
-	// Check that we support only sysWorkModes "1" (power the essential loads only) and "2" (power all home circuits), i.e. we don't support
-	// exporting to the grid
 	if essentialOnly != "" {
 		flag, err := strconv.ParseBool(essentialOnly)
 		if err != nil {
@@ -52,6 +52,14 @@ func updateInverterSettings(ctx context.Context) error {
 		if err = inverterSettings.SetLimitedToLoad(flag); err != nil {
 			return fmt.Errorf("%w: %w", ErrCantUpdateInverterSettings, err)
 		}
+	}
+
+	if gridCharge != "" {
+		flag, err := strconv.ParseBool(gridCharge)
+		if err != nil {
+			return fmt.Errorf("%w: grid-charge must be \"true\" or \"false\", not \"%s\"", ErrCantUpdateInverterSettings, gridCharge)
+		}
+		inverterSettings.SetGridChargeOn(flag)
 	}
 
 	if batteryCap != "" {
@@ -82,7 +90,9 @@ func init() {
 
 	updateCmd.Flags().StringP("battery-capacity", "b", "", "The minimum battery capacity")
 	updateCmd.Flags().StringP("essential-only", "e", "", "Power essential only (true) or all (false) circuits")
+	updateCmd.Flags().StringP("grid-charge", "g", "", "Enable (true) or disable (false) grid charging of the battery")
 
 	viper.BindPFlag("essential-only", updateCmd.Flags().Lookup("essential-only"))
 	viper.BindPFlag("battery-capacity", updateCmd.Flags().Lookup("battery-capacity"))
+	viper.BindPFlag("grid-charge", updateCmd.Flags().Lookup("grid-charge"))
 }
