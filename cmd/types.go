@@ -48,6 +48,10 @@ func (flag *onOff) Set(v string) error {
 	return nil
 }
 
+func (flag *onOff) Bool() bool {
+	return *flag == "on"
+}
+
 type percentage string
 
 func (p *percentage) String() string {
@@ -59,7 +63,7 @@ func (p *percentage) Type() string {
 }
 
 func (p *percentage) Set(v string) error {
-	_, err := strconv.Atoi(v)
+	_, err := strconv.ParseFloat(v, 64)
 	if err != nil {
 		return err
 	}
@@ -68,6 +72,6 @@ func (p *percentage) Set(v string) error {
 }
 
 func (p *percentage) Int() int {
-	v, _ := strconv.Atoi(p.String())
-	return v
+	v, _ := strconv.ParseFloat(p.String(), 64)
+	return int(v)
 }

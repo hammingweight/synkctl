@@ -26,9 +26,9 @@ import (
 
 // Updates the lower threshold battery capacity and/or the system work mode
 func updateInverterSettings(ctx context.Context) error {
-	essentialOnly := viper.GetString("essential-only")
+	essentialOnly := onOff(viper.GetString("essential-only"))
 	batteryCap := percentage(viper.GetString("battery-capacity"))
-	gridCharge := viper.GetString("grid-charge")
+	gridCharge := onOff(viper.GetString("grid-charge"))
 	if essentialOnly == "" && batteryCap == "" && gridCharge == "" {
 		return fmt.Errorf("%w: must supply \"essential-only\", \"battery-capacity\" or \"grid-charge\" flag",
 			ErrCantUpdateInverterSettings)
@@ -44,13 +44,13 @@ func updateInverterSettings(ctx context.Context) error {
 	}
 
 	if essentialOnly != "" {
-		if err = inverterSettings.SetLimitedToLoad(essentialOnly == "on"); err != nil {
+		if err = inverterSettings.SetLimitedToLoad(essentialOnly.Bool()); err != nil {
 			return fmt.Errorf("%w: %w", ErrCantUpdateInverterSettings, err)
 		}
 	}
 
 	if gridCharge != "" {
-		inverterSettings.SetGridChargeOn(gridCharge == "on")
+		inverterSettings.SetGridChargeOn(gridCharge.Bool())
 	}
 
 	if batteryCap != "" {
