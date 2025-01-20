@@ -45,21 +45,13 @@ func updateInverterSettings(ctx context.Context) error {
 	}
 
 	if essentialOnly != "" {
-		flag, err := strconv.ParseBool(essentialOnly)
-		if err != nil {
-			return fmt.Errorf("%w: essential-only must be \"true\" or \"false\", not \"%s\"", ErrCantUpdateInverterSettings, essentialOnly)
-		}
-		if err = inverterSettings.SetLimitedToLoad(flag); err != nil {
+		if err = inverterSettings.SetLimitedToLoad(essentialOnly == "on"); err != nil {
 			return fmt.Errorf("%w: %w", ErrCantUpdateInverterSettings, err)
 		}
 	}
 
 	if gridCharge != "" {
-		flag, err := strconv.ParseBool(gridCharge)
-		if err != nil {
-			return fmt.Errorf("%w: grid-charge must be \"true\" or \"false\", not \"%s\"", ErrCantUpdateInverterSettings, gridCharge)
-		}
-		inverterSettings.SetGridChargeOn(flag)
+		inverterSettings.SetGridChargeOn(gridCharge == "on")
 	}
 
 	if batteryCap != "" {
@@ -89,8 +81,10 @@ func init() {
 	inverterCmd.AddCommand(updateCmd)
 
 	updateCmd.Flags().StringP("battery-capacity", "b", "", "The minimum battery capacity")
-	updateCmd.Flags().StringP("essential-only", "e", "", "Power essential only (true) or all (false) circuits")
-	updateCmd.Flags().StringP("grid-charge", "g", "", "Enable (true) or disable (false) grid charging of the battery")
+	var essentialOnly onOff
+	updateCmd.Flags().VarP(&essentialOnly, "essential-only", "e", "Power essential only (on) or all (off) circuits")
+	var gridCharge onOff
+	updateCmd.Flags().VarP(&gridCharge, "grid-charge", "g", "Enable (on) or disable (off) grid charging of the battery")
 
 	viper.BindPFlag("essential-only", updateCmd.Flags().Lookup("essential-only"))
 	viper.BindPFlag("battery-capacity", updateCmd.Flags().Lookup("battery-capacity"))
