@@ -28,7 +28,7 @@ import (
 func listInverters(ctx context.Context) error {
 	synkClient, err := newClient(ctx, false)
 	if err != nil {
-		return nil
+		return err
 	}
 	inverterSerialNumbers, err := synkClient.ListInverters(ctx)
 	if err != nil {

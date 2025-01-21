@@ -55,10 +55,10 @@ func unmarshalResponseData(resp *http.Response, data any) error {
 	if data != nil {
 		dataBytes, err := json.Marshal(synkResponse.Data)
 		if err != nil {
-			return nil
+			return err
 		}
 		if err = json.Unmarshal(dataBytes, data); err != nil {
-			return nil
+			return err
 		}
 	}
 	return nil

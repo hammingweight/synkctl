@@ -49,7 +49,7 @@ func createAndOpenFile(filename string) (*os.File, error) {
 func writeConfiguration(writer io.Writer, configuration *Configuration) error {
 	marshalledData, err := yaml.Marshal(configuration)
 	if err != nil {
-		return nil
+		return err
 	}
 	_, err = writer.Write(marshalledData)
 	return err
