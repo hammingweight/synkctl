@@ -42,3 +42,18 @@ func (input *Input) Power() int {
 	}
 	return int(v.(float64))
 }
+
+// PV returns the power, current and voltage from the n-th string where/
+// the indexes start at 0.
+func (input *Input) PV(n int) (map[string]any, bool) {
+	v, ok := input.Get("pvIV")
+	if !ok {
+		panic("cannot read the pvIV attribute")
+	}
+	l, ok := v.([]any)
+	if !ok || len(l) <= n {
+		return nil, false
+	}
+	m := l[n]
+	return m.(map[string]any), true
+}
