@@ -54,6 +54,5 @@ func (input *Input) PV(n int) (map[string]any, bool) {
 	if !ok || len(l) <= n {
 		return nil, false
 	}
-	m := l[n]
-	return m.(map[string]any), true
+	return l[n].(map[string]any), true
 }
