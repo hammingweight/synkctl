@@ -42,7 +42,7 @@ func inverterSettings(ctx context.Context) error {
 	return nil
 }
 
-// infoCmd represents the settings command
+// settingsCmd represents the settings command
 var settingsCmd = &cobra.Command{
 	Use:   "settings",
 	Short: "Summary of important inverter settings",
