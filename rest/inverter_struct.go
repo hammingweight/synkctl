@@ -424,6 +424,14 @@ type InverterShortForm struct {
 	ZeroExportPower   string `json:"zeroExportPower,omitempty"`
 }
 
+// InverterSettings contains the most important configurable settings for
+// the inverter: battery-capacity, essential-only and grid-charge.
+type InverterSettings struct {
+	BatteryCapacity int  `json:"battery-capacity"`
+	EssentialOnly   bool `json:"essential-only"`
+	GridCharge      bool `json:"grid-charge"`
+}
+
 // String() returns a pretty-printed JSON representation of an InverterShortForm.
 func (inverter *InverterShortForm) String() string {
 	m, err := json.MarshalIndent(inverter, "", "    ")
