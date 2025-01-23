@@ -46,6 +46,7 @@ func inverterSettings(ctx context.Context) error {
 var settingsCmd = &cobra.Command{
 	Use:   "settings",
 	Short: "Summary of important inverter settings",
+	Args:  cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return inverterSettings(cmd.Context())
 	},
