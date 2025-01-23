@@ -118,6 +118,11 @@ func (settings *Inverter) SetLimitedToLoad(limitToLoad bool) error {
 	return nil
 }
 
+// SetEssentialOnly is an alias for the SetLimitedToLoad method.
+func (settings *Inverter) SetEssentialOnly(essentialOnly bool) error {
+	return settings.SetLimitedToLoad(essentialOnly)
+}
+
 // LimitedToLoad returns true if the inverter powers only essential loads. If the inverter can
 // power circuits connected to the CT, this method returns false.
 func (settings *Inverter) LimitedToLoad() bool {
@@ -125,6 +130,11 @@ func (settings *Inverter) LimitedToLoad() bool {
 		panic("unexpected value for sysWorkMode attribute: " + settings.SysWorkMode)
 	}
 	return settings.SysWorkMode == "1"
+}
+
+// EssentialOnly is an alias for the LimitedToLoad method.
+func (settings *Inverter) EssentialOnly() bool {
+	return settings.LimitedToLoad()
 }
 
 // SetBatteryCapacity sets the battery state of charge at which point the inverter will use the grid
@@ -199,4 +209,25 @@ func (settings *Inverter) SetGridChargeOn(on bool) {
 	settings.Time4on = on
 	settings.Time5on = on
 	settings.Time6on = on
+}
+
+// Settings returns the settings for battery-capacity, essential-only and grid-charge.
+func (settings *Inverter) Settings() *InverterSettings {
+	is := &InverterSettings{}
+	is.BatteryCapacity = settings.BatteryCapacity()
+	is.EssentialOnly = settings.EssentialOnly()
+	is.GridCharge = settings.GridChargeOn()
+	return is
+}
+
+// SetSettings adjusts the battery-capacity, essential-only and grid-charge parameters
+// of the inverter.
+func (settings *Inverter) SetSettings(is *InverterSettings) error {
+	settings.SetGridChargeOn(is.GridCharge)
+	err := settings.SetBatteryCapacity(is.BatteryCapacity)
+	if err != nil {
+		return err
+	}
+	err = settings.SetEssentialOnly(is.EssentialOnly)
+	return err
 }
