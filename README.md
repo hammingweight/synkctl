@@ -205,7 +205,16 @@ To allow the grid to recharge the battery if the battery SOC drops below the dis
 ```
 $ synkctl inverter update --grid-charge on
 ```
+To see the current inverter settings that can be updated, run
 
+```
+$ synkctl inverter settings 
+{
+    "battery-capacity": 30,
+    "essential-only": true,
+    "grid-charge": false
+}
+```
 
 ##### `apply`
 The `update` operation is limited and coarse. For example, a SunSynk inverter allows an operator to set up to six different battery SOCs (`cap1` to `cap6`) depending on the time of day,
