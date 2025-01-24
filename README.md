@@ -211,8 +211,8 @@ To see the current inverter settings that can be updated, run
 $ synkctl inverter settings 
 {
     "battery-capacity": 30,
-    "essential-only": true,
-    "grid-charge": false
+    "essential-only": "on",
+    "grid-charge": "off"
 }
 ```
 

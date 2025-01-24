@@ -16,7 +16,11 @@ limitations under the License.
 
 package rest
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"github.com/hammingweight/synkctl/types"
+)
 
 // Inverter is the complete SunSynk model of the inverter including fields that cannot be updated.
 // For example, the batteryShutdownCap field is included in the response which can be useful but this
@@ -427,9 +431,9 @@ type InverterShortForm struct {
 // InverterSettings contains the most important configurable settings for
 // the inverter: battery-capacity, essential-only and grid-charge.
 type InverterSettings struct {
-	BatteryCapacity int  `json:"battery-capacity"`
-	EssentialOnly   bool `json:"essential-only"`
-	GridCharge      bool `json:"grid-charge"`
+	BatteryCapacity int         `json:"battery-capacity"`
+	EssentialOnly   types.OnOff `json:"essential-only"`
+	GridCharge      types.OnOff `json:"grid-charge"`
 }
 
 // String() returns a pretty-printed JSON representation of an InverterShortForm.

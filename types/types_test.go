@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package cmd
+package types
 
 import "testing"
 
 func TestOff(t *testing.T) {
-	flag := onOff("")
+	flag := OnOff("")
 	err := flag.Set("false")
 	if err != nil {
 		t.Error("'false' is a valid onOff value")
@@ -40,7 +40,7 @@ func TestOff(t *testing.T) {
 }
 
 func TestOn(t *testing.T) {
-	var flag onOff
+	var flag OnOff
 	err := flag.Set("true")
 	if err != nil {
 		t.Error("'true' is a valid onOff value")
@@ -61,8 +61,17 @@ func TestOn(t *testing.T) {
 	}
 }
 
+func TestNew(t *testing.T) {
+	if NewOnOff(false) != "off" {
+		t.Errorf("expected 'off', got '%s'\n", NewOnOff(false))
+	}
+	if NewOnOff(true) != "on" {
+		t.Errorf("expected 'on', got '%s'\n", NewOnOff(true))
+	}
+}
+
 func TestInvalidValues(t *testing.T) {
-	var flag onOff
+	var flag OnOff
 	err := flag.Set("")
 	if err == nil {
 		t.Error("The empty string is not a valid value")
@@ -70,7 +79,7 @@ func TestInvalidValues(t *testing.T) {
 }
 
 func TestSetPercentage(t *testing.T) {
-	var p percentage
+	var p Percentage
 	err := p.Set("hello")
 	if err == nil {
 		t.Error("'hello' is not a valid percentage")
