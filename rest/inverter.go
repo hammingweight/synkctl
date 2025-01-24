@@ -23,6 +23,8 @@ import (
 	"fmt"
 	"slices"
 	"strconv"
+
+	"github.com/hammingweight/synkctl/types"
 )
 
 // Inverter gets the settings of an inverter from the API.
@@ -215,19 +217,19 @@ func (settings *Inverter) SetGridChargeOn(on bool) {
 func (settings *Inverter) Settings() *InverterSettings {
 	is := &InverterSettings{}
 	is.BatteryCapacity = settings.BatteryCapacity()
-	is.EssentialOnly = settings.EssentialOnly()
-	is.GridCharge = settings.GridChargeOn()
+	is.EssentialOnly = types.NewOnOff(settings.EssentialOnly())
+	is.GridCharge = types.NewOnOff(settings.GridChargeOn())
 	return is
 }
 
 // SetSettings adjusts the battery-capacity, essential-only and grid-charge parameters
 // of the inverter.
 func (settings *Inverter) SetSettings(is *InverterSettings) error {
-	settings.SetGridChargeOn(is.GridCharge)
+	settings.SetGridChargeOn(is.GridCharge.Bool())
 	err := settings.SetBatteryCapacity(is.BatteryCapacity)
 	if err != nil {
 		return err
 	}
-	err = settings.SetEssentialOnly(is.EssentialOnly)
+	err = settings.SetEssentialOnly(is.EssentialOnly.Bool())
 	return err
 }

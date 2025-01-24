@@ -20,12 +20,13 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hammingweight/synkctl/types"
 	"github.com/spf13/cobra"
 )
 
-var batteryCap percentage
-var essentialOnly onOff
-var gridCharge onOff
+var batteryCap types.Percentage
+var essentialOnly types.OnOff
+var gridCharge types.OnOff
 
 // Updates the lower threshold battery capacity and/or the system work mode
 func updateInverterSettings(ctx context.Context) error {
