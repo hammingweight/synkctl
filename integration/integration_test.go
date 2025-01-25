@@ -54,10 +54,10 @@ func init() {
 	}
 	config.DefaultInverterSN = serialNumber
 
-	// Allow three attempts to authenticate, in case of flakiness somewhere.
+	// Allow multiple attempts to authenticate, in case of flakiness somewhere.
 	// Also, increase the delay between attempts.
-	for i := 0; i < 3; i++ {
-		time.Sleep(time.Duration(i) * time.Minute)
+	for i := 0; i < 12; i++ {
+		time.Sleep(time.Duration(i) * time.Second * 5)
 		client, err = rest.Authenticate(context.Background(), config)
 		if err == nil {
 			return
