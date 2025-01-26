@@ -179,6 +179,24 @@ func (settings *Inverter) BatteryCapacity() int {
 	return slices.Min(c)
 }
 
+// BatteryLowCapacity returns the battery state of charge that will generate an alarm.
+func (settings *Inverter) BatteryLowCapacity() int {
+	c, err := strconv.Atoi(settings.BatteryLowCap)
+	if err != nil {
+		panic(err)
+	}
+	return c
+}
+
+// BatteryShutdownCapacity returns the battery shutdown SoC.
+func (settings *Inverter) BatteryShutdownCapacity() int {
+	c, err := strconv.Atoi(settings.BatteryShutdownCap)
+	if err != nil {
+		panic(err)
+	}
+	return c
+}
+
 // GridChargeOn returns true if the grid is used at any time to charge the battery.
 func (settings *Inverter) GridChargeOn() bool {
 	gridCharge := []any{settings.Time1on, settings.Time2on, settings.Time3on, settings.Time4on, settings.Time5on, settings.Time6on}
