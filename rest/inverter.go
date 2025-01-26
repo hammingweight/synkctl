@@ -149,9 +149,15 @@ func (settings *Inverter) SetBatteryCapacity(batteryCap int) error {
 		return fmt.Errorf("\"battery-capacity\" cannot be greater than %d", batteryCapUpperInt)
 	}
 
-	batteryCapLowerInt, _ := strconv.Atoi(settings.BatteryShutdownCap)
-	if batteryCap <= batteryCapLowerInt {
-		return fmt.Errorf("\"battery-capacity\" must be greater than %d", batteryCapLowerInt)
+	batteryCapLow := settings.BatteryLowCapacity()
+	if batteryCap <= batteryCapLow {
+		return fmt.Errorf("\"battery-capacity\" must be greater than %d", batteryCapLow)
+	}
+	// The next check is for the pathological case where the shutdown capacity is greater than
+	// the low SoC alarm setting.
+	batteryCapShutdown := settings.BatteryShutdownCapacity()
+	if batteryCap <= batteryCapShutdown {
+		return fmt.Errorf("\"battery-capacity\" must be greater than %d", batteryCapShutdown)
 	}
 
 	batteryCapStr := fmt.Sprintf("%d", batteryCap)
