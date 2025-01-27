@@ -18,6 +18,7 @@ package rest
 
 import (
 	"context"
+	"strconv"
 )
 
 // Battery is a model of a battery connected to an inverter.
@@ -58,4 +59,22 @@ func (battery *Battery) Power() int {
 		return int(v.(float64))
 	}
 	panic("cannot retrieve the battery power")
+}
+
+// CapacityAh returns the capacity of the battery in ampere-hours.
+func (battery *Battery) CapacityAh() float64 {
+	cap, ok := battery.SynkObject.Get("capacity")
+	if ok {
+		switch cap := cap.(type) {
+		case string:
+			v, err := strconv.ParseFloat(cap, 64)
+			if err != nil {
+				panic(err)
+			}
+			return v
+		case float64:
+			return cap
+		}
+	}
+	panic("cannot retrieve the battery capacity")
 }
