@@ -144,9 +144,8 @@ func (settings *Inverter) EssentialOnly() bool {
 // maximum allowed SoC for the battery (typically, 100%) or below the shutdown capacity of the
 // battery (e.g. 10%).
 func (settings *Inverter) SetBatteryCapacity(batteryCap int) error {
-	batteryCapUpperInt, _ := strconv.Atoi(settings.BatteryCap)
-	if batteryCap > batteryCapUpperInt {
-		return fmt.Errorf("\"battery-capacity\" cannot be greater than %d", batteryCapUpperInt)
+	if batteryCap > 100 {
+		return fmt.Errorf("\"battery-capacity\" cannot be greater than 100")
 	}
 
 	batteryCapLow := settings.BatteryLowCapacity()

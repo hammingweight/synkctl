@@ -45,3 +45,17 @@ func (battery *Battery) SOC() int {
 	}
 	panic("cannot retrieve the SOC")
 }
+
+// Power returns the power being supplied from (positive value) or supplied to the battery. This is a convenience
+// method that calls
+//
+//	battery.Get("power")
+//
+// since "power" is the attribute used by the SunSynk REST API.
+func (battery *Battery) Power() int {
+	v, ok := battery.Get("power")
+	if ok {
+		return int(v.(float64))
+	}
+	panic("cannot retrieve the battery power")
+}
