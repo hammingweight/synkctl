@@ -27,7 +27,6 @@ type Details struct{ *SynkObject }
 // Details calls the SunSynk REST API to get the inverter's specification.
 func (synkClient *SynkClient) Details(ctx context.Context) (*Details, error) {
 	path := []string{"inverter", synkClient.SerialNumber}
-	//queryParams := map[string]string{}
 	o := &SynkObject{}
 	err := synkClient.readAPIV1(ctx, o, nil, path...)
 	return &Details{o}, err
