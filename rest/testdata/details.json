@@ -1,0 +1,47 @@
+{
+    "address": "1 Main Road, Springfield, Ohio, USA",
+    "alias": "1234567890",
+    "brand": "Deye",
+    "commType": 8,
+    "custCode": 29,
+    "emonth": 123.4,
+    "equipType": 2,
+    "etoday": 4.5,
+    "etotal": 678.9,
+    "eyear": 678.9,
+    "gsn": "XXXXXXXXX",
+    "model": "",
+    "opened": 1,
+    "pac": 1000,
+    "plant": {
+        "email": "carl@example.com",
+        "id": 123456,
+        "installer": "Carl",
+        "master": null,
+        "name": "My plant",
+        "phone": "555-12345678",
+        "type": null
+    },
+    "protocolIdentifier": "2",
+    "ratePower": 5000,
+    "runStatus": "Normal",
+    "sn": "12345678",
+    "status": 1,
+    "thumbUrl": "https://s3-eu-central-2.ionoscloud.com/sunsynk/plant/image.jpg",
+    "type": 2,
+    "updateAt": "2025-01-28T09:47:19Z",
+    "user": {
+        "email": "carl@example.com",
+        "id": null,
+        "mobile": null,
+        "nickname": "carl@example.com"
+    },
+    "version": {
+        "bmsVer": "",
+        "commVer": null,
+        "hardVer": "",
+        "hmiVer": "E.4.0.0",
+        "masterVer": "3.0.0.0",
+        "softVer": "1.0.0.0"
+    }
+}
