@@ -127,3 +127,15 @@ func TestLoad(t *testing.T) {
 	// The next line will panic if we can't read the power.
 	load.Power()
 }
+
+func TestDetails(t *testing.T) {
+	defer panicRecover(t)
+	details, err := client.Details(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	power := details.RatedPower()
+	if power < 1000 || power > 100000 {
+		t.Errorf("rated power %d looks wrong", power)
+	}
+}
