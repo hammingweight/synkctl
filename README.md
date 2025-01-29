@@ -286,7 +286,8 @@ func main() {
 	// For some useful attributes, there are convenience methods. For exmple
 	// battery.SOC() is equivalent to battery.Get("bmsSoc")
 	battery, _ := client.Battery(ctx)
-	fmt.Println("Battery SOC:\t\t", battery.SOC())
+	soc, _ := battery.SOC()
+	fmt.Println("Battery SOC:\t\t", soc)
 
 	// We can update inverter settings. For example, increase the lower
 	// threshold for the battery capacity by 5% or allow the inverter to
@@ -296,7 +297,8 @@ func main() {
 	oldBatteryCapacity := inverter.BatteryCapacity()
 	newBatteryCapacity := oldBatteryCapacity + 5
 	inverter.SetBatteryCapacity(newBatteryCapacity)
-	if input.Power() > 1000 {
+	power, _ := input.Power()
+	if power > 1000 {
 		inverter.SetLimitedToLoad(false)
 	}
 
