@@ -104,6 +104,15 @@ func TestInput(t *testing.T) {
 	}
 	// The next line will panic if we can't read the power.
 	input.Power()
+	// Check that we can read the first's MPPT's values.
+	pv, ok := input.PV(0)
+	if !ok {
+		t.Fatal("Cannot read the values for first MPPT")
+	}
+	_, ok = pv["time"]
+	if !ok {
+		t.Fatal("Cannot read update time")
+	}
 }
 
 func TestInverter(t *testing.T) {

@@ -48,7 +48,7 @@ func (input *Input) Power() int {
 func (input *Input) PV(n int) (map[string]any, bool) {
 	v, ok := input.Get("pvIV")
 	if !ok {
-		panic("cannot read the pvIV attribute")
+		return nil, false
 	}
 	l, ok := v.([]any)
 	if !ok || len(l) <= n {
