@@ -1,0 +1,3 @@
+# A config file used in unit testing.
+user: foo@example.com
+password: mypassword

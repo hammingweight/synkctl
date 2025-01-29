@@ -82,6 +82,16 @@ func TestReadConfigurationFromFileWithInverterSerialNumber(t *testing.T) {
 	}
 }
 
+func TestReadConfigurationNoEndpoint(t *testing.T) {
+	configuration, err := ReadConfigurationFromFile("./testdata/testconfig_no_endpoint")
+	if err != nil {
+		t.Fatal("failed with error: ", err)
+	}
+	if configuration.Endpoint != DefaultEndpoint {
+		t.Errorf("expected endpoint: %s got %s", DefaultEndpoint, configuration.Endpoint)
+	}
+}
+
 func TestReadUnknownKeyInConfigurationFile(t *testing.T) {
 	_, err := ReadConfigurationFromFile("./testdata/testconfig_with_bad_key")
 	if err == nil {

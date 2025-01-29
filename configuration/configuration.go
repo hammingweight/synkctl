@@ -82,6 +82,9 @@ func ReadConfigurationFromFile(fileName string) (*Configuration, error) {
 		return nil, err
 	}
 	configuration, err := readConfiguration(f)
+	if configuration.Endpoint == "" {
+		configuration.Endpoint = DefaultEndpoint
+	}
 	return configuration, err
 }
 
