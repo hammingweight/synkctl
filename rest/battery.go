@@ -78,7 +78,7 @@ func (battery *Battery) CapacityAh() (float64, error) {
 		case string:
 			v, err := strconv.ParseFloat(cap, 64)
 			if err != nil {
-				panic(err)
+				return 0.0, err
 			}
 			return v, nil
 		case float64:
