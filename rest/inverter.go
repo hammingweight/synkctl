@@ -172,16 +172,16 @@ func (settings *Inverter) SetBatteryCapacity(batteryCap int) error {
 
 // BatteryCapacity gets the battery state of charge at which point the inverter will use the grid rather than batteries
 // to power circuits.
-func (settings *Inverter) BatteryCapacity() int {
+func (settings *Inverter) BatteryCapacity() (int, error) {
 	c := make([]int, 6)
 	for i, s := range []string{settings.Cap1, settings.Cap2, settings.Cap3, settings.Cap4, settings.Cap5, settings.Cap6} {
 		cc, err := strconv.Atoi(s)
 		if err != nil {
-			panic(err)
+			return 0, err
 		}
 		c[i] = cc
 	}
-	return slices.Min(c)
+	return slices.Min(c), nil
 }
 
 // BatteryLowCapacity returns the battery state of charge that will generate an alarm.
@@ -237,12 +237,16 @@ func (settings *Inverter) SetGridChargeOn(on bool) {
 }
 
 // Settings returns the settings for battery-capacity, essential-only and grid-charge.
-func (settings *Inverter) Settings() *InverterSettings {
+func (settings *Inverter) Settings() (*InverterSettings, error) {
 	is := &InverterSettings{}
-	is.BatteryCapacity = settings.BatteryCapacity()
+	var err error
+	is.BatteryCapacity, err = settings.BatteryCapacity()
+	if err != nil {
+		return nil, err
+	}
 	is.EssentialOnly = types.NewOnOff(settings.EssentialOnly())
 	is.GridCharge = types.NewOnOff(settings.GridChargeOn())
-	return is
+	return is, nil
 }
 
 // SetSettings adjusts the battery-capacity, essential-only and grid-charge parameters

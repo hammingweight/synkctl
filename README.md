@@ -294,7 +294,7 @@ func main() {
 	// power non-essential circuits if the solar panels are producing
 	// more than 1000W.
 	inverter, _ := client.Inverter(ctx)
-	oldBatteryCapacity := inverter.BatteryCapacity()
+	oldBatteryCapacity, _ := inverter.BatteryCapacity()
 	newBatteryCapacity := oldBatteryCapacity + 5
 	inverter.SetBatteryCapacity(newBatteryCapacity)
 	power, _ := input.Power()

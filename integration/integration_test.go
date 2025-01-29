@@ -124,7 +124,10 @@ func TestInverter(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	batteryCap := inverter.BatteryCapacity()
+	batteryCap, err := inverter.BatteryCapacity()
+	if err != nil {
+		t.Fatal(err)
+	}
 	if batteryCap <= 0 || batteryCap > 100 {
 		t.Errorf("battery capacity cannot be %d", batteryCap)
 	}

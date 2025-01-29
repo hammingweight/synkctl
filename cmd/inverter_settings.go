@@ -33,7 +33,10 @@ func inverterSettings(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	is := settings.Settings()
+	is, err := settings.Settings()
+	if err != nil {
+		return err
+	}
 	data, err := json.MarshalIndent(is, "", "    ")
 	if err != nil {
 		return err
