@@ -18,6 +18,7 @@ package rest
 
 import (
 	"context"
+	"errors"
 	"strconv"
 )
 
@@ -39,12 +40,17 @@ func (synkClient *SynkClient) Battery(ctx context.Context) (*Battery, error) {
 //	battery.Get("bmsSoc")
 //
 // since "bmsSoc" is the attribute used by the SunSynk REST API.
-func (battery *Battery) SOC() int {
+func (battery *Battery) SOC() (int, error) {
 	v, ok := battery.Get("bmsSoc")
 	if ok {
-		return int(v.(float64))
+		switch v := v.(type) {
+		case float64:
+			return int(v), nil
+		case int:
+			return v, nil
+		}
 	}
-	panic("cannot retrieve the SOC")
+	return 0, errors.New("cannot read battery SOC")
 }
 
 // Power returns the power being supplied from (positive value) or supplied to the battery. This is a convenience
@@ -53,16 +59,19 @@ func (battery *Battery) SOC() int {
 //	battery.Get("power")
 //
 // since "power" is the attribute used by the SunSynk REST API.
-func (battery *Battery) Power() int {
+func (battery *Battery) Power() (int, error) {
 	v, ok := battery.Get("power")
 	if ok {
-		return int(v.(float64))
+		switch v := v.(type) {
+		case float64:
+			return int(v), nil
+		}
 	}
-	panic("cannot retrieve the battery power")
+	return 0, errors.New("cannot read battery power")
 }
 
 // CapacityAh returns the capacity of the battery in ampere-hours.
-func (battery *Battery) CapacityAh() float64 {
+func (battery *Battery) CapacityAh() (float64, error) {
 	cap, ok := battery.SynkObject.Get("capacity")
 	if ok {
 		switch cap := cap.(type) {
@@ -71,10 +80,10 @@ func (battery *Battery) CapacityAh() float64 {
 			if err != nil {
 				panic(err)
 			}
-			return v
+			return v, nil
 		case float64:
-			return cap
+			return cap, nil
 		}
 	}
-	panic("cannot retrieve the battery capacity")
+	return 0, errors.New("cannot read battery capacity")
 }

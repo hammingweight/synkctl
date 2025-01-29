@@ -37,7 +37,10 @@ func Test_CapacityAh(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	cap := battery.CapacityAh()
+	cap, err := battery.CapacityAh()
+	if err != nil {
+		t.Fatal(err)
+	}
 	exp := 100.0
 	if cap != exp {
 		t.Errorf("expected %f, got %f", exp, cap)
