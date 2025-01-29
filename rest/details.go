@@ -18,6 +18,7 @@ package rest
 
 import (
 	"context"
+	"errors"
 	"strconv"
 )
 
@@ -33,19 +34,19 @@ func (synkClient *SynkClient) Details(ctx context.Context) (*Details, error) {
 }
 
 // RatedPower returns the maximum power in watts that the inverter supports.
-func (details *Details) RatedPower() int {
+func (details *Details) RatedPower() (int, error) {
 	power, ok := details.SynkObject.Get("ratePower")
 	if ok {
 		switch power := power.(type) {
 		case float64:
-			return int(power)
+			return int(power), nil
 		case string:
 			v, err := strconv.Atoi(power)
 			if err != nil {
-				panic(err)
+				return 0, err
 			}
-			return v
+			return v, nil
 		}
 	}
-	panic("can't read rated power")
+	return 0, errors.New("cannot read rated power")
 }

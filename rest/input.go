@@ -18,6 +18,7 @@ package rest
 
 import (
 	"context"
+	"errors"
 )
 
 // Input is the SunSynk model of the inputs (e.g. solar panels) to an inverter.
@@ -35,12 +36,15 @@ func (synkClient *SynkClient) Input(ctx context.Context) (*Input, error) {
 }
 
 // Power returns the most recent reading of the power (in watts, W) being generated.
-func (input *Input) Power() int {
+func (input *Input) Power() (int, error) {
 	v, ok := input.Get("pac")
-	if !ok {
-		panic("cannot read the power being generated")
+	if ok {
+		switch v := v.(type) {
+		case float64:
+			return int(v), nil
+		}
 	}
-	return int(v.(float64))
+	return 0, errors.New("cannot read the power being generated")
 }
 
 // PV returns the power, current and voltage from the n-th string where/

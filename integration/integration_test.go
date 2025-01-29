@@ -78,7 +78,10 @@ func TestBattery(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	soc := battery.SOC()
+	soc, err := battery.SOC()
+	if err != nil {
+		t.Fatal(err)
+	}
 	if soc <= 0 || soc > 100 {
 		t.Errorf("battery SOC cannot be %d", soc)
 	}
@@ -143,7 +146,10 @@ func TestDetails(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	power := details.RatedPower()
+	power, err := details.RatedPower()
+	if err != nil {
+		t.Fatal(err)
+	}
 	if power < 1000 || power > 100000 {
 		t.Errorf("rated power %d looks wrong", power)
 	}

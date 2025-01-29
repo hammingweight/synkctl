@@ -18,6 +18,7 @@ package rest
 
 import (
 	"context"
+	"errors"
 )
 
 // Load is the SunSynk model of the load connected to an inverter.
@@ -36,10 +37,10 @@ func (synkClient *SynkClient) Load(ctx context.Context) (*Load, error) {
 // Power returns the current power (in watts, W) being consumed by the load.
 // This is a convenience method that reads the totalPower attribute of a Load
 // instance.
-func (load *Load) Power() int {
+func (load *Load) Power() (int, error) {
 	v, ok := load.Get("totalPower")
-	if !ok {
-		panic("cannot determine the power being consumed")
+	if ok {
+		return int(v.(float64)), nil
 	}
-	return int(v.(float64))
+	return 0, errors.New("cannot determine the power being consumed")
 }

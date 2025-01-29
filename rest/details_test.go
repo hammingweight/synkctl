@@ -37,7 +37,10 @@ func Test_InverterRatedPower(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	power := details.RatedPower()
+	power, err := details.RatedPower()
+	if err != nil {
+		t.Fatal(err)
+	}
 	exp := 5000
 	if power != exp {
 		t.Errorf("expected %d, got %d", exp, power)
