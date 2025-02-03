@@ -32,9 +32,20 @@ func verify(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantAuthenticateUser, err)
 	}
-	_, err = rest.Authenticate(ctx, config)
+	client, err := rest.Authenticate(ctx, config)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantAuthenticateUser, err)
+	}
+	// Check that the user can access the default inverter (if specified)
+	sn := viper.GetString("inverter")
+	if sn != "" {
+		client.SerialNumber = sn
+	}
+	if client.SerialNumber != "" {
+		_, err = client.Inverter(ctx)
+		if err != nil {
+			return fmt.Errorf("can't get inverter details (SN: %s): %w", client.SerialNumber, err)
+		}
 	}
 	fmt.Println("OK.")
 	return nil
