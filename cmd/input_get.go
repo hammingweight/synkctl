@@ -49,4 +49,5 @@ var inputGetCmd = &cobra.Command{
 
 func init() {
 	inputCmd.AddCommand(inputGetCmd)
+	addKeysFlag(inputGetCmd)
 }

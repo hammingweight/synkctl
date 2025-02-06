@@ -63,7 +63,6 @@ func init() {
 	// Arguments that apply to all subcommands.
 	rootCmd.PersistentFlags().StringP("config", "c", configFile, "synkctl config file location")
 	rootCmd.PersistentFlags().StringP("inverter", "i", "", "SunSynk inverter serial number")
-	rootCmd.PersistentFlags().StringP("keys", "k", "", "Extract specific keys from response")
 
 	// Set up viper
 	replacer := strings.NewReplacer("-", "_")
@@ -71,7 +70,6 @@ func init() {
 	viper.SetEnvPrefix("SYNK")
 	viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
 	viper.BindPFlag("inverter", rootCmd.PersistentFlags().Lookup("inverter"))
-	viper.BindPFlag("keys", rootCmd.PersistentFlags().Lookup("keys"))
 }
 
 func initConfig() {
