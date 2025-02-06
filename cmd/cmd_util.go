@@ -21,6 +21,7 @@ import (
 	"strings"
 
 	"github.com/hammingweight/synkctl/rest"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
@@ -34,4 +35,9 @@ func displayObject(o *rest.SynkObject) error {
 	}
 	fmt.Println(o)
 	return nil
+}
+
+func addKeysFlag(cmd *cobra.Command) {
+	cmd.PersistentFlags().StringP("keys", "k", "", "Extract specific keys from response")
+	viper.BindPFlag("keys", cmd.PersistentFlags().Lookup("keys"))
 }

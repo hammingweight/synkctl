@@ -49,4 +49,5 @@ var batteryGetCmd = &cobra.Command{
 
 func init() {
 	batteryCmd.AddCommand(batteryGetCmd)
+	addKeysFlag(batteryGetCmd)
 }
