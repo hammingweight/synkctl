@@ -19,6 +19,7 @@ package types
 import (
 	"errors"
 	"strconv"
+	"strings"
 )
 
 // OnOff represents a setting that is on (true) or off (false) or
@@ -100,4 +101,35 @@ func (p *Percentage) Set(v string) error {
 func (p *Percentage) Int() int {
 	v, _ := strconv.ParseFloat(p.String(), 64)
 	return int(v)
+}
+
+// CSV is a string with comma-separated values.
+type CSV string
+
+func (csv *CSV) String() string {
+	return string(*csv)
+}
+
+// Type returns a description of the CSV type.
+func (csv *CSV) Type() string {
+	return "csv"
+}
+
+// Set sets the value.
+func (csv *CSV) Set(v string) error {
+	*csv = CSV(v)
+	return nil
+}
+
+// Values returns the values as a slice
+func (csv *CSV) Values() []string {
+	values := strings.Split(string(*csv), ",")
+	r := []string{}
+	for _, v := range values {
+		if v != "" {
+			v = strings.TrimSpace(v)
+			r = append(r, v)
+		}
+	}
+	return r
 }
