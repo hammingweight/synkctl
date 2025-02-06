@@ -49,4 +49,5 @@ var detailsCmd = &cobra.Command{
 
 func init() {
 	inverterCmd.AddCommand(detailsCmd)
+	addKeysFlag(detailsCmd)
 }

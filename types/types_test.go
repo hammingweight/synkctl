@@ -99,3 +99,30 @@ func TestSetPercentage(t *testing.T) {
 		t.Errorf("Expected value 99, got %d\n", p.Int())
 	}
 }
+
+func TestCSV(t *testing.T) {
+	csv := CSV("")
+	if len(csv.Values()) != 0 {
+		t.Errorf("Expected length 0, got %d", len(csv.Values()))
+	}
+	csv = CSV("hello")
+	if len(csv.Values()) != 1 {
+		t.Errorf("Expected length 1, got %d", len(csv.Values()))
+	}
+	csv = CSV("hello,world")
+	if len(csv.Values()) != 2 {
+		t.Errorf("Expected length 2, got %d", len(csv.Values()))
+	}
+	csv = CSV(" hello, world ")
+	words := csv.Values()
+	if words[0] != "hello" {
+		t.Errorf("Expected 'hello', got '%s'", words[0])
+	}
+	if words[1] != "world" {
+		t.Errorf("Expected 'world', got '%s'", words[1])
+	}
+	csv = CSV(",1, 2 ,,3,")
+	if len(csv.Values()) != 3 {
+		t.Errorf("Expected length 3, got %d", len(csv.Values()))
+	}
+}

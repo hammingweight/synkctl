@@ -37,7 +37,7 @@ func readLoad(ctx context.Context) error {
 }
 
 // The load command displays load statistics
-var getLoadCmd = &cobra.Command{
+var loadGetCmd = &cobra.Command{
 	Use:     "get",
 	Short:   "Gets the inverter's current and cumulative load statistics",
 	Aliases: []string{"read"},
@@ -48,5 +48,6 @@ var getLoadCmd = &cobra.Command{
 }
 
 func init() {
-	loadCmd.AddCommand(getLoadCmd)
+	loadCmd.AddCommand(loadGetCmd)
+	addKeysFlag(loadGetCmd)
 }
