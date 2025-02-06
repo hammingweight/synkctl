@@ -49,5 +49,4 @@ var gridGetCmd = &cobra.Command{
 
 func init() {
 	gridCmd.AddCommand(gridGetCmd)
-	addKeysFlag(gridGetCmd)
 }

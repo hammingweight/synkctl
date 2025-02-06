@@ -56,6 +56,7 @@ Flags:
   -c, --config string     synkctl config file location
   -h, --help              help for synkctl
   -i, --inverter string   SunSynk inverter serial number
+  -k, --keys string       Extract specific keys from response
   -v, --version           version for synkctl
 
 Use "synkctl [command] --help" for more information about a command.

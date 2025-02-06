@@ -66,7 +66,6 @@ var inverterGetCmd = &cobra.Command{
 
 func init() {
 	inverterCmd.AddCommand(inverterGetCmd)
-	addKeysFlag(inverterGetCmd)
 
 	inverterGetCmd.Flags().BoolP("short", "s", false, "Get short output (get only fields that can be updated)")
 	viper.BindPFlag("short", inverterGetCmd.Flags().Lookup("short"))
