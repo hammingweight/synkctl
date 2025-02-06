@@ -18,20 +18,26 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/hammingweight/synkctl/rest"
-	"github.com/spf13/viper"
+	"github.com/hammingweight/synkctl/types"
+	"github.com/spf13/cobra"
 )
 
 func displayObject(o *rest.SynkObject) error {
-	if viper.GetString("keys") != "" {
+	if len(keys.Values()) != 0 {
 		var err error
-		o, err = o.ExtractKeys(strings.Split(viper.GetString("keys"), ","))
+		o, err = o.ExtractKeys(keys.Values())
 		if err != nil {
 			return err
 		}
 	}
 	fmt.Println(o)
 	return nil
+}
+
+var keys types.CSV
+
+func addKeysFlag(cmd *cobra.Command) {
+	cmd.Flags().VarP(&keys, "keys", "k", "Extract keys from response")
 }
