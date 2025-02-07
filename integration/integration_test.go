@@ -30,7 +30,7 @@ import (
 
 var client *rest.SynkClient
 
-func init() {
+func getConfigFromVars() *configuration.Configuration {
 	// If we can't create a client, no tests will pass so
 	// we just panic if something goes wrong.
 	username := os.Getenv("TEST_USER")
@@ -53,6 +53,15 @@ func init() {
 		panic("the TEST_INVERTER_SN environment variable must be set")
 	}
 	config.DefaultInverterSN = serialNumber
+	return config
+}
+
+func init() {
+	configFile, _ := configuration.DefaultConfigurationFile()
+	config, err := configuration.ReadConfigurationFromFile(configFile)
+	if err != nil {
+		config = getConfigFromVars()
+	}
 
 	// Allow multiple attempts to authenticate, in case of flakiness somewhere.
 	// Also, increase the delay between attempts.
