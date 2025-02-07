@@ -39,8 +39,9 @@ func (synkClient *SynkClient) Load(ctx context.Context) (*Load, error) {
 // instance.
 func (load *Load) Power() (int, error) {
 	v, ok := load.Get("totalPower")
-	if ok {
-		return int(v.(float64)), nil
+	// If the API is flaky, ok can be true but v is nil
+	if v == nil || !ok {
+		return 0, errors.New("cannot determine the power being consumed")
 	}
-	return 0, errors.New("cannot determine the power being consumed")
+	return int(v.(float64)), nil
 }

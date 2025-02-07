@@ -139,8 +139,10 @@ func TestLoad(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	// The next line will panic if we can't read the power.
-	load.Power()
+	_, err = load.Power()
+	if err != nil {
+		t.Fatal(err)
+	}
 }
 
 func TestDetails(t *testing.T) {
