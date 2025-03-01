@@ -186,6 +186,7 @@ The `update` operation allows you to
  * Set the minimum battery SOC (i.e. the SOC at which the inverter will use the grid to power circuits - assuming that the grid is up, obviously)
  * Enable or disable providing power to the CT coil (i.e. allowing or preventing the inverter from powering non-essential circuits)
  * Enable or disable recharging of the battery from the grid
+ * Prioritize charging the battery or powering the load
 
 For example, to ensure that the battery won't be discharged below 50% if the grid is up
 
@@ -199,6 +200,12 @@ To allow the inverter to power non-essential circuits via the CT coil
 $ synkctl inverter update --essential-only off
 ```
 
+To prioritize recharging the battery if the battery SOC drops below the discharge threshold
+
+```
+$ synkctl inverter update --battery-first on
+```
+
 To allow the grid to recharge the battery if the battery SOC drops below the discharge threshold
 
 ```
@@ -210,6 +217,7 @@ To see the current inverter settings that can be updated, run
 $ synkctl inverter settings 
 {
     "battery-capacity": 30,
+    "battery-first": "on",
     "essential-only": "on",
     "grid-charge": "off"
 }

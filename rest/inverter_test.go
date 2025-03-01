@@ -50,3 +50,24 @@ func TestSetGridCharge(t *testing.T) {
 		t.Error("grid charging should report as off")
 	}
 }
+
+func TestBatteryFirst(t *testing.T) {
+	inv := Inverter{}
+	inv.EnergyMode = "1"
+
+	inv.SetBatteryFirst(true)
+	if inv.EnergyMode != "0" {
+		t.Error("energy mode should be 0")
+	}
+	if !inv.BatteryFirst() {
+		t.Error("battery-first is off")
+	}
+
+	inv.SetBatteryFirst(false)
+	if inv.EnergyMode != "1" {
+		t.Error("energy mode should be 1")
+	}
+	if inv.BatteryFirst() {
+		t.Error("battery-first is on")
+	}
+}
