@@ -139,6 +139,12 @@ func (settings *Inverter) EssentialOnly() bool {
 	return settings.LimitedToLoad()
 }
 
+// BatteryFirst returns whether input power should be directed first to the battery (true) or the
+// load (false).
+func (settings *Inverter) BatteryFirst() bool {
+	return settings.EnergyMode == "0"
+}
+
 // SetBatteryCapacity sets the battery state of charge at which point the inverter will use the grid
 // rather than batteries to power circuits. It is an error to set the capacity at a value higher than the
 // maximum allowed SoC for the battery (typically, 100%) or below the shutdown capacity of the
@@ -236,6 +242,15 @@ func (settings *Inverter) SetGridChargeOn(on bool) {
 	settings.Time6on = on
 }
 
+// SetBatteryFirst sets whether charging the battery (on) or powering the load (off) is the priority.
+func (settings *Inverter) SetBatteryFirst(on bool) {
+	if on {
+		settings.EnergyMode = "0"
+	} else {
+		settings.EnergyMode = "1"
+	}
+}
+
 // Settings returns the settings for battery-capacity, essential-only and grid-charge.
 func (settings *Inverter) Settings() (*InverterSettings, error) {
 	is := &InverterSettings{}
@@ -244,6 +259,7 @@ func (settings *Inverter) Settings() (*InverterSettings, error) {
 	if err != nil {
 		return nil, err
 	}
+	is.BatteryFirst = types.NewOnOff(settings.BatteryFirst())
 	is.EssentialOnly = types.NewOnOff(settings.EssentialOnly())
 	is.GridCharge = types.NewOnOff(settings.GridChargeOn())
 	return is, nil

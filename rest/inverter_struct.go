@@ -432,6 +432,7 @@ type InverterShortForm struct {
 // the inverter: battery-capacity, essential-only and grid-charge.
 type InverterSettings struct {
 	BatteryCapacity int         `json:"battery-capacity"`
+	BatteryFirst    types.OnOff `json:"battery-first"`
 	EssentialOnly   types.OnOff `json:"essential-only"`
 	GridCharge      types.OnOff `json:"grid-charge"`
 }

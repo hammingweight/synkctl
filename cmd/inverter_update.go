@@ -25,13 +25,14 @@ import (
 )
 
 var batteryCap types.Percentage
+var batteryFirst types.OnOff
 var essentialOnly types.OnOff
 var gridCharge types.OnOff
 
 // Updates the lower threshold battery capacity and/or the system work mode
 func updateInverterSettings(ctx context.Context) error {
-	if essentialOnly == "" && batteryCap == "" && gridCharge == "" {
-		return fmt.Errorf("%w: must supply \"essential-only\", \"battery-capacity\" or \"grid-charge\" flag",
+	if essentialOnly == "" && batteryCap == "" && gridCharge == "" && batteryFirst == "" {
+		return fmt.Errorf("%w: must supply \"essential-only\", \"battery-capacity\", \"battery-first\" or \"grid-charge\" flag",
 			ErrCantUpdateInverterSettings)
 	}
 
@@ -59,6 +60,10 @@ func updateInverterSettings(ctx context.Context) error {
 			return fmt.Errorf("%w: %w", ErrCantUpdateInverterSettings, err)
 		}
 	}
+
+	if batteryFirst != "" {
+		inverterSettings.SetBatteryFirst(batteryFirst.Bool())
+	}
 	return synkClient.UpdateInverter(ctx, inverterSettings)
 }
 
@@ -77,6 +82,7 @@ func init() {
 	inverterCmd.AddCommand(updateCmd)
 
 	updateCmd.Flags().VarP(&batteryCap, "battery-capacity", "b", "The minimum battery capacity")
+	updateCmd.Flags().VarP(&batteryFirst, "battery-first", "B", "Prioritize powering battery (on) or load (off)")
 	updateCmd.Flags().VarP(&essentialOnly, "essential-only", "e", "Power essential only (on) or all (off) circuits")
 	updateCmd.Flags().VarP(&gridCharge, "grid-charge", "g", "Enable (on) or disable (off) grid charging of the battery")
 }
