@@ -19,10 +19,12 @@ package rest
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"io"
 	"net/http"
 	"net/url"
+	"os"
 
 	"github.com/hammingweight/synkctl/configuration"
 )
@@ -61,6 +63,15 @@ func newAuthRequestBody(config *configuration.Configuration) (io.Reader, error) 
 		return nil, err
 	}
 	return bytes.NewReader(r), nil
+}
+
+func init() {
+	// Undocumented feature to work around TLS certificate problems at SunSynk (e.g. the outage of 10 March 2025).
+	// Run 'export SYNK_DISABLE_TLS_CERTIFICATE_VALIDATION=1' before running synkctl to disable TLS certificate
+	// validation. Generally, it's not advised to do this.
+	if os.Getenv("SYNK_DISABLE_TLS_CERTIFICATE_VALIDATION") != "" {
+		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	}
 }
 
 // Authenticate uses a specify configuration to authenticate a user. If successful, a SynkClient is
