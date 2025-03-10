@@ -16,8 +16,14 @@ limitations under the License.
 
 package main
 
-import "github.com/hammingweight/synkctl/cmd"
+import (
+	"crypto/tls"
+	"net/http"
+
+	"github.com/hammingweight/synkctl/cmd"
+)
 
 func main() {
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	cmd.Execute()
 }
