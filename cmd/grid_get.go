@@ -40,7 +40,6 @@ func readGrid(ctx context.Context) error {
 var gridGetCmd = &cobra.Command{
 	Use:     "get",
 	Short:   "Gets the state of the grid connection",
-	Aliases: []string{"read"},
 	Args:    cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return readGrid(cmd.Context())

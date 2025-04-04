@@ -57,7 +57,6 @@ func readInverterSettings(ctx context.Context) error {
 var inverterGetCmd = &cobra.Command{
 	Use:     "get",
 	Short:   "Reads the inverter settings",
-	Aliases: []string{"read"},
 	Args:    cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return readInverterSettings(cmd.Context())
