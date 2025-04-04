@@ -18,13 +18,15 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 // Reads the current load from the inverter
-func readLoad(ctx context.Context) error {
+func readLoad(ctx context.Context, sf pflag.Value) error {
 	synkClient, err := newClient(ctx, true)
 	if err != nil {
 		return err
@@ -33,20 +35,28 @@ func readLoad(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadLoadStatistics, err)
 	}
+	if sf.String() == "true" {
+		if len(keys) != 0 {
+			return errors.New("cannot specify both \"--keys\" and \"--short\"")
+		}
+		keys = "dailyUsed,totalPower"
+	}
+
 	return displayObject(load.SynkObject)
 }
 
 // The load command displays load statistics
 var loadGetCmd = &cobra.Command{
-	Use:     "get",
-	Short:   "Gets the inverter's current and cumulative load statistics",
-	Args:    cobra.ExactArgs(0),
+	Use:   "get",
+	Short: "Gets the inverter's current and cumulative load statistics",
+	Args:  cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return readLoad(cmd.Context())
+		return readLoad(cmd.Context(), cmd.Flags().Lookup("short").Value)
 	},
 }
 
 func init() {
 	loadCmd.AddCommand(loadGetCmd)
 	addKeysFlag(loadGetCmd)
+	loadGetCmd.Flags().BoolP("short", "s", false, "display short form of the load statistics")
 }

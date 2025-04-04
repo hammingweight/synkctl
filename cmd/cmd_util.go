@@ -39,5 +39,5 @@ func displayObject(o *rest.SynkObject) error {
 var keys types.CSV
 
 func addKeysFlag(cmd *cobra.Command) {
-	cmd.Flags().VarP(&keys, "keys", "k", "Extract keys from response")
+	cmd.Flags().VarP(&keys, "keys", "k", "extract keys from response")
 }

@@ -22,11 +22,11 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+	"github.com/spf13/pflag"
 )
 
 // Reads the inverter's settings (e.g. battery discharge threshold)
-func readInverterSettings(ctx context.Context) error {
+func readInverterSettings(ctx context.Context, sf pflag.Value) error {
 	synkClient, err := newClient(ctx, true)
 	if err != nil {
 		return err
@@ -35,7 +35,7 @@ func readInverterSettings(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadInverterSettings, err)
 	}
-	if viper.GetBool("short") {
+	if sf.String() == "true" {
 		if len(keys) != 0 {
 			return errors.New("cannot specify both \"--keys\" and \"--short\"")
 		}
@@ -55,18 +55,16 @@ func readInverterSettings(ctx context.Context) error {
 
 // The inverter get command allows an operator to get the imverter's settings
 var inverterGetCmd = &cobra.Command{
-	Use:     "get",
-	Short:   "Reads the inverter settings",
-	Args:    cobra.ExactArgs(0),
+	Use:   "get",
+	Short: "Reads the inverter settings",
+	Args:  cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return readInverterSettings(cmd.Context())
+		return readInverterSettings(cmd.Context(), cmd.Flags().Lookup("short").Value)
 	},
 }
 
 func init() {
 	inverterCmd.AddCommand(inverterGetCmd)
 	addKeysFlag(inverterGetCmd)
-
-	inverterGetCmd.Flags().BoolP("short", "s", false, "Get short output (get only fields that can be updated)")
-	viper.BindPFlag("short", inverterGetCmd.Flags().Lookup("short"))
+	inverterGetCmd.Flags().BoolP("short", "s", false, "get short output form (only fields that can be updated)")
 }
