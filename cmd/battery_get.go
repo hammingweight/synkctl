@@ -40,7 +40,6 @@ func readBattery(ctx context.Context) error {
 var batteryGetCmd = &cobra.Command{
 	Use:     "get",
 	Short:   "Reads battery statistics",
-	Aliases: []string{"read"},
 	Args:    cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return readBattery(cmd.Context())

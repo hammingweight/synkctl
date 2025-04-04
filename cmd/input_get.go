@@ -39,7 +39,6 @@ func readInputState(ctx context.Context) error {
 // The input command allows an operator to get the state of the inputs feeding the inverter.
 var inputGetCmd = &cobra.Command{
 	Use:     "get",
-	Aliases: []string{"read"},
 	Short:   "Gets the state of the inverter's inputs",
 	Args:    cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
