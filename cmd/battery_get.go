@@ -18,13 +18,15 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 // Reads the battery state (SoC, charging/discharging, etc)
-func readBattery(ctx context.Context) error {
+func readBattery(ctx context.Context, sf pflag.Value) error {
 	synkClient, err := newClient(ctx, true)
 	if err != nil {
 		return err
@@ -33,20 +35,28 @@ func readBattery(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadBatteryState, err)
 	}
+	if sf.String() == "true" {
+		if len(keys) != 0 {
+			return errors.New("cannot specify both \"--keys\" and \"--short\"")
+		}
+		keys = "bmsSoc,power"
+	}
+
 	return displayObject(battery.SynkObject)
 }
 
 // The battery command allows an operator to get the battery's state.
 var batteryGetCmd = &cobra.Command{
-	Use:     "get",
-	Short:   "Reads battery statistics",
-	Args:    cobra.ExactArgs(0),
+	Use:   "get",
+	Short: "Reads battery statistics",
+	Args:  cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return readBattery(cmd.Context())
+		return readBattery(cmd.Context(), cmd.Flags().Lookup("short").Value)
 	},
 }
 
 func init() {
 	batteryCmd.AddCommand(batteryGetCmd)
 	addKeysFlag(batteryGetCmd)
+	batteryGetCmd.Flags().BoolP("short", "s", false, "display short form of the battery state")
 }

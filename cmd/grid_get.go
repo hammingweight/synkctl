@@ -18,13 +18,15 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 // Reads the state of the grid (power being drawn from the grid, relay status, etc.)
-func readGrid(ctx context.Context) error {
+func readGrid(ctx context.Context, sf pflag.Value) error {
 	synkClient, err := newClient(ctx, true)
 	if err != nil {
 		return err
@@ -33,20 +35,28 @@ func readGrid(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadGridState, err)
 	}
+	if sf.String() == "true" {
+		if len(keys) != 0 {
+			return errors.New("cannot specify both \"--keys\" and \"--short\"")
+		}
+		keys = "acRealyStatus,etodayFrom,pac"
+	}
+
 	return displayObject(grid.SynkObject)
 }
 
 // The grid command allows an operator to get the grid's state
 var gridGetCmd = &cobra.Command{
-	Use:     "get",
-	Short:   "Gets the state of the grid connection",
-	Args:    cobra.ExactArgs(0),
+	Use:   "get",
+	Short: "Gets the state of the grid connection",
+	Args:  cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return readGrid(cmd.Context())
+		return readGrid(cmd.Context(), cmd.Flags().Lookup("short").Value)
 	},
 }
 
 func init() {
 	gridCmd.AddCommand(gridGetCmd)
 	addKeysFlag(gridGetCmd)
+	gridGetCmd.Flags().BoolP("short", "s", false, "display short form of the grid state")
 }
