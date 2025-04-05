@@ -18,13 +18,15 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 // Reads the inverter's details.
-func readDetails(ctx context.Context) error {
+func readDetails(ctx context.Context, sf pflag.Value) error {
 	synkClient, err := newClient(ctx, true)
 	if err != nil {
 		return err
@@ -32,6 +34,12 @@ func readDetails(ctx context.Context) error {
 	details, err := synkClient.Details(ctx)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCantReadDetails, err)
+	}
+	if sf.String() == "true" {
+		if len(keys) != 0 {
+			return errors.New("cannot specify both \"--keys\" and \"--short\"")
+		}
+		keys = "brand,emonth,etoday,eyear,etoday,etotal,pac,sn,ratePower"
 	}
 	return displayObject(details.SynkObject)
 }
@@ -43,11 +51,12 @@ var detailsCmd = &cobra.Command{
 	Aliases: []string{"detail"},
 	Args:    cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return readDetails(cmd.Context())
+		return readDetails(cmd.Context(), cmd.Flags().Lookup("short").Value)
 	},
 }
 
 func init() {
 	inverterCmd.AddCommand(detailsCmd)
 	addKeysFlag(detailsCmd)
+	detailsCmd.Flags().BoolP("short", "s", false, "Display only a short version of the details")
 }
