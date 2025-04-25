@@ -11,7 +11,8 @@ func TestReadGridCharge(t *testing.T) {
 	inv.Time4on = false
 	inv.Time5on = false
 	inv.Time6on = false
-	if !inv.GridChargeOn() {
+	chargeOn, _ := inv.GridChargeOn()
+	if !chargeOn {
 		t.Error("grid charging should report as on")
 	}
 
@@ -21,12 +22,14 @@ func TestReadGridCharge(t *testing.T) {
 	inv.Time4on = "false"
 	inv.Time5on = "false"
 	inv.Time6on = "false"
-	if inv.GridChargeOn() {
+	chargeOn, _ = inv.GridChargeOn()
+	if chargeOn {
 		t.Error("grid charging should report as off")
 	}
 
 	inv.Time6on = "true"
-	if !inv.GridChargeOn() {
+	chargeOn, _ = inv.GridChargeOn()
+	if !chargeOn {
 		t.Error("grid charging should report as on")
 	}
 }
@@ -38,7 +41,8 @@ func TestSetGridCharge(t *testing.T) {
 	if inv.Time1on.(bool) {
 		t.Error("grid charging is on")
 	}
-	if inv.GridChargeOn() {
+	chargeOn, _ := inv.GridChargeOn()
+	if chargeOn {
 		t.Error("grid charging is on")
 	}
 
@@ -46,7 +50,8 @@ func TestSetGridCharge(t *testing.T) {
 	if !inv.Time6on.(bool) {
 		t.Error("grid charging is off")
 	}
-	if !inv.GridChargeOn() {
+	chargeOn, _ = inv.GridChargeOn()
+	if !chargeOn {
 		t.Error("grid charging should report as off")
 	}
 }

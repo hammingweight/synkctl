@@ -128,9 +128,6 @@ func (settings *Inverter) SetEssentialOnly(essentialOnly bool) error {
 // LimitedToLoad returns true if the inverter powers only essential loads. If the inverter can
 // power circuits connected to the CT, this method returns false.
 func (settings *Inverter) LimitedToLoad() bool {
-	if settings.SysWorkMode != "1" && settings.SysWorkMode != "2" {
-		panic("unexpected value for sysWorkMode attribute: " + settings.SysWorkMode)
-	}
 	return settings.SysWorkMode == "1"
 }
 
@@ -154,13 +151,19 @@ func (settings *Inverter) SetBatteryCapacity(batteryCap int) error {
 		return fmt.Errorf("\"battery-capacity\" cannot be greater than 100")
 	}
 
-	batteryCapLow := settings.BatteryLowCapacity()
+	batteryCapLow, err := settings.BatteryLowCapacity()
+	if err != nil {
+		return err
+	}
 	if batteryCap <= batteryCapLow {
 		return fmt.Errorf("\"battery-capacity\" must be greater than %d", batteryCapLow)
 	}
 	// The next check is for the pathological case where the shutdown capacity is greater than
 	// the low SoC alarm setting.
-	batteryCapShutdown := settings.BatteryShutdownCapacity()
+	batteryCapShutdown, err := settings.BatteryShutdownCapacity()
+	if err != nil {
+		return err
+	}
 	if batteryCap <= batteryCapShutdown {
 		return fmt.Errorf("\"battery-capacity\" must be greater than %d", batteryCapShutdown)
 	}
@@ -191,45 +194,45 @@ func (settings *Inverter) BatteryCapacity() (int, error) {
 }
 
 // BatteryLowCapacity returns the battery state of charge that will generate an alarm.
-func (settings *Inverter) BatteryLowCapacity() int {
+func (settings *Inverter) BatteryLowCapacity() (int, error) {
 	c, err := strconv.Atoi(settings.BatteryLowCap)
 	if err != nil {
-		panic(err)
+		return 0, err
 	}
-	return c
+	return c, nil
 }
 
 // BatteryShutdownCapacity returns the battery shutdown SoC.
-func (settings *Inverter) BatteryShutdownCapacity() int {
+func (settings *Inverter) BatteryShutdownCapacity() (int, error) {
 	c, err := strconv.Atoi(settings.BatteryShutdownCap)
 	if err != nil {
-		panic(err)
+		return 0, err
 	}
-	return c
+	return c, nil
 }
 
 // GridChargeOn returns true if the grid is used at any time to charge the battery.
-func (settings *Inverter) GridChargeOn() bool {
+func (settings *Inverter) GridChargeOn() (bool, error) {
 	gridCharge := []any{settings.Time1on, settings.Time2on, settings.Time3on, settings.Time4on, settings.Time5on, settings.Time6on}
 	for _, c := range gridCharge {
 		switch c := c.(type) {
 		case string:
 			b, err := strconv.ParseBool(c)
 			if err != nil {
-				panic(err)
+				return false, err
 			}
 			if b {
-				return b
+				return b, nil
 			}
 		case bool:
 			if c {
-				return c
+				return c, nil
 			}
 		default:
-			panic(fmt.Sprintf("unexpected value for time-on setting: %v", c))
+			return false, fmt.Errorf("unexpected value for time-on setting: %v", c)
 		}
 	}
-	return false
+	return false, nil
 }
 
 // SetGridChargeOn sets whether to enable (true) or disable (false) grid charging of the battery.
@@ -261,7 +264,11 @@ func (settings *Inverter) Settings() (*InverterSettings, error) {
 	}
 	is.BatteryFirst = types.NewOnOff(settings.BatteryFirst())
 	is.EssentialOnly = types.NewOnOff(settings.EssentialOnly())
-	is.GridCharge = types.NewOnOff(settings.GridChargeOn())
+	chargeOn, err := settings.GridChargeOn()
+	if err != nil {
+		return nil, err
+	}
+	is.GridCharge = types.NewOnOff(chargeOn)
 	return is, nil
 }
 
