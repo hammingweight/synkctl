@@ -70,9 +70,10 @@ func updateInverterSettings(ctx context.Context) error {
 // Updates the configured lower discharge threshold for the bettery and whether to power all home circuits or
 // only the essential circuits
 var updateCmd = &cobra.Command{
-	Use:   "update",
-	Short: "Basic options to update the inverter settings",
-	Args:  cobra.ExactArgs(0),
+	Use:     "update",
+	Short:   "Basic options to update the inverter settings",
+	Aliases: []string{"set"},
+	Args:    cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return updateInverterSettings(cmd.Context())
 	},

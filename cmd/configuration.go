@@ -23,8 +23,8 @@ import (
 // The configuration command manages the access credentials for the SunSynk API
 var configurationCmd = &cobra.Command{
 	Use:     "configuration",
-	Aliases: []string{"cfg", "config"},
 	Short:   "Access configuration for the SunSynk API",
+	Aliases: []string{"cfg", "config"},
 }
 
 func init() {
