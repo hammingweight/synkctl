@@ -168,3 +168,18 @@ func TestDetails(t *testing.T) {
 		t.Errorf("rated power %d looks wrong", power)
 	}
 }
+
+func TestUsers(t *testing.T) {
+	defer panicRecover(t)
+	user, err := client.User(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	id, err := user.ID()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if id <= 0 {
+		t.Errorf("user id %d looks wrong", id)
+	}
+}
