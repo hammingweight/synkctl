@@ -39,6 +39,7 @@ func generate() error {
 		User:              user,
 		Password:          password,
 		DefaultInverterSN: inverterSN,
+		DefaultPlantID:    plantID,
 	}
 	if err := configuration.WriteConfigurationToFile(viper.GetString("config"), config); err != nil {
 		return fmt.Errorf("%w: %w", ErrCantCreateConfigFile, err)
@@ -52,6 +53,8 @@ func generate() error {
 	}
 	return nil
 }
+
+var plantID int
 
 // The generate command creates a configuration file
 var generateCmd = &cobra.Command{
@@ -69,6 +72,7 @@ func init() {
 	generateCmd.Flags().StringP("endpoint", "e", configuration.DefaultEndpoint, "SunSynk API endpoint")
 	generateCmd.Flags().StringP("user", "u", "", "SunSynk user")
 	generateCmd.Flags().StringP("password", "p", "", "SunSynk user's password")
+	generateCmd.Flags().IntVar(&plantID, "plant-id", 0, "default plant identifier")
 
 	// Viper bindings.
 	viper.BindPFlag("endpoint", generateCmd.Flags().Lookup("endpoint"))
