@@ -30,6 +30,7 @@ var (
 	ErrCantReadInputState         = errors.New("can't read input state")
 	ErrCantReadInverterSettings   = errors.New("can't read inverter settings")
 	ErrCantReadLoadStatistics     = errors.New("can't read load statistics")
+	ErrCantReadUser               = errors.New("can't read user details")
 	ErrCantUpdateInverterSettings = errors.New("can't update inverter settings")
 	ErrNoInverterSerialNumber     = errors.New("no inverter serial number (--inverter) supplied")
 )
