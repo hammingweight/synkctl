@@ -53,7 +53,7 @@ func readInverterSettings(ctx context.Context, sf pflag.Value) error {
 	return displayObject(so)
 }
 
-// The inverter get command allows an operator to get the imverter's settings
+// The inverter get command allows an operator to get the inverter's settings
 var inverterGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Reads the inverter settings",

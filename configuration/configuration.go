@@ -36,6 +36,7 @@ type Configuration struct {
 	User              string `yaml:"user"`
 	Password          string `yaml:"password"`
 	DefaultInverterSN string `yaml:"default_inverter_sn,omitempty"`
+	DefaultPlantID    int    `yaml:"default_plant_id,omitempty"`
 }
 
 func createAndOpenFile(filename string) (*os.File, error) {

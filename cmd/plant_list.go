@@ -24,34 +24,42 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Lists all the inverters that the user can view
-func listInverters(ctx context.Context) error {
+// Lists all the plants that the user can view
+func listPlants(ctx context.Context) error {
 	synkClient, err := newClient(ctx, false)
 	if err != nil {
 		return err
 	}
-	inverterSerialNumbers, err := synkClient.ListInverters(ctx)
+	user, err := synkClient.User(ctx)
 	if err != nil {
 		return err
 	}
-	marshalledBytes, err := json.MarshalIndent(inverterSerialNumbers, "", "    ")
+	id, err := user.ID()
+	if err != nil {
+		return err
+	}
+	plants, err := synkClient.ListPlants(ctx, id)
+	if err != nil {
+		return err
+	}
+	marshalledBytes, err := json.MarshalIndent(plants, "", "    ")
 	if err != nil {
 		return err
 	}
 	fmt.Println(string(marshalledBytes))
+
 	return nil
 }
 
-// The list command allows a user to get the serial number of inverters that
-// they can manage
-var listInverterCmd = &cobra.Command{
+// The list command allows a user to get the serial number of plants
+var listPlantCmd = &cobra.Command{
 	Use:   "list",
-	Short: "Lists all inverter serial numbers",
+	Short: "Lists all plants",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return listInverters(cmd.Context())
+		return listPlants(cmd.Context())
 	},
 }
 
 func init() {
-	inverterCmd.AddCommand(listInverterCmd)
+	plantCmd.AddCommand(listPlantCmd)
 }
