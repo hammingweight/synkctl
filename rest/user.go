@@ -35,7 +35,7 @@ func (synkClient *SynkClient) User(ctx context.Context) (*User, error) {
 
 // ID returns the user's identifier.
 func (user *User) ID() (int, error) {
-	v, ok := user.Get("idc")
+	v, ok := user.Get("id")
 	if ok {
 		switch v := v.(type) {
 		case float64:
