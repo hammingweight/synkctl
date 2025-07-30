@@ -45,7 +45,7 @@ func readPlant(ctx context.Context, sf pflag.Value, plantID int) error {
 		if len(keys) != 0 {
 			return errors.New("cannot specify both \"--keys\" and \"--short\"")
 		}
-		keys = "emonth,etoday,etotal,eyear"
+		keys = "emonth,etoday,etotal,eyear,pac"
 	}
 
 	synkClient, err := newClient(ctx, true)
