@@ -77,7 +77,7 @@ func init() {
 // Authenticate uses a specify configuration to authenticate a user. If successful, a SynkClient is
 // returned that can be used to make requests against the API.
 func Authenticate(ctx context.Context, config *configuration.Configuration) (*SynkClient, error) {
-	url, err := url.JoinPath(config.Endpoint, "oauth", "token")
+	url, err := url.JoinPath(config.Endpoint, "oauth", "token", "new")
 	if err != nil {
 		return nil, err
 	}
