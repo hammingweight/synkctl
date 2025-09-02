@@ -23,6 +23,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/hammingweight/synkctl/configuration"
@@ -76,11 +77,27 @@ func init() {
 // Authenticate uses a specify configuration to authenticate a user. If successful, a SynkClient is
 // returned that can be used to make requests against the API.
 func Authenticate(ctx context.Context, config *configuration.Configuration) (*SynkClient, error) {
-	tokens := &tokens{
-		AccessToken: config.Bearer,
-		ExpiresIn:   604799,
-		TokenType:   "Bearer",
-		Scope:       "all",
+	url, err := url.JoinPath(config.Endpoint, "oauth", "token")
+	if err != nil {
+		return nil, err
 	}
-	return &SynkClient{endpoint: config.Endpoint, tokens: *tokens, SerialNumber: config.DefaultInverterSN}, nil
+	authRequest, err := newAuthRequestBody(config)
+	if err != nil {
+		return nil, err
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, authRequest)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json")
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	tokens := &tokens{}
+	if err = unmarshalResponseData(resp, tokens); err != nil {
+		return nil, err
+	}
+	return &SynkClient{endpoint: config.Endpoint, tokens: *tokens, SerialNumber: config.DefaultInverterSN}, err
 }
