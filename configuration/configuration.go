@@ -35,6 +35,7 @@ type Configuration struct {
 	Endpoint          string `yaml:"endpoint"`
 	User              string `yaml:"user"`
 	Password          string `yaml:"password"`
+	Bearer            string `yaml:"bearer"`
 	DefaultInverterSN string `yaml:"default_inverter_sn,omitempty"`
 	DefaultPlantID    int    `yaml:"default_plant_id,omitempty"`
 }
