@@ -62,6 +62,12 @@ Use "synkctl [command] --help" for more information about a command.
 ```
 
 #### Configuring **synkctl**
+Before you configure **synkctl**, you need to get the encrypted form of your password. The easiest way to get an encrypted form
+of your password, is to log into [SunSynk](https://sunsynk.net) using a browser (e.g. Chrome) and view the network traffic.
+Look at the password in the payload submitted to the `new` URI as in the image
+
+![Get the password](./images/getpassword.png)
+
 To use **synkctl** you need to create a configuration file; the easiest way to generate a
 file is to run
 
@@ -82,7 +88,7 @@ $ synkctl configuration generate -u <username> -p <password> -i <inverter_serial
 For example,
 
 ```
-$ synkctl configuration generate -u carl@example.com -p verySecret -i 2401011234
+$ synkctl configuration generate -u carl@example.com -p QCDkukkf9BeA87ztJ... -i 2401011234
 Wrote configuration to '/home/carl/.synk/config'.
 ```
 
@@ -92,7 +98,7 @@ Then, to view the config file
 $ cat ~/.synk/config
 endpoint: https://api.sunsynk.net
 user: carl@example.com
-password: verySecret
+password: QCDkukkf9BeA87ztJ...
 default_inverter_sn: "2401011234"
 ```
 
