@@ -16,6 +16,6 @@ jobs:
       - name: run tests
         env:
           TEST_USER: ${{ secrets.SUNSYNK_USERNAME }}
-          TEST_PASSWORD: ${{ secrets.SUNSYNK_PASSWORD }}
+          TEST_BEARER_TOKEN: ${{ secrets.SUNSYNK_BEARER_TOKEN }}
           TEST_INVERTER_SN: ${{ secrets.SUNSYNK_INVERTER_SN }}
         run: go test -v -count=1 -tags integration  ./integration

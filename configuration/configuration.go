@@ -35,6 +35,7 @@ type Configuration struct {
 	Endpoint          string `yaml:"endpoint"`
 	User              string `yaml:"user"`
 	Password          string `yaml:"password"`
+	Bearer            string `yaml:"bearer"`
 	DefaultInverterSN string `yaml:"default_inverter_sn,omitempty"`
 	DefaultPlantID    int    `yaml:"default_plant_id,omitempty"`
 }
@@ -89,22 +90,22 @@ func ReadConfigurationFromFile(fileName string) (*Configuration, error) {
 	return configuration, err
 }
 
-// New constructs a configuration object with a specified username/password
+// New constructs a configuration object with a specified username/bearer token
 // combination using the default region 1 (London) endpoint
-func New(user string, password string) (*Configuration, error) {
+func New(user string, bearerToken string) (*Configuration, error) {
 	if user == "" {
 		return nil, errors.New("'user' cannot be empty")
 	}
-	if password == "" {
+	if bearerToken == "" {
 		return nil, errors.New("'password' cannot be empty")
 	}
-	return &Configuration{User: user, Password: password, Endpoint: DefaultEndpoint}, nil
+	return &Configuration{User: user, Bearer: bearerToken, Endpoint: DefaultEndpoint}, nil
 }
 
-// NewWithEndpoint constructs a configuration object with username/password credentials and an
+// NewWithEndpoint constructs a configuration object with username/bearer token credentials and an
 // overridden API endpoint
-func NewWithEndpoint(user string, password string, endpoint string) (*Configuration, error) {
-	config, err := New(user, password)
+func NewWithEndpoint(user string, bearerToken string, endpoint string) (*Configuration, error) {
+	config, err := New(user, bearerToken)
 	if err != nil {
 		return nil, err
 	}

@@ -116,8 +116,8 @@ func TestWriteConfiguration(t *testing.T) {
 	if err := yaml.Unmarshal(w.Bytes(), configMap); err != nil {
 		t.Fatal("error:", err)
 	}
-	if len(configMap) != 3 {
-		t.Errorf("expected 3 elements, got %d\n", len(configMap))
+	if len(configMap) != 4 {
+		t.Errorf("expected 4 elements, got %d\n", len(configMap))
 	}
 	if configuration.Endpoint != api {
 		t.Errorf("expected Endpoint: %s, got %s", api, configuration.Endpoint)
@@ -155,8 +155,8 @@ func TestWriteConfigurationToFile(t *testing.T) {
 	if err = yaml.Unmarshal(data, configMap); err != nil {
 		t.Fatal("error: ", err)
 	}
-	if len(configMap) != 3 {
-		t.Errorf("expected 3 elements, got %d\n", len(configMap))
+	if len(configMap) != 4 {
+		t.Errorf("expected 4 elements, got %d\n", len(configMap))
 	}
 	if configuration.Endpoint != api {
 		t.Errorf("expected Endpoint: %s, got %s", api, configuration.Endpoint)
