@@ -38,14 +38,14 @@ import (
 	"github.com/hammingweight/synkctl/configuration"
 )
 
-type PublicKeyResponse struct {
+type publicKeyResponse struct {
 	Code    int    `json:"code"`
 	Msg     string `json:"msg"`
 	Success bool   `json:"success"`
 	Data    string `json:"data"` // The Base64 encoded RSA key
 }
 
-type TokenData struct {
+type tokenData struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 	Scope        string `json:"scope"`
@@ -53,14 +53,14 @@ type TokenData struct {
 	ExpiresIn    int    `json:"expires_in"`
 }
 
-type TokenResponse struct {
+type tokenResponse struct {
 	Code    int       `json:"code"`
 	Msg     string    `json:"msg"`
 	Success bool      `json:"success"`
-	Data    TokenData `json:"data"`
+	Data    tokenData `json:"data"`
 }
 
-type LoginPayload struct {
+type loginPayload struct {
 	Nonce     int64  `json:"nonce"`
 	AreaCode  string `json:"areaCode"`
 	ClientID  string `json:"client_id"`
@@ -79,7 +79,7 @@ func md5Hash(s string) string {
 }
 
 // GetSunsynkToken executes the full authentication workflow and returns the token data.
-func getSunsynkToken(endpoint, username, password string) (*TokenData, error) {
+func getSunsynkToken(endpoint, username, password string) (*tokenData, error) {
 	client := &http.Client{}
 	source := "sunsynk"
 
@@ -113,7 +113,7 @@ func getSunsynkToken(endpoint, username, password string) (*TokenData, error) {
 		return nil, fmt.Errorf("failed to read public key response: %w", err)
 	}
 
-	var pkResp PublicKeyResponse
+	var pkResp publicKeyResponse
 	if err := json.Unmarshal(bodyPK, &pkResp); err != nil {
 		return nil, fmt.Errorf("failed to parse public key JSON: %w", err)
 	}
@@ -155,7 +155,7 @@ func getSunsynkToken(endpoint, username, password string) (*TokenData, error) {
 	encryptedPasswordB64 := base64.StdEncoding.EncodeToString(encryptedBytes)
 
 	// 6. Login to get the bearer token
-	payload := LoginPayload{
+	payload := loginPayload{
 		Nonce:     nonce,
 		AreaCode:  "sunsynk",
 		ClientID:  "csp-web",
@@ -188,7 +188,7 @@ func getSunsynkToken(endpoint, username, password string) (*TokenData, error) {
 		return nil, fmt.Errorf("failed to read login response: %w", err)
 	}
 
-	var tokenResp TokenResponse
+	var tokenResp tokenResponse
 	if err := json.Unmarshal(bodyLogin, &tokenResp); err != nil {
 		return nil, fmt.Errorf("failed to parse login JSON: %w (body: %s)", err, string(bodyLogin))
 	}
