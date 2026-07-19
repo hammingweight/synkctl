@@ -45,7 +45,7 @@ type publicKeyResponse struct {
 	Data    string `json:"data"` // The Base64 encoded RSA key
 }
 
-type tokenData struct {
+type tokens struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 	Scope        string `json:"scope"`
@@ -54,10 +54,10 @@ type tokenData struct {
 }
 
 type tokenResponse struct {
-	Code    int       `json:"code"`
-	Msg     string    `json:"msg"`
-	Success bool      `json:"success"`
-	Data    tokenData `json:"data"`
+	Code    int    `json:"code"`
+	Msg     string `json:"msg"`
+	Success bool   `json:"success"`
+	Data    tokens `json:"data"`
 }
 
 type loginPayload struct {
@@ -79,7 +79,7 @@ func md5Hash(s string) string {
 }
 
 // GetSunsynkToken executes the full authentication workflow and returns the token data.
-func getSunsynkToken(endpoint, username, password string) (*tokenData, error) {
+func getSunsynkToken(endpoint, username, password string) (*tokens, error) {
 	client := &http.Client{}
 	source := "sunsynk"
 
@@ -200,14 +200,6 @@ func getSunsynkToken(endpoint, username, password string) (*tokenData, error) {
 	return &tokenResp.Data, nil
 }
 
-type tokens struct {
-	AccessToken  string `json:"access_token"`
-	TokenType    string `json:"token_type"`
-	RefreshToken string `json:"refresh_token"`
-	ExpiresIn    int    `json:"expires_in"`
-	Scope        string `json:"scope"`
-}
-
 // SynkClient is a type that is needed for accessing the SunSynk API; it includes the API endpoint and OAuth
 // tokens. It also includes the serial number for an inverter since most requests use the serial number to
 // identify which object is being requested (e.g. the details of a battery connected to the inverter.)
@@ -229,15 +221,9 @@ func init() {
 // Authenticate uses a specify configuration to authenticate a user. If successful, a SynkClient is
 // returned that can be used to make requests against the API.
 func Authenticate(ctx context.Context, config *configuration.Configuration) (*SynkClient, error) {
-	tokenData, err := getSunsynkToken(config.Endpoint, config.User, config.Password)
+	tokens, err := getSunsynkToken(config.Endpoint, config.User, config.Password)
 	if err != nil {
 		return nil, err
-	}
-	tokens := &tokens{
-		AccessToken: tokenData.AccessToken,
-		ExpiresIn:   tokenData.ExpiresIn,
-		TokenType:   tokenData.TokenType,
-		Scope:       tokenData.Scope,
 	}
 	return &SynkClient{endpoint: config.Endpoint, tokens: *tokens, SerialNumber: config.DefaultInverterSN}, nil
 }
