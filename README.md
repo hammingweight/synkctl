@@ -62,12 +62,6 @@ Use "synkctl [command] --help" for more information about a command.
 ```
 
 #### Configuring **synkctl**
-Before you configure **synkctl**, you need to get the encrypted form of your password. The easiest way to get an encrypted form
-of your password, is to log into [SunSynk](https://sunsynk.net) using a browser (e.g. Chrome) and view the network traffic.
-Look at the password in the payload submitted to the `new` URI as in the image
-
-![Get the password](./images/getpassword.png)
-
 To use **synkctl** you need to create a configuration file; the easiest way to generate a
 file is to run
 
