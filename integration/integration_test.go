@@ -37,11 +37,11 @@ func getConfigFromVars() *configuration.Configuration {
 	if username == "" {
 		panic("the TEST_USER environment variable must be set")
 	}
-	bearerToken := os.Getenv("TEST_BEARER_TOKEN")
-	if bearerToken == "" {
-		panic("the TEST_BEARER_TOKEN environment variable must be set")
+	password := os.Getenv("TEST_PASSWORD")
+	if password == "" {
+		panic("the TEST_PASSWORD environment variable must be set")
 	}
-	config, err := configuration.New(username, bearerToken)
+	config, err := configuration.New(username, password)
 	if err != nil {
 		panic(err)
 	}
