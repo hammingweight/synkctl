@@ -39,7 +39,7 @@ func readGrid(ctx context.Context, sf pflag.Value) error {
 		if len(keys) != 0 {
 			return errors.New("cannot specify both \"--keys\" and \"--short\"")
 		}
-		keys = "acRealyStatus,etodayFrom,pac"
+		keys = "acRealyStatus,etodayFrom,limiterTotalPower,pac"
 	}
 
 	return displayObject(grid.SynkObject)
